@@ -1,4 +1,4 @@
-const CustomLeaf = ({ attributes, children, leaf }: any) => {
+const RenderLeaf = ({ attributes, children, leaf }: any) => {
     if (leaf.bold) {
         children = <strong>{children}</strong>
     }
@@ -18,4 +18,4 @@ const CustomLeaf = ({ attributes, children, leaf }: any) => {
     return <span {...attributes}>{children}</span>
 }
 
-export default CustomLeaf;
+export default RenderLeaf;

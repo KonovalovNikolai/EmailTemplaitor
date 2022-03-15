@@ -1,4 +1,4 @@
-const CustomElement = ({ attributes, children, element }: any) => {
+const RenderElement = ({ attributes, children, element }: any) => {
     const style = { textAlign: element.align }
     switch (element.type) {
         case 'block-quote':
@@ -46,4 +46,4 @@ const CustomElement = ({ attributes, children, element }: any) => {
     }
 }
 
-export default CustomElement;
+export default RenderElement;

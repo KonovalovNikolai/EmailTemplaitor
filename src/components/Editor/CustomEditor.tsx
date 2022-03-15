@@ -1,29 +1,17 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import isHotkey from 'is-hotkey'
-import { Editable, withReact, useSlate, Slate, ReactEditor } from 'slate-react'
-import { withHistory } from 'slate-history'
+import { Editable, withReact, Slate } from 'slate-react'
+import { withHistory} from 'slate-history'
 import {
-    BaseEditor,
-    Transforms,
     createEditor,
     Descendant,
 } from 'slate'
 
-import CustomElement from './elements/Element'
-import CustomLeaf from './elements/Leaf'
+import RenderElement from './elements/Element'
+import RenderLeaf from './elements/Leaf'
 import MarkButton from '../Toolbar/MarkButton'
 import './Editor.css'
-
-type UserElement = { type: 'paragraph'; children: CustomText[] }
-type CustomText = { text: string }
-
-declare module 'slate' {
-    interface CustomTypes {
-        Editor: BaseEditor & ReactEditor
-        Element: UserElement
-        Text: CustomText
-    }
-}
+import { BlockButton } from '../Toolbar/BlockButton'
 
 interface Props {
     value: Descendant[];
@@ -33,17 +21,22 @@ interface Props {
 const CustomEditor = ({ value, onChange }: Props) => {
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
-    const renderElement = useCallback(props => <CustomElement {...props} />, [])
-    const renderLeaf = useCallback(props => <CustomLeaf {...props} />, [])
+    const renderElement = useCallback(props => <RenderElement {...props} />, [])
+    const renderLeaf = useCallback(props => <RenderLeaf {...props} />, [])
 
     return (
         <div className='editor'>
             <Slate editor={editor} value={value} onChange={value => onChange(value)}>
                 <div className='toolbar'>
-                    <MarkButton format={'bold'} text={'B'} />
-                    <MarkButton format={'italic'} text={'i'} />
+                    <MarkButton format='bold' text={'B'} />
+                    <MarkButton format='italic' text={'i'} />
                     <MarkButton format={'underline'} text={'U'} />
                     <MarkButton format={'code'} text={'<>'} />
+                    <BlockButton format={'heading-one'} text={'h1'} />
+                    <BlockButton format="heading-two" text="h2" />
+                    <BlockButton format="block-quote" text="q" />
+                    <BlockButton format="numbered-list" text="1" />
+                    <BlockButton format="bulleted-list" text="." />
                 </div>
                 <Editable
                     renderElement={renderElement}
@@ -55,6 +48,5 @@ const CustomEditor = ({ value, onChange }: Props) => {
         </div>
     );
 }
-
 
 export default CustomEditor

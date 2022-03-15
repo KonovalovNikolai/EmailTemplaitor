@@ -32,7 +32,7 @@ export const initialValue: Descendant[] = [
         children: [{ text: 'A wise quote.' }],
     },
     {
-        type: 'paragraph',
+        type: 'heading',
         align: 'center',
         children: [{ text: 'Try it out for yourself!' }],
     },

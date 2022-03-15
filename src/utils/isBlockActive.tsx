@@ -1,4 +1,4 @@
-import { Editor, Element as SlateElement } from "slate"
+import { Editor, Element as SlateElement } from "slate";
 
 const isBlockActive = (editor: Editor, format: string) => {
     const nodes = Editor.nodes(editor, {
@@ -9,3 +9,5 @@ const isBlockActive = (editor: Editor, format: string) => {
     })
     return !!nodes.next().value
 }
+
+export default isBlockActive;
