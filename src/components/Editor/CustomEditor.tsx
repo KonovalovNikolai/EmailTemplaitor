@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import isHotkey from 'is-hotkey'
 import { Editable, withReact, Slate } from 'slate-react'
-import { withHistory} from 'slate-history'
+import { withHistory } from 'slate-history'
 import {
     createEditor,
     Descendant,
@@ -37,6 +37,10 @@ const CustomEditor = ({ value, onChange }: Props) => {
                     <BlockButton format="block-quote" text="q" />
                     <BlockButton format="numbered-list" text="1" />
                     <BlockButton format="bulleted-list" text="." />
+                    <BlockButton format="left" text="left" />
+                    <BlockButton format="center" text="center" />
+                    <BlockButton format="right" text="right" />
+                    <BlockButton format="justify" text="justify" />
                 </div>
                 <Editable
                     renderElement={renderElement}

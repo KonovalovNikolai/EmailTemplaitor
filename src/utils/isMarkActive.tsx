@@ -1,7 +1,8 @@
 import { Editor } from "slate"
 
-const isMarkActive = (editor:any, format:string) => {
-    return (new Set(Object.keys(Editor.marks(editor) ?? {}))).has(format);
+const isMarkActive = (editor: Editor, format: string) => {
+    const marks = Editor.marks(editor)
+    return marks ? marks[format] === true : false
 }
 
 export default isMarkActive;
