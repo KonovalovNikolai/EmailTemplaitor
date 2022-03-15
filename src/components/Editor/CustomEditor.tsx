@@ -7,8 +7,8 @@ import {
     Descendant,
 } from 'slate'
 
-import RenderElement from './elements/Element'
-import RenderLeaf from './elements/Leaf'
+import RenderElement from './elements/RenderElement'
+import RenderLeaf from './elements/RenderLeaf'
 import MarkButton from '../Toolbar/MarkButton'
 import './Editor.css'
 import { BlockButton } from '../Toolbar/BlockButton'
