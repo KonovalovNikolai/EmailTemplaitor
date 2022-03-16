@@ -1,3 +1,6 @@
+import { Mention } from "./Mention"
+
+
 const RenderElement = ({ attributes, children, element }: any) => {
     const style = { textAlign: element.align }
     switch (element.type) {
@@ -36,6 +39,12 @@ const RenderElement = ({ attributes, children, element }: any) => {
                 <ol style={style} {...attributes}>
                     {children}
                 </ol>
+            )
+        case 'mention':
+            return (
+                <Mention {...{ attributes, children, element }}>
+                    {children}
+                </Mention>
             )
         default:
             return (

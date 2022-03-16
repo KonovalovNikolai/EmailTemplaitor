@@ -1,17 +1,20 @@
 import { useSlate } from "slate-react"
 
-import toggleBlock from "../../utils/toggleBlock"
+import toggleMark from "../utils/toggleMark"
 
-export const BlockButton = ({ format, text }) => {
+
+const MarkButton = ({ format, text }:any) => {
     const editor = useSlate()
     return (
         <button
             onMouseDown={event => {
                 event.preventDefault()
-                toggleBlock(editor, format)
+                toggleMark(editor, format)
             }}
         >
             {text}
         </button>
     )
 }
+
+export default MarkButton;
