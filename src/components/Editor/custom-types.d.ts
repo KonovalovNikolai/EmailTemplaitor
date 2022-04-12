@@ -22,17 +22,6 @@ export type BulletedListElement = {
   children: Descendant[]
 }
 
-export type CheckListItemElement = {
-  type: 'check-list-item'
-  checked: boolean
-  children: Descendant[]
-}
-
-export type EditableVoidElement = {
-  type: 'editable-void'
-  children: EmptyText[]
-}
-
 export type HeadingElement = {
   type: 'heading'
   align?: string
@@ -48,7 +37,7 @@ export type HeadingTwoElement = {
 export type ImageElement = {
   type: 'image'
   url: string
-  children: EmptyText[]
+  children: Descendant[]
 }
 
 export type LinkElement = { type: 'link'; url: string; children: Descendant[] }
@@ -69,21 +58,12 @@ export type ParagraphElement = {
   children: Descendant[]
 }
 
-export type TableElement = { type: 'table'; children: TableRow[] }
-
-export type TableCellElement = { type: 'table-cell'; children: CustomText[] }
-
-export type TableRowElement = { type: 'table-row'; children: TableCell[] }
-
 export type TitleElement = { type: 'title'; children: Descendant[] }
 
-export type VideoElement = { type: 'video'; url: string; children: EmptyText[] }
 
 type CustomElement =
   | BlockQuoteElement
   | BulletedListElement
-  | CheckListItemElement
-  | EditableVoidElement
   | HeadingElement
   | HeadingTwoElement
   | ImageElement
@@ -92,11 +72,7 @@ type CustomElement =
   | ListItemElement
   | MentionElement
   | ParagraphElement
-  | TableElement
-  | TableRowElement
-  | TableCellElement
   | TitleElement
-  | VideoElement
 
 export type CustomText = {
   bold?: boolean

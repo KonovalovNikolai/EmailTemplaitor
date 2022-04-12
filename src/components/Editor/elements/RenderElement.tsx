@@ -2,6 +2,7 @@ import { Mention } from "./Mention"
 
 
 const RenderElement = ({ attributes, children, element }: any) => {
+
     const style = { textAlign: element.align }
     switch (element.type) {
         case 'block-quote':
@@ -42,7 +43,7 @@ const RenderElement = ({ attributes, children, element }: any) => {
             )
         case 'mention':
             return (
-                <Mention {...{ attributes, children, element }}>
+                <Mention {...{ attributes, element }}> 
                     {children}
                 </Mention>
             )

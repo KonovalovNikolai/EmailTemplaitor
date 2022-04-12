@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import isHotkey from 'is-hotkey'
-import { Editable, withReact, Slate, ReactEditor, useSelected, useFocused } from 'slate-react'
+import { Editable, withReact, Slate, ReactEditor } from 'slate-react'
 import { withHistory } from 'slate-history'
 import {
     createEditor,
@@ -99,7 +99,7 @@ const CustomEditor = ({ value, onChange }: Props) => {
                         const before = wordBefore && Editor.before(editor, wordBefore)
                         const beforeRange = before && Editor.range(editor, before, start)
                         const beforeText = beforeRange && Editor.string(editor, beforeRange)
-                        const beforeMatch = beforeText && beforeText.match(/^@(\w+)$/)
+                        const beforeMatch = beforeText && beforeText.match(/^#(\w+)$/)
                         const after = Editor.after(editor, start)
                         const afterRange = Editor.range(editor, start, after)
                         const afterText = Editor.string(editor, afterRange)
@@ -156,6 +156,12 @@ const CustomEditor = ({ value, onChange }: Props) => {
                         >
                             {chars.map((char, i) => (
                                 <div
+                                    onClick={ () => {
+                                            Transforms.select(editor, target)
+                                            insertMention(editor, char)
+                                            setTarget(null)
+                                        }
+                                    }
                                     key={char}
                                     style={{
                                         padding: '1px 3px',

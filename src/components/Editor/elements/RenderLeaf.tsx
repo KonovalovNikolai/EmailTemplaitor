@@ -1,4 +1,5 @@
 const RenderLeaf = ({ attributes, children, leaf }: any) => {
+
     if (leaf.bold) {
         children = <strong>{children}</strong>
     }

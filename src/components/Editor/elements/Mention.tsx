@@ -7,7 +7,7 @@ export const Mention = ({ attributes, children, element }) => {
     return (
         <span
             {...attributes}
-            contentEditable={true}
+            contentEditable={false}
             data-cy={`mention-${element.character.replace(' ', '-')}`}
             style={{
                 padding: '3px 3px 2px',
@@ -20,7 +20,7 @@ export const Mention = ({ attributes, children, element }) => {
                 boxShadow: selected && focused ? '0 0 0 2px #B4D5FF' : 'none',
             }}
         >
-            @{element.character}
+            {`#${element.character}`}
             {children}
         </span>
     )
