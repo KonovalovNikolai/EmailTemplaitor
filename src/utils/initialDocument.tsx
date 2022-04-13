@@ -9,7 +9,7 @@ export const initialValue: Descendant[] = [
             { text: ' text, ' },
             { text: 'much', italic: true },
             { text: ' better than a ' },
-            { text: '<textarea>', code: true },
+            { text: '????', underline: true },
             { text: '!' },
         ],
     },
@@ -36,4 +36,22 @@ export const initialValue: Descendant[] = [
         align: 'center',
         children: [{ text: 'Try it out for yourself!' }],
     },
+    {
+        type: 'paragraph',
+        children: [
+          { text: 'Try mentioning characters, like ' },
+          {
+            type: 'mention',
+            character: 'R2-D2',
+            children: [{ text: '' }],
+          },
+          { text: ' or ' },
+          {
+            type: 'mention',
+            character: 'Mace Windu',
+            children: [{ text: '' }],
+          },
+          { text: '!' },
+        ],
+      },
 ] as any;

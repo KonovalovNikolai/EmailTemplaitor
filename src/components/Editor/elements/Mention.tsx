@@ -4,6 +4,18 @@ export const Mention = ({ attributes, children, element }) => {
     const selected = useSelected()
     const focused = useFocused()
 
+    let character = <span>{`#${element.character}`}</span>
+    if (element.bold) {
+        character = <strong>{character}</strong>
+    }
+    if (element.italic) {
+        character = <em>{character}</em>
+    }
+    if (element.underline) {
+        character = <u>{character}</u>
+    }
+
+
     return (
         <span
             {...attributes}
@@ -20,7 +32,7 @@ export const Mention = ({ attributes, children, element }) => {
                 boxShadow: selected && focused ? '0 0 0 2px #B4D5FF' : 'none',
             }}
         >
-            {`#${element.character}`}
+            {character}
             {children}
         </span>
     )

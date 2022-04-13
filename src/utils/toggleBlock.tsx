@@ -3,7 +3,7 @@ import { Editor, Transforms, Element as SlateElement } from "slate";
 import isBlockActive from "./isBlockActive";
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
-const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
+export const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
 
 const toggleBlock = (editor: Editor, format) => {
     const isActive = isBlockActive(

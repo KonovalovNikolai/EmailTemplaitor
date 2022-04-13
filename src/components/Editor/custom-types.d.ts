@@ -50,6 +50,9 @@ export type MentionElement = {
   type: 'mention'
   character: string
   children: CustomText[]
+  bold?: boolean
+  italic?: boolean
+  underline?: boolean
 }
 
 export type ParagraphElement = {
@@ -57,8 +60,6 @@ export type ParagraphElement = {
   align?: string
   children: Descendant[]
 }
-
-export type TitleElement = { type: 'title'; children: Descendant[] }
 
 
 type CustomElement =
@@ -72,12 +73,11 @@ type CustomElement =
   | ListItemElement
   | MentionElement
   | ParagraphElement
-  | TitleElement
 
 export type CustomText = {
   bold?: boolean
   italic?: boolean
-  code?: boolean
+  underline?: boolean
   text: string
 }
 

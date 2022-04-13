@@ -120,7 +120,6 @@ const CustomEditor = ({ value, onChange }: Props) => {
                     <MarkButton format='bold' text='B' />
                     <MarkButton format='italic' text='i' />
                     <MarkButton format='underline' text='U' />
-                    <MarkButton format='code' text='<>' />
                     <BlockButton format='heading-one' text='h1' />
                     <BlockButton format="heading-two" text="h2" />
                     <BlockButton format="block-quote" text="q" />

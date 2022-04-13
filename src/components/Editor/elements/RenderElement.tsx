@@ -43,9 +43,7 @@ const RenderElement = ({ attributes, children, element }: any) => {
             )
         case 'mention':
             return (
-                <Mention {...{ attributes, element }}> 
-                    {children}
-                </Mention>
+                <Mention {...{ attributes, children, element }} /> 
             )
         default:
             return (
