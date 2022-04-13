@@ -1,17 +1,18 @@
 import { Editor, Element as SlateElement, Transforms } from "slate";
-import { MentionElement } from "../components/Editor/custom-types";
 
 import isMarkActive from "./isMarkActive";
 
 const toggleMark = (editor: any, format: string) => {
     const isActive = isMarkActive(editor, format)
 
+    // Применяем изменение для обычных узлов
     if (isActive) {
         Editor.removeMark(editor, format)
     } else {
         Editor.addMark(editor, format, true)
     }
 
+    // Применяем изменения для упоминаний
     Array.from(
         Editor.nodes(editor, {
             match: n =>

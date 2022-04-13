@@ -1,7 +1,6 @@
 import { useSlate } from "slate-react"
-import isMarkActive from "../utils/isMarkActive"
-
-import toggleMark from "../utils/toggleMark"
+import isMarkActive from "../../../utils/isMarkActive"
+import toggleMark from "../../../utils/toggleMark"
 
 
 const MarkButton = ({ format, text }: any) => {

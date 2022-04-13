@@ -12,11 +12,12 @@ import {
 
 import RenderElement from './elements/RenderElement'
 import RenderLeaf from './elements/RenderLeaf'
-import MarkButton from '../MarkButton'
-import { BlockButton } from '../BlockButton'
 import { Portal } from '../Portal'
 import { MentionElement } from './custom-types'
 import { withMentions } from './plugins/withMentions'
+import MarkButton from './components/MarkButton'
+import { BlockButton } from './components/BlockButton'
+
 import './Editor.css'
 
 interface Props {
@@ -95,10 +96,23 @@ const CustomEditor = ({ value, onChange }: Props) => {
 
                     if (selection && Range.isCollapsed(selection)) {
                         const [start] = Range.edges(selection)
+
+                        const charBefore = Editor.before(editor, start, { unit: 'character' })
+                        const range = charBefore && Editor.range(editor, charBefore, start)
+                        const character = range && Editor.string(editor, range)
+
+                        if (character === "#") {
+                            setTarget(range)
+                            setSearch("")
+                            setIndex(0)
+                            return
+                        }
+
                         const wordBefore = Editor.before(editor, start, { unit: 'word' })
                         const before = wordBefore && Editor.before(editor, wordBefore)
                         const beforeRange = before && Editor.range(editor, before, start)
                         const beforeText = beforeRange && Editor.string(editor, beforeRange)
+
                         const beforeMatch = beforeText && beforeText.match(/^#(\w+)$/)
                         const after = Editor.after(editor, start)
                         const afterRange = Editor.range(editor, start, after)
@@ -190,6 +204,7 @@ const insertMention = (editor, character) => {
 }
 
 const CHARACTERS = [
+    "Bas",
     'Aayla Secura',
     'Adi Gallia',
     'Admiral Dodd Rancit',

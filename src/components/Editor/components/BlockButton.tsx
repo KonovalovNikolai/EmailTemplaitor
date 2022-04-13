@@ -1,7 +1,7 @@
 import { useSlate } from "slate-react"
-import isBlockActive from "../utils/isBlockActive"
 
-import toggleBlock, { TEXT_ALIGN_TYPES } from "../utils/toggleBlock"
+import isBlockActive from "../../../utils/isBlockActive"
+import toggleBlock, { TEXT_ALIGN_TYPES } from "../../../utils/toggleBlock"
 
 export const BlockButton = ({ format, text }) => {
     const editor = useSlate()
