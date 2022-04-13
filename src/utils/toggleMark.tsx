@@ -12,33 +12,24 @@ const toggleMark = (editor: any, format: string) => {
         Editor.addMark(editor, format, true)
     }
 
-    const mentions = Array.from(
+    Array.from(
         Editor.nodes(editor, {
             match: n =>
                 !Editor.isEditor(n) &&
                 SlateElement.isElement(n) &&
                 n.type === "mention"
-        })
-    );
+        })).forEach(element => {
+            const [mention, cellPath] = element;
 
-    mentions.forEach(element => {
-        const [mention, cellPath] = element;
-
-        if (!Editor.isEditor(mention) &&
-            SlateElement.isElement(mention) &&
-            mention.type === "mention") {
-            const newMention: MentionElement = {
-                type: 'mention',
-                character: mention.character,
-                children: [{ text: '' }],
-                bold: mention.bold,
-                italic: mention.italic,
-                underline: mention.underline
+            if (!Editor.isEditor(mention) &&
+                SlateElement.isElement(mention) &&
+                mention.type === "mention") {
+                const newMention = { ...mention }
+                newMention[format] = !isActive
+                Transforms.setNodes(editor, newMention, { at: cellPath })
             }
-            newMention[format] = !isActive
-            Transforms.setNodes(editor, newMention, {at: cellPath})
         }
-    });
+    );
 }
 
 export default toggleMark;
