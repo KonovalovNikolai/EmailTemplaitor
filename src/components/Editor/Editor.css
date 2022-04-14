@@ -5,6 +5,11 @@
     padding: 20px;
 }
 
+.editable {
+    overflow-y: scroll;
+    height: 250px;
+}
+
 .toolbar {
     position: relative;
     padding: 1px 18px 17px;

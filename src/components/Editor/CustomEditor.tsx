@@ -146,6 +146,7 @@ const CustomEditor = ({ value, onChange }: Props) => {
                     <BlockButton format="justify" text="justify" />
                 </div>
                 <Editable
+                    className='editable'
                     onKeyDown={onKeyDown}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
