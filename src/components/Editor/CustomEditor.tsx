@@ -20,6 +20,7 @@ import { BlockButton } from './components/BlockButton'
 
 import './Editor.css'
 import { AutocompleteListItem } from './components/AutocompleteListItem'
+import { getDataForAutoComplete } from '../../utils/getDataForAutoComplete'
 
 interface Props {
     value: Descendant[];
@@ -98,34 +99,13 @@ const CustomEditor = ({ value, onChange }: Props) => {
                     if (selection && Range.isCollapsed(selection)) {
                         const [start] = Range.edges(selection)
 
-                        const charBefore = Editor.before(editor, start, { unit: 'character' })
-                        const range = charBefore && Editor.range(editor, charBefore, start)
-                        const character = range && Editor.string(editor, range)
+                        const {range, word} = getDataForAutoComplete(editor, start)
 
-                        if (character === "#") {
-                            setTarget(range)
-                            setSearch("")
-                            setIndex(0)
-                            return
-                        }
+                        setTarget(range)
+                        setSearch(word)
+                        setIndex(0)
 
-                        const wordBefore = Editor.before(editor, start, { unit: 'word' })
-                        const before = wordBefore && Editor.before(editor, wordBefore)
-                        const beforeRange = before && Editor.range(editor, before, start)
-                        const beforeText = beforeRange && Editor.string(editor, beforeRange)
-
-                        const beforeMatch = beforeText && beforeText.match(/^#(\w+)$/)
-                        const after = Editor.after(editor, start)
-                        const afterRange = Editor.range(editor, start, after)
-                        const afterText = Editor.string(editor, afterRange)
-                        const afterMatch = afterText.match(/^(\s|$)/)
-
-                        if (beforeMatch && afterMatch) {
-                            setTarget(beforeRange)
-                            setSearch(beforeMatch[1])
-                            setIndex(0)
-                            return
-                        }
+                        return
                     }
 
                     setTarget(null)
