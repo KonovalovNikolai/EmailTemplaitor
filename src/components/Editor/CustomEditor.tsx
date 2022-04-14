@@ -19,6 +19,7 @@ import MarkButton from './components/MarkButton'
 import { BlockButton } from './components/BlockButton'
 
 import './Editor.css'
+import { AutocompleteListItem } from './components/AutocompleteListItem'
 
 interface Props {
     value: Descendant[];
@@ -168,22 +169,16 @@ const CustomEditor = ({ value, onChange }: Props) => {
                             data-cy="mentions-portal"
                         >
                             {chars.map((char, i) => (
-                                <div
-                                    onClick={ () => {
-                                            Transforms.select(editor, target)
-                                            insertMention(editor, char)
-                                            setTarget(null)
-                                        }
-                                    }
+                                <AutocompleteListItem
                                     key={char}
-                                    style={{
-                                        padding: '1px 3px',
-                                        borderRadius: '3px',
-                                        background: i === index ? '#B4D5FF' : 'transparent',
+                                    char={char}
+                                    isSelected={i === index}
+                                    onClick={() => {
+                                        Transforms.select(editor, target)
+                                        insertMention(editor, char)
+                                        setTarget(null)
                                     }}
-                                >
-                                    {char}
-                                </div>
+                                />
                             ))}
                         </div>
                     </Portal>
