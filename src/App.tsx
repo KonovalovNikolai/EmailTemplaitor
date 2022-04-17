@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Descendant, Editor } from 'slate';
-import { DeletableListElement, EditableList, ListElement } from './components/EditableList/EditableList';
+import { EditableList } from './components/EditableList/EditableList';
 import CustomEditor from './components/Editor/CustomEditor';
+import { FieldList } from './utils/FieldList';
 
 import { initialValue } from './utils/initialDocument';
 
@@ -14,28 +15,24 @@ function App() {
   //   </div>
   // );
 
-  const [list, setList] = useState<ListElement[]>([
-    {
-      name: "Email",
-      isDeletable: false
-    },
+  const [list, setList] = useState<FieldList>(new FieldList([
     {
       name: "City",
       isDeletable: true
     },
     {
-      name: "Phone Number",
+      name: "Name",
       isDeletable: true
     },
-  ])
+  ]))
 
   return (
     <div>
       <EditableList
-        list={list}
+        fieldList={list}
         onChange={
-          (list: ListElement[]) => {
-            setList(list)
+          (newList: FieldList) => {
+            setList(newList)
           }
         }
       />

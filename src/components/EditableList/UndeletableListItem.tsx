@@ -1,4 +1,5 @@
-import { ListElement } from "./EditableList"
+import { ListElement } from "../../utils/FieldList"
+import { Chip } from '@material-ui/core';
 
 type Props = {
     element: ListElement
@@ -7,8 +8,6 @@ type Props = {
 
 export const UndeletableListItem = ({ element, validator }: Props) => {
     return (
-        <div>
-            <div>{element.name}</div>
-        </div>
+        <Chip label={element.name} color="primary"/>
     )
 }
