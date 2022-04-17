@@ -24,19 +24,25 @@ function App() {
       name: "Name",
       isDeletable: true
     },
+    {
+      name: "LastName",
+      isDeletable: true
+    },
+    {
+      name: "Phone",
+      isDeletable: true
+    },
   ]))
 
   return (
-    <div>
-      <EditableList
-        fieldList={list}
-        onChange={
-          (newList: FieldList) => {
-            setList(newList)
-          }
+    <EditableList
+      fieldList={list}
+      onChange={
+        (newList: FieldList) => {
+          setList(newList)
         }
-      />
-    </div>
+      }
+    />
   )
 }
 
