@@ -1,6 +1,7 @@
 import { Box, Paper, Popover, TextField } from '@mui/material';
 import * as React from 'react';
 import { FieldList, ListElement } from "../../utils/FieldList"
+import { hasWhiteSpace } from '../../utils/hasWhiteSpace';
 import { DeletableListItem, UndeletableListItem } from './ListItemBase';
 
 type Props = {
@@ -32,6 +33,8 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
     }
 
     const handleEnter = (value: string) => {
+        if (value === selectedElement.element.name) return
+
         const newElement = selectedElement.element
         newElement.name = value
         onChange(fieldList.Replace(selectedElement.element, newElement))
@@ -42,11 +45,16 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
         setSelectedElement(null);
     };
 
+    const validator = (value: string) => {
+        if (hasWhiteSpace(value) || fieldList.ContainName(value)) {
+            return false
+        }
+        return true
+    }
+
     return (
         <Box
             sx={{
-                width: 200,
-                height: 300,
                 display: "flex",
                 flexWrap: 'wrap',
                 alignContent: 'flex-start',
@@ -94,6 +102,7 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
                             helperText="Введите новое название поля"
                             defaultValue={selectedElement.element.name}
                             onEnter={handleEnter}
+                            validator={validator}
                         />
                     </Popover>
                 }
@@ -107,6 +116,7 @@ type FieldNameInputFieldProps = {
     helperText: string
     defaultValue: string
     onEnter: (value: string) => void
+    validator: (value: string) => boolean
 }
 
 export const FieldNameInputField = ({
@@ -114,19 +124,24 @@ export const FieldNameInputField = ({
     helperText,
     defaultValue,
     onEnter,
+    validator
 }: FieldNameInputFieldProps) => {
     const [value, setValue] = React.useState(defaultValue);
+    const isError = value === defaultValue ? false : !validator(value)
+
     return (
         <TextField
             id={id}
             variant="outlined"
             helperText={helperText}
 
+            error={isError}
+
             value={value}
 
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                    onEnter(value)
+                    isError ? onEnter(defaultValue) : onEnter(value)
                 }
             }}
 
