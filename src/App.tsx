@@ -7,13 +7,13 @@ import { FieldList } from './utils/FieldList';
 import { initialValue } from './utils/initialDocument';
 
 function App() {
-  // const [value, setValue] = useState<Descendant[]>(initialValue)
+  const [value, setValue] = useState<Descendant[]>(initialValue)
 
-  // return (
-  //   <div>
-  //     <CustomEditor value={value} onChange={setValue}/>
-  //   </div>
-  // );
+  return (
+    <div>
+      <CustomEditor value={value} onChange={setValue}/>
+    </div>
+  );
 
   const [list, setList] = useState<FieldList>(new FieldList([
     {
