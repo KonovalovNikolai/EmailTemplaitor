@@ -1,4 +1,4 @@
-import { Box, Paper, Popover, TextField } from '@mui/material';
+import { Box, Icon, IconButton, Paper, Popover, TextField } from '@mui/material';
 import * as React from 'react';
 import { FieldList, ListElement } from "../../utils/FieldList"
 import { hasWhiteSpace } from '../../utils/hasWhiteSpace';
@@ -33,11 +33,19 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
     }
 
     const handleEnter = (value: string) => {
-        if (value === selectedElement.element.name) return
+        if (value === "" || value === selectedElement.element.name) return
 
-        const newElement = selectedElement.element
-        newElement.name = value
-        onChange(fieldList.Replace(selectedElement.element, newElement))
+        if (selectedElement.element.name === "") {
+            const newElement = selectedElement.element
+            newElement.name = value
+            onChange(fieldList.Add(newElement))
+        }
+        else {
+            const newElement = selectedElement.element
+            newElement.name = value
+            onChange(fieldList.Replace(selectedElement.element, newElement))
+        }
+
         handleClose()
     }
 
@@ -86,6 +94,16 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
                     })
                 }
 
+                <IconButton size='small'
+                    onClick={
+                        (event) => {
+                            handleClick(event, { name: "", isDeletable: true })
+                        }
+                    }
+                >
+                    <Icon color='primary'>add_circle</Icon>
+                </IconButton>
+
                 {open &&
                     <Popover
                         id="change-field-name-popover"
@@ -94,12 +112,16 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
                         onClose={handleClose}
                         anchorOrigin={{
                             vertical: 'bottom',
-                            horizontal: 'left',
+                            horizontal: 'center',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
                         }}
                     >
                         <FieldNameInputField
                             id="new-field-name-input"
-                            helperText="Введите новое название поля"
+                            helperText="Введите название поля"
                             defaultValue={selectedElement.element.name}
                             onEnter={handleEnter}
                             validator={validator}
@@ -140,8 +162,10 @@ export const FieldNameInputField = ({
             value={value}
 
             onKeyDown={(e) => {
+                if (isError) return
+
                 if (e.key === "Enter") {
-                    isError ? onEnter(defaultValue) : onEnter(value)
+                    onEnter(value)
                 }
             }}
 

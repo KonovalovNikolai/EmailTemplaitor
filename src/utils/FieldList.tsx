@@ -38,6 +38,12 @@ export class FieldList {
         return new FieldList(this.list)
     }
 
+    public Add(element: ListElement): FieldList {
+        this.list.push(element)
+
+        return new FieldList(this.list)
+    }
+
     public Delete(element: ListElement): FieldList {
         this.list = this.list.filter(e => e !== element)
 
