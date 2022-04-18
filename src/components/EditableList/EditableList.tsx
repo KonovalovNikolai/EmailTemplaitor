@@ -1,9 +1,11 @@
-import { Box, Icon, IconButton, Paper, Popover, TextField } from '@mui/material';
+import { Box, Icon, IconButton, InputAdornment, Paper, Popover, TextField } from '@mui/material';
 import * as React from 'react';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { FieldList, ListElement } from "../../utils/FieldList"
 import { hasWhiteSpace } from '../../utils/hasWhiteSpace';
 import { DeletableListItem, UndeletableListItem } from './ListItemBase';
+
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ListTopBar from './ListTopBar';
 
 type Props = {
     fieldList: FieldList
@@ -16,7 +18,13 @@ type SelectedElement = {
 }
 
 export const EditableList = ({ fieldList, onChange }: Props) => {
-    const list = fieldList.GetList()
+    const [serchValue, setSearch] = React.useState("")
+
+    const handleSearchInput = React.useCallback(
+        (value: string) => setSearch(value.toLowerCase()), []
+    )
+
+    const list = fieldList.GetList().filter(element => element.name.toLowerCase().startsWith(serchValue))
 
     const handleDelete = (element: ListElement) => {
         onChange(fieldList.Delete(element));
@@ -64,16 +72,21 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
     return (
         <Box
             sx={{
-                display: "flex",
-                flexWrap: 'wrap',
-                alignContent: 'flex-start',
+                width: 200,
+                height: 300,
             }}
         >
+            <ListTopBar 
+                onChange={handleSearchInput}
+            />
+
             <Paper
                 elevation={3}
                 sx={{
-                    width: 200,
-                    height: 300
+                    display: "flex",
+                    flexWrap: 'wrap',
+                    alignContent: 'flex-start',
+                    height: 1
                 }}
             >
                 {list.length > 0 &&
@@ -102,7 +115,7 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
                         }
                     }
                 >
-                    <AddCircleIcon color='primary'/>
+                    <AddCircleIcon color='primary' />
                 </IconButton>
 
                 {open &&
