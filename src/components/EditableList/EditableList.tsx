@@ -1,5 +1,6 @@
 import { Box, Icon, IconButton, Paper, Popover, TextField } from '@mui/material';
 import * as React from 'react';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { FieldList, ListElement } from "../../utils/FieldList"
 import { hasWhiteSpace } from '../../utils/hasWhiteSpace';
 import { DeletableListItem, UndeletableListItem } from './ListItemBase';
@@ -101,7 +102,7 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
                         }
                     }
                 >
-                    <Icon color='primary'>add_circle</Icon>
+                    <AddCircleIcon color='primary'/>
                 </IconButton>
 
                 {open &&
