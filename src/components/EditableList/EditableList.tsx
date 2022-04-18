@@ -11,7 +11,6 @@ type Props = {
 type SelectedElement = {
     anchorEl: Element
     element: ListElement
-    value: string
 }
 
 export const EditableList = ({ fieldList, onChange }: Props) => {
@@ -29,25 +28,14 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
         setSelectedElement({
             anchorEl: event.currentTarget,
             element: element,
-            value: element.name
         });
     }
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === "Enter") {
-            const newElement = { ...selectedElement.element }
-            newElement.name = selectedElement.value
-            onChange(fieldList.Replace(selectedElement.element, newElement))
-            handleClose()
-        }
-    }
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setSelectedElement({
-            anchorEl: selectedElement.anchorEl,
-            element: selectedElement.element,
-            value: event.target.value
-        })
+    const handleEnter = (value: string) => {
+        const newElement = selectedElement.element
+        newElement.name = value
+        onChange(fieldList.Replace(selectedElement.element, newElement))
+        handleClose()
     }
 
     const handleClose = () => {
@@ -71,50 +59,84 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
                     height: 300
                 }}
             >
-            {list.length > 0 &&
-                list.map((element) => {
-                    const { name, isDeletable } = element;
+                {list.length > 0 &&
+                    list.map((element) => {
+                        const { name, isDeletable } = element;
 
-                    return isDeletable ?
-                        <DeletableListItem
-                            key={name}
-                            label={name}
-                            onDelete={() => handleDelete(element)}
-                            onClick={(event) => { handleClick(event, element) }}
-                        />
-                        :
-                        <UndeletableListItem
-                            key={name}
-                            label={name}
-                        />
-                })
-            }
+                        return isDeletable ?
+                            <DeletableListItem
+                                key={name}
+                                label={name}
+                                onDelete={() => handleDelete(element)}
+                                onClick={(event) => { handleClick(event, element) }}
+                            />
+                            :
+                            <UndeletableListItem
+                                key={name}
+                                label={name}
+                            />
+                    })
+                }
 
-            {open &&
-                <Popover
-                    id="change-field-name-popover"
-                    open={open}
-                    anchorEl={anchorEl}
-                    onClose={handleClose}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                >
-                    <TextField
-                        id="new-field-name-input"
-                        variant="outlined"
-                        helperText="Введите новое название поля"
-                        value={selectedElement.value}
-                        onKeyDown={handleKeyDown}
-                        onChange={handleChange}
-                        sx={{
-                            margin: 0.5
+                {open &&
+                    <Popover
+                        id="change-field-name-popover"
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
                         }}
-                    />
-                </Popover>
-            }
-        </Paper>
+                    >
+                        <FieldNameInputField
+                            id="new-field-name-input"
+                            helperText="Введите новое название поля"
+                            defaultValue={selectedElement.element.name}
+                            onEnter={handleEnter}
+                        />
+                    </Popover>
+                }
+            </Paper>
         </Box >
+    )
+}
+
+type FieldNameInputFieldProps = {
+    id: string
+    helperText: string
+    defaultValue: string
+    onEnter: (value: string) => void
+}
+
+export const FieldNameInputField = ({
+    id,
+    helperText,
+    defaultValue,
+    onEnter,
+}: FieldNameInputFieldProps) => {
+    const [value, setValue] = React.useState(defaultValue);
+    return (
+        <TextField
+            id={id}
+            variant="outlined"
+            helperText={helperText}
+
+            value={value}
+
+            onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                    onEnter(value)
+                }
+            }}
+
+            onChange={(e) => {
+                setValue(e.target.value)
+            }}
+
+            sx={{
+                margin: 0.5
+            }}
+        />
     )
 }
