@@ -4,70 +4,102 @@ import { FieldList, ListElement } from "../../utils/FieldList"
 import { hasWhiteSpace } from '../../utils/hasWhiteSpace';
 import { DeletableListItem, UndeletableListItem } from './ListItemBase';
 
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ListTopBar from './ListTopBar';
+import { FieldNameInputField } from './FieldNameInputField';
+import AddNewFieldButton from './AddNewFieldButton';
 
 type Props = {
     fieldList: FieldList
     onChange: (list: FieldList) => void
 }
 
+// Дата состояния выделенного элемента
 type SelectedElement = {
     anchorEl: Element
     element: ListElement
 }
 
 export const EditableList = ({ fieldList, onChange }: Props) => {
+    //#region - Top Bar -
+    // Состояние строки поиска
     const [serchValue, setSearch] = React.useState("")
 
+    // Обработка ввода в поисковую строку
     const handleSearchInput = React.useCallback(
         (value: string) => setSearch(value.toLowerCase()), []
     )
+    //#endregion
 
+    //#region - Field List -
+    // Список элементов списка
+    // Список фильтруется по текущему значению строки посика
     const list = fieldList.GetList().filter(element => element.name.toLowerCase().startsWith(serchValue))
 
-    const handleDelete = (element: ListElement) => {
-        onChange(fieldList.Delete(element));
-    }
+    // Обработка удаление элемента
+    const handleDelete = React.useCallback(
+        (element: ListElement) => {
+            onChange(fieldList.Delete(element));
+        },
+        []
+    )
 
+    // Обработка нажатия на элемент
+    // Вызвать попап для ввода имени поля
+    const handleClick = React.useCallback(
+        (event: React.MouseEvent, element: ListElement) => {
+            setSelectedElement({
+                anchorEl: event.currentTarget,
+                element: element,
+            });
+        },
+        []
+    )
+
+    //#endregion
+
+    //#region - Field Name Input Popover -
+    // Состояние выделенного элемента
     const [selectedElement, setSelectedElement] = React.useState<SelectedElement | null>(null)
-    const open = Boolean(selectedElement);
-    const anchorEl = open ? selectedElement.anchorEl : null
 
-    const handleClick = (event: React.MouseEvent, element: ListElement) => {
-        setSelectedElement({
-            anchorEl: event.currentTarget,
-            element: element,
-        });
-    }
-
+    // Обработка нажатия Enter при вводе имени
     const handleEnter = (value: string) => {
+        // Если поле пустое или имеет тоже значение, что и текущее имя элемента,
+        // то изменения не будут приняты
         if (value === "" || value === selectedElement.element.name) return
 
+        // Если текущий выделенный элемент не имеет имени,
+        // значит это создание нового элемента
         if (selectedElement.element.name === "") {
+            // Добавление нового элемента в список
             const newElement = selectedElement.element
             newElement.name = value
             onChange(fieldList.Add(newElement))
         }
         else {
+            // Изменение имени выбранного элемента
             const newElement = selectedElement.element
             newElement.name = value
             onChange(fieldList.Replace(selectedElement.element, newElement))
         }
 
+        // Закрыть попап
         handleClose()
     }
 
+    // Обработка закрытия попапа
     const handleClose = () => {
         setSelectedElement(null);
     };
 
+    // Валидатор значения поля ввода нового имени
     const validator = (value: string) => {
         if (hasWhiteSpace(value) || fieldList.ContainName(value)) {
             return false
         }
         return true
     }
+
+    //#endregion
 
     return (
         <Box
@@ -76,12 +108,11 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
                 height: 300,
             }}
         >
-            <ListTopBar 
+            <ListTopBar
                 onChange={handleSearchInput}
             />
 
-            <Paper
-                elevation={3}
+            <Box
                 sx={{
                     display: "flex",
                     flexWrap: 'wrap',
@@ -108,21 +139,15 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
                     })
                 }
 
-                <IconButton size='small'
-                    onClick={
-                        (event) => {
-                            handleClick(event, { name: "", isDeletable: true })
-                        }
-                    }
-                >
-                    <AddCircleIcon color='primary' />
-                </IconButton>
+                <AddNewFieldButton
+                    onClick={handleClick}
+                />
 
-                {open &&
+                {!!selectedElement &&
                     <Popover
                         id="change-field-name-popover"
-                        open={open}
-                        anchorEl={anchorEl}
+                        open={true}
+                        anchorEl={selectedElement.anchorEl}
                         onClose={handleClose}
                         anchorOrigin={{
                             vertical: 'bottom',
@@ -142,54 +167,7 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
                         />
                     </Popover>
                 }
-            </Paper>
+            </Box>
         </Box >
-    )
-}
-
-type FieldNameInputFieldProps = {
-    id: string
-    helperText: string
-    defaultValue: string
-    onEnter: (value: string) => void
-    validator: (value: string) => boolean
-}
-
-export const FieldNameInputField = ({
-    id,
-    helperText,
-    defaultValue,
-    onEnter,
-    validator
-}: FieldNameInputFieldProps) => {
-    const [value, setValue] = React.useState(defaultValue);
-    const isError = value === defaultValue ? false : !validator(value)
-
-    return (
-        <TextField
-            id={id}
-            variant="outlined"
-            helperText={helperText}
-
-            error={isError}
-
-            value={value}
-
-            onKeyDown={(e) => {
-                if (isError) return
-
-                if (e.key === "Enter") {
-                    onEnter(value)
-                }
-            }}
-
-            onChange={(e) => {
-                setValue(e.target.value)
-            }}
-
-            sx={{
-                margin: 0.5
-            }}
-        />
     )
 }
