@@ -10,6 +10,11 @@ export type UnDeletableListElement = {
 
 export type ListElement = DeletableListElement | UnDeletableListElement
 
+/**
+ * Класс представляющий поля пользователя.
+ * 
+ * Реализует методы для модификации списка полей.
+ */
 export class FieldList {
     private list: ListElement[]
     private importantElement: UnDeletableListElement = {
@@ -21,8 +26,9 @@ export class FieldList {
         this.list = list
     }
 
-    public GetList(): ListElement[] {
-        return [this.importantElement, ...this.list]
+    public GetList(filter:string): ListElement[] {
+        const list = [this.importantElement, ...this.list]
+        return filter === "" ? list : list.filter(element => element.name.toLowerCase().startsWith(filter))
     }
 
     public Replace(element: ListElement, newElement: ListElement): FieldList {
@@ -54,7 +60,7 @@ export class FieldList {
         if (name === this.importantElement.name) {
             return true;
         }
-        
+
         for (let index = 0; index < this.list.length; index++) {
             const element = this.list[index];
             if (element.name === name) {

@@ -1,6 +1,6 @@
 import { Chip } from "@mui/material"
 import { on } from "events"
-import React from "react"
+import React, { memo } from "react"
 import { ListElement } from "../../utils/FieldList"
 
 type ListItemBaseProps = {
@@ -26,23 +26,29 @@ export const ListItemBase = ({ label, color, onDelete = null, onClick = null }: 
 }
 
 type DeletableListItemProps = {
-    label: string
-    onDelete: () => void
-    onClick: (event: React.MouseEvent) => any
+    element: ListElement
+    onDelete: (element: ListElement) => void
+    onClick: (event: React.MouseEvent, element: ListElement) => any
 }
 
-export const DeletableListItem = ({ label, onDelete, onClick }: DeletableListItemProps) => {
+export const DeletableListItem = memo(({ element, onDelete, onClick }: DeletableListItemProps) => {
+
+    
     return (
-        <ListItemBase label={label} color="default" onDelete={onDelete} onClick={onClick} />
+        <ListItemBase
+        label={element.name}
+        color="default"
+        onDelete={() => onDelete(element)}
+        onClick={(event) => onClick(event, element)} />
     )
-}
+})
 
 type UndeletableListItemProps = {
     label: string
 }
 
-export const UndeletableListItem = ({ label }: UndeletableListItemProps) => {
+export const UndeletableListItem = memo(({ label }: UndeletableListItemProps) => {
     return (
         <ListItemBase label={label} color="primary" onClick={null} onDelete={null} />
     )
-}
+})

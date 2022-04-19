@@ -1,22 +1,38 @@
-import { Box, Icon, IconButton, InputAdornment, Paper, Popover, TextField } from '@mui/material';
-import * as React from 'react';
+import React, { useCallback, useState } from 'react';
+import { Box, Popover} from '@mui/material';
+
 import { FieldList, ListElement } from "../../utils/FieldList"
 import { hasWhiteSpace } from '../../utils/hasWhiteSpace';
-import { DeletableListItem, UndeletableListItem } from './ListItemBase';
 
+import { DeletableListItem, UndeletableListItem } from './ListItemBase';
 import ListTopBar from './ListTopBar';
 import { FieldNameInputField } from './FieldNameInputField';
 import AddNewFieldButton from './AddNewFieldButton';
 
 type Props = {
     fieldList: FieldList
-    onChange: (list: FieldList) => void
+    onChange: React.Dispatch<React.SetStateAction<FieldList>>
 }
 
 // Дата состояния выделенного элемента
-type SelectedElement = {
+type SelectedElementData = {
     anchorEl: Element
     element: ListElement
+}
+
+type TopBarData = {
+    searchValue: string
+}
+
+class SortButtonState {
+    public Sort(list: ListElement[]) {
+        return list.sort((a, b) => {
+            if (a.name > b.name) return 1;
+            if (a.name < b.name) return -1;
+            return 0;
+        })
+    }
+    
 }
 
 export const EditableList = ({ fieldList, onChange }: Props) => {
@@ -33,19 +49,18 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
     //#region - Field List -
     // Список элементов списка
     // Список фильтруется по текущему значению строки посика
-    const list = fieldList.GetList().filter(element => element.name.toLowerCase().startsWith(serchValue))
-
+    const list = fieldList.GetList(serchValue)
     // Обработка удаление элемента
-    const handleDelete = React.useCallback(
+    const handleDelete = useCallback(
         (element: ListElement) => {
-            onChange(fieldList.Delete(element));
+            onChange(prevList => prevList.Delete(element));
         },
         []
     )
 
     // Обработка нажатия на элемент
     // Вызвать попап для ввода имени поля
-    const handleClick = React.useCallback(
+    const handleClick = useCallback(
         (event: React.MouseEvent, element: ListElement) => {
             setSelectedElement({
                 anchorEl: event.currentTarget,
@@ -59,7 +74,7 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
 
     //#region - Field Name Input Popover -
     // Состояние выделенного элемента
-    const [selectedElement, setSelectedElement] = React.useState<SelectedElement | null>(null)
+    const [selectedElement, setSelectedElement] = useState<SelectedElementData | null>(null)
 
     // Обработка нажатия Enter при вводе имени
     const handleEnter = (value: string) => {
@@ -127,9 +142,9 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
                         return isDeletable ?
                             <DeletableListItem
                                 key={name}
-                                label={name}
-                                onDelete={() => handleDelete(element)}
-                                onClick={(event) => { handleClick(event, element) }}
+                                element={element}
+                                onDelete={handleDelete}
+                                onClick={handleClick}
                             />
                             :
                             <UndeletableListItem

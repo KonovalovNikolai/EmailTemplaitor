@@ -37,11 +37,7 @@ function App() {
   return (
     <EditableList
       fieldList={list}
-      onChange={
-        (newList: FieldList) => {
-          setList(newList)
-        }
-      }
+      onChange={setList}
     />
   )
 }
