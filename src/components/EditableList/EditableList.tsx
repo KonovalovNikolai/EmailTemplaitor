@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Popover} from '@mui/material';
+import { Box, Popover } from '@mui/material';
 
 import { FieldList, ListElement } from "../../utils/FieldList"
 import { hasWhiteSpace } from '../../utils/hasWhiteSpace';
@@ -8,6 +8,7 @@ import { DeletableListItem, UndeletableListItem } from './ListItemBase';
 import ListTopBar from './ListTopBar';
 import { FieldNameInputField } from './FieldNameInputField';
 import AddNewFieldButton from './AddNewFieldButton';
+import { DefaultSortButtonState, SortButtonState } from '../../utils/SortButtonState';
 
 type Props = {
     fieldList: FieldList
@@ -20,36 +21,27 @@ type SelectedElementData = {
     element: ListElement
 }
 
-type TopBarData = {
+export type TopBarData = {
     searchValue: string
-}
-
-class SortButtonState {
-    public Sort(list: ListElement[]) {
-        return list.sort((a, b) => {
-            if (a.name > b.name) return 1;
-            if (a.name < b.name) return -1;
-            return 0;
-        })
-    }
-    
+    sortState: SortButtonState
 }
 
 export const EditableList = ({ fieldList, onChange }: Props) => {
     //#region - Top Bar -
-    // Состояние строки поиска
-    const [serchValue, setSearch] = React.useState("")
-
-    // Обработка ввода в поисковую строку
-    const handleSearchInput = React.useCallback(
-        (value: string) => setSearch(value.toLowerCase()), []
+    // Состояние верхней панели
+    const [barState, setBarState] = React.useState<TopBarData>(
+        {
+            searchValue: "",
+            sortState: new DefaultSortButtonState()
+        }
     )
     //#endregion
 
     //#region - Field List -
     // Список элементов списка
+    // Список сортируется по текущему состоянию сортировки
     // Список фильтруется по текущему значению строки посика
-    const list = fieldList.GetList(serchValue)
+    const list = barState.sortState.Sort(fieldList.GetList(barState.searchValue))
     // Обработка удаление элемента
     const handleDelete = useCallback(
         (element: ListElement) => {
@@ -124,7 +116,7 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
             }}
         >
             <ListTopBar
-                onChange={handleSearchInput}
+                onChange={setBarState}
             />
 
             <Box

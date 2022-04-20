@@ -4,9 +4,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { memo } from "react";
+import { TopBarData } from "./EditableList";
 
 type ListTopBarProps = {
-    onChange: (value: string) => void
+    onChange: React.Dispatch<React.SetStateAction<TopBarData>>
 }
 
 const ListTopBar = ({onChange}: ListTopBarProps) => {
@@ -35,7 +36,11 @@ const ListTopBar = ({onChange}: ListTopBarProps) => {
 
             onChange={
                 (e) => {
-                    onChange(e.target.value)
+                    onChange(prevState => {
+                        const newState = {...prevState}
+                        newState.searchValue = e.target.value.toLowerCase()
+                        return newState
+                    })
                 }
             }
         />
@@ -44,9 +49,15 @@ const ListTopBar = ({onChange}: ListTopBarProps) => {
                 width: "auto"
             }}
             size="small"
+            onClick={() => {
+                onChange(prevState => {
+                    const newState = {...prevState}
+                    newState.sortState = prevState.sortState.ChangeState()
+                    return newState
+                })
+            }}
         >
             <SortByAlphaIcon />
-            <ArrowDropUpIcon />
         </IconButton>
     </Box>
     )
