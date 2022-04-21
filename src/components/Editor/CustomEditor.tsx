@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import isHotkey from 'is-hotkey'
 import { Editable, withReact, Slate, ReactEditor } from 'slate-react'
 import { withHistory } from 'slate-history'
 import {
@@ -15,12 +14,11 @@ import RenderLeaf from './elements/RenderLeaf'
 import { Portal } from '../Portal'
 import { MentionElement } from './custom-types'
 import { withMentions } from './plugins/withMentions'
-import MarkButton from './components/MarkButton'
-import { BlockButton } from './components/BlockButton'
 
 import './Editor.css'
-import { AutocompleteListItem } from './components/AutocompleteListItem'
-import { getDataForAutoComplete } from '../../utils/getDataForAutoComplete'
+import { AutocompleteListItem } from './AutocompleteListItem'
+import { Toolbar } from '@mui/material'
+import { SlateToolBar } from './Toolbar'
 
 interface Props {
     value: Descendant[];
@@ -132,20 +130,8 @@ const CustomEditor = ({ value, onChange }: Props) => {
                     setTarget(null)
                 }}
             >
-                <div className='toolbar'>
-                    <MarkButton format='bold' text='B' />
-                    <MarkButton format='italic' text='i' />
-                    <MarkButton format='underline' text='U' />
-                    <BlockButton format='heading-one' text='h1' />
-                    <BlockButton format="heading-two" text="h2" />
-                    <BlockButton format="block-quote" text="q" />
-                    <BlockButton format="numbered-list" text="1" />
-                    <BlockButton format="bulleted-list" text="." />
-                    <BlockButton format="left" text="left" />
-                    <BlockButton format="center" text="center" />
-                    <BlockButton format="right" text="right" />
-                    <BlockButton format="justify" text="justify" />
-                </div>
+                <SlateToolBar/>
+
                 <Editable
                     className='editable'
                     onKeyDown={onKeyDown}
