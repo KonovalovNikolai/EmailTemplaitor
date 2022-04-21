@@ -6,7 +6,8 @@ import {
     Descendant,
     Transforms,
     Range,
-    Editor
+    Editor,
+    BaseRange
 } from 'slate'
 
 import RenderElement from './elements/RenderElement'
@@ -17,8 +18,8 @@ import { withMentions } from './plugins/withMentions'
 
 import './Editor.css'
 import { AutocompleteListItem } from './AutocompleteListItem'
-import { Toolbar } from '@mui/material'
 import { SlateToolBar } from './Toolbar'
+import { Box, Paper, Popper, PopperProps, Typography } from '@mui/material'
 
 interface Props {
     value: Descendant[];
@@ -34,11 +35,11 @@ const CustomEditor = ({ value, onChange }: Props) => {
     const renderElement = useCallback(props => <RenderElement {...props} />, [])
     const renderLeaf = useCallback(props => <RenderLeaf {...props} />, [])
 
-    const ref = useRef<HTMLDivElement | null>()
-
-    const [target, setTarget] = useState<Range | undefined>()
     const [index, setIndex] = useState(0)
     const [search, setSearch] = useState('')
+    const [open, setOpen] = React.useState(false);
+    const [target, setTarget] = useState<Range | undefined>()
+    const [anchorEl, setAnchorEl] = React.useState<PopperProps['anchorEl']>(null);
 
     const chars = CHARACTERS.filter(c =>
         c.toLowerCase().startsWith(search.toLowerCase())
@@ -46,7 +47,7 @@ const CustomEditor = ({ value, onChange }: Props) => {
 
     const onKeyDown = useCallback(
         event => {
-            if (target) {
+            if (open) {
                 switch (event.key) {
                     case 'ArrowDown':
                         event.preventDefault()
@@ -64,6 +65,8 @@ const CustomEditor = ({ value, onChange }: Props) => {
                         Transforms.select(editor, target)
                         insertMention(editor, chars[index])
                         setTarget(null)
+                        setAnchorEl(null)
+                        setOpen(false)
                         break
                     case 'Escape':
                         event.preventDefault()
@@ -75,18 +78,15 @@ const CustomEditor = ({ value, onChange }: Props) => {
         [index, search, target]
     )
 
-    useEffect(() => {
-        if (target && chars.length > 0) {
-            const el = ref.current
-            const domRange = ReactEditor.toDOMRange(editor, target)
-            const rect = domRange.getBoundingClientRect()
-            el.style.top = `${rect.top + window.pageYOffset + 24}px`
-            el.style.left = `${rect.left + window.pageXOffset}px`
-        }
-    }, [chars.length, editor, index, search, target])
-
     return (
-        <div className='editor'>
+        <Box
+            sx={{
+                maxWidth: "42em",
+                m: "20px auto",
+                p: "20px",
+                background: "white",
+            }}
+        >
             <Slate
                 editor={editor}
                 value={value}
@@ -102,7 +102,12 @@ const CustomEditor = ({ value, onChange }: Props) => {
                         const character = range && Editor.string(editor, range)
 
                         if (character === "#") {
+                            const getBoundingClientRect = () =>
+                                GetBoundingClientRectFromRange(editor, range)
+
+                            setAnchorEl({ getBoundingClientRect })
                             setTarget(range)
+                            setOpen(true)
                             setSearch("")
                             setIndex(0)
                             return
@@ -120,6 +125,11 @@ const CustomEditor = ({ value, onChange }: Props) => {
                         const afterMatch = afterText.match(/^(\s|$)/)
 
                         if (beforeMatch && afterMatch) {
+                            const getBoundingClientRect = () =>
+                                GetBoundingClientRectFromRange(editor, beforeRange)
+
+                            setAnchorEl({ getBoundingClientRect })
+                            setOpen(true)
                             setTarget(beforeRange)
                             setSearch(beforeMatch[1])
                             setIndex(0)
@@ -127,10 +137,12 @@ const CustomEditor = ({ value, onChange }: Props) => {
                         }
                     }
 
+                    setAnchorEl(null)
                     setTarget(null)
+                    setOpen(false)
                 }}
             >
-                <SlateToolBar/>
+                <SlateToolBar />
 
                 <Editable
                     className='editable'
@@ -140,39 +152,30 @@ const CustomEditor = ({ value, onChange }: Props) => {
                     spellCheck
                     autoFocus
                 />
-                {target && chars.length > 0 && (
-                    <Portal>
-                        <div
-                            ref={ref}
-                            style={{
-                                top: '-9999px',
-                                left: '-9999px',
-                                position: 'absolute',
-                                zIndex: 1,
-                                padding: '3px',
-                                background: 'white',
-                                borderRadius: '4px',
-                                boxShadow: '0 1px 5px rgba(0,0,0,.2)',
-                            }}
-                            data-cy="mentions-portal"
-                        >
-                            {chars.map((char, i) => (
-                                <AutocompleteListItem
-                                    key={char}
-                                    char={char}
-                                    isSelected={i === index}
-                                    onClick={() => {
-                                        Transforms.select(editor, target)
-                                        insertMention(editor, char)
-                                        setTarget(null)
-                                    }}
-                                />
-                            ))}
-                        </div>
-                    </Portal>
-                )}
+
+                <Popper
+                    id="auto-complete-list-popper"
+                    open={open}
+                    anchorEl={anchorEl}
+                    placement="bottom-start"
+                >
+                    <Paper>
+                        {chars.map((char, i) => (
+                            <AutocompleteListItem
+                                key={char}
+                                char={char}
+                                isSelected={i === index}
+                                onClick={() => {
+                                    Transforms.select(editor, target)
+                                    insertMention(editor, char)
+                                    setTarget(null)
+                                }}
+                            />
+                        ))}
+                    </Paper>
+                </Popper>
             </Slate>
-        </div >
+        </Box >
     );
 }
 
@@ -184,6 +187,10 @@ const insertMention = (editor, character) => {
     }
     Transforms.insertNodes(editor, mention)
     Transforms.move(editor)
+}
+
+function GetBoundingClientRectFromRange(editor: Editor, range: BaseRange) {
+    return ReactEditor.toDOMRange(editor, range).getBoundingClientRect();
 }
 
 const CHARACTERS = [

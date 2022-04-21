@@ -18,43 +18,58 @@ import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 export const SlateToolBar = memo(() => {
     return (
         <Box
+            sx={{
+                display: "flex",
+                justifyContent: "center",
+                "& > :not(style)": {
+                    m: "0 20px 0 20px"
+                }
+            }}
         >
-            <MarkButton format='bold'>
-                <FormatBoldIcon/>
-            </MarkButton>
-            <MarkButton format='italic'>
-                <FormatItalicIcon/>
-            </MarkButton>
-            <MarkButton format='underline'> 
-                <FormatUnderlinedIcon/>
-            </MarkButton>
+            <Box>
+                <MarkButton format='bold'>
+                    <FormatBoldIcon />
+                </MarkButton>
+                <MarkButton format='italic'>
+                    <FormatItalicIcon />
+                </MarkButton>
+                <MarkButton format='underline'>
+                    <FormatUnderlinedIcon />
+                </MarkButton>
+            </Box>
 
-            <BlockButton format='heading-one'>
-                <LooksOneIcon/>
-            </BlockButton>
-            <BlockButton format="heading-two">
-                <LooksTwoIcon/>
-            </BlockButton>
+            <Box>
+                <BlockButton format='heading-one'>
+                    <LooksOneIcon />
+                </BlockButton>
+                <BlockButton format="heading-two">
+                    <LooksTwoIcon />
+                </BlockButton>
+            </Box>
 
-            <BlockButton format="numbered-list">
-                <FormatListNumberedIcon/>
-            </BlockButton>
-            <BlockButton format="bulleted-list">
-                <FormatListBulletedIcon/>
-            </BlockButton>
+            <Box>
+                <BlockButton format="numbered-list">
+                    <FormatListNumberedIcon />
+                </BlockButton>
+                <BlockButton format="bulleted-list">
+                    <FormatListBulletedIcon />
+                </BlockButton>
+            </Box>
 
-            <BlockButton format="left">
-                <FormatAlignLeftIcon/>
-            </BlockButton>
-            <BlockButton format="center">
-                <FormatAlignCenterIcon/>
-            </BlockButton>
-            <BlockButton format="right">
-                <FormatAlignRightIcon/>
-            </BlockButton>
-            <BlockButton format="justify">
-                <FormatAlignJustifyIcon/>
-            </BlockButton>
+            <Box>
+                <BlockButton format="left">
+                    <FormatAlignLeftIcon />
+                </BlockButton>
+                <BlockButton format="center">
+                    <FormatAlignCenterIcon />
+                </BlockButton>
+                <BlockButton format="right">
+                    <FormatAlignRightIcon />
+                </BlockButton>
+                <BlockButton format="justify">
+                    <FormatAlignJustifyIcon />
+                </BlockButton>
+            </Box>
         </Box>
     )
 })
