@@ -1,13 +1,13 @@
 import { IconButton } from "@mui/material"
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { ListElement } from "../../utils/FieldList";
+import { ListElement } from "../utils/FieldList";
 import { memo } from "react";
 
 type Props = {
     onClick: (event: React.MouseEvent, element: ListElement) => void
 }
 
-const AddNewFieldButton = ({onClick}: Props) => {
+const NewFieldButton = ({onClick}: Props) => {
     return (
         <IconButton size='small'
             onClick={
@@ -21,4 +21,4 @@ const AddNewFieldButton = ({onClick}: Props) => {
     )
 }
 
-export default memo(AddNewFieldButton)
+export default memo(NewFieldButton)

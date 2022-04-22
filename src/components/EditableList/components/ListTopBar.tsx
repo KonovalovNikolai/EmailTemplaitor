@@ -4,7 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { memo } from "react";
-import { TopBarData } from "./EditableList";
+import { TopBarData } from "../EditableList";
 
 type ListTopBarProps = {
     onChange: React.Dispatch<React.SetStateAction<TopBarData>>

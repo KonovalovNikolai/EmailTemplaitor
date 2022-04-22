@@ -1,14 +1,14 @@
 import React, { useCallback, useState } from 'react';
 import { Box, Popover } from '@mui/material';
 
-import { FieldList, ListElement } from "../../utils/FieldList"
-import { hasWhiteSpace } from '../../utils/hasWhiteSpace';
+import { FieldList, ListElement } from "./utils/FieldList"
+import { hasWhiteSpace } from './utils/hasWhiteSpace';
 
-import { DeletableListItem, UndeletableListItem } from './ListItemBase';
-import ListTopBar from './ListTopBar';
-import { FieldNameInputField } from './FieldNameInputField';
-import AddNewFieldButton from './AddNewFieldButton';
-import { DefaultSortButtonState, SortButtonState } from '../../utils/SortButtonState';
+import { DeletableListItem, UndeletableListItem } from './components/ListItemBase';
+import ListTopBar from './components/ListTopBar';
+import { FieldNameInputField } from './components/FieldNameInputField';
+import NewFieldButton from './components/AddNewFieldButton';
+import { DefaultSortButtonState, SortButtonState } from './utils/SortButtonState';
 
 type Props = {
     fieldList: FieldList
@@ -146,7 +146,7 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
                     })
                 }
 
-                <AddNewFieldButton
+                <NewFieldButton
                     onClick={handleClick}
                 />
 

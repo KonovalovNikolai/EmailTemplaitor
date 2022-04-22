@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Editable, withReact, Slate, ReactEditor } from 'slate-react'
 import { withHistory } from 'slate-history'
 import {
@@ -12,15 +12,12 @@ import {
 
 import RenderElement from './elements/RenderElement'
 import RenderLeaf from './elements/RenderLeaf'
-import { Portal } from '../Portal'
 import { MentionElement } from './custom-types'
 import { withMentions } from './plugins/withMentions'
 
-import './Editor.css'
-import { AutocompleteListItem } from './AutocompleteListItem'
-import { SlateToolBar } from './Toolbar'
-import { Box, Paper, Popper, PopperProps, Typography } from '@mui/material'
-import AutoCompletePoper from './AutoCompletePoper'
+import { SlateToolBar } from './components/Toolbar/Toolbar'
+import { Box, PopperProps } from '@mui/material'
+import AutoCompletePoper from './components/AutoCompletePoper/AutoCompletePoper'
 
 interface Props {
     value: Descendant[];

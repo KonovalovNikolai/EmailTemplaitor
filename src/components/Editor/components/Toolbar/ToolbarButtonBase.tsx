@@ -1,7 +1,6 @@
 import { IconButton } from "@mui/material"
 import React, { memo, useCallback } from "react"
 import { useSlate } from "slate-react"
-
 import toggleBlock from "../../utils/toggleBlock"
 import toggleMark from "../../utils/toggleMark"
 

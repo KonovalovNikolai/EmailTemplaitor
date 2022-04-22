@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Descendant, Editor } from 'slate';
 import { EditableList } from './components/EditableList/EditableList';
 import CustomEditor from './components/Editor/CustomEditor';
-import { FieldList } from './utils/FieldList';
+import { FieldList } from './components/EditableList/utils/FieldList';
 
-import { initialValue } from './utils/initialDocument';
+import { initialValue } from './components/Editor/utils/initialDocument';
 
 function App() {
   const [value, setValue] = useState<Descendant[]>(initialValue)

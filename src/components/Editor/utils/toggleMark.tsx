@@ -1,5 +1,4 @@
 import { Editor, Element as SlateElement, Transforms } from "slate";
-
 import isMarkActive from "./isMarkActive";
 
 const toggleMark = (editor: any, format: string) => {

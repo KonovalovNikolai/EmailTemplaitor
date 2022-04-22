@@ -1,7 +1,7 @@
 import { Chip } from "@mui/material"
 import { on } from "events"
 import React, { memo } from "react"
-import { ListElement } from "../../utils/FieldList"
+import { ListElement } from "../utils/FieldList"
 
 type ListItemBaseProps = {
     label: string,
