@@ -18,10 +18,14 @@ import { withMentions } from './plugins/withMentions'
 import { SlateToolBar } from './components/Toolbar/Toolbar'
 import { Box, PopperProps } from '@mui/material'
 import AutoCompletePoper from './components/AutoCompletePoper/AutoCompletePoper'
+import { EditableList } from '../EditableList/EditableList'
+import { FieldList } from '../EditableList/utils/FieldList'
 
 interface Props {
     value: Descendant[];
+    list: FieldList
     onChange: React.Dispatch<any>;
+    onListChange: React.Dispatch<React.SetStateAction<FieldList>>
 }
 
 type AutoCompleteData = {
@@ -31,7 +35,7 @@ type AutoCompleteData = {
     listIndex: number
 }
 
-const CustomEditor = ({ value, onChange }: Props) => {
+const CustomEditor = ({ value, list, onChange, onListChange }: Props) => {
     const editor = useMemo(
         () => withMentions(withReact(withHistory(createEditor()))),
         []
@@ -42,9 +46,7 @@ const CustomEditor = ({ value, onChange }: Props) => {
 
     const [autoCompleteData, setAutoCompleteData] = useState<AutoCompleteData | null>(null)
 
-    const chars = CHARACTERS.filter(c =>
-        c.toLowerCase().startsWith(autoCompleteData?.searchValue.toLowerCase())
-    ).slice(0, 10)
+    const chars = list.GetListOfNames(autoCompleteData?.searchValue).sort().slice(0, 10)
 
     const handleKeyDown = useCallback(
         event => {
@@ -93,84 +95,95 @@ const CustomEditor = ({ value, onChange }: Props) => {
     return (
         <Box
             sx={{
-                maxWidth: "42em",
+                display: "flex",
+                maxWidth: "800px",
                 m: "20px auto",
                 p: "20px",
                 background: "white",
             }}
         >
-            <Slate
-                editor={editor}
-                value={value}
-                onChange={value => {
-                    onChange(value)
-                    const { selection } = editor
-
-                    if (selection && Range.isCollapsed(selection)) {
-                        const [start] = Range.edges(selection)
-
-                        const charBefore = Editor.before(editor, start, { unit: 'character' })
-                        const range = charBefore && Editor.range(editor, charBefore, start)
-                        const character = range && Editor.string(editor, range)
-
-                        if (character === "#") {
-                            const getBoundingClientRect = () =>
-                                GetBoundingClientRectFromRange(editor, range)
-
-                            const autoCompleteData: AutoCompleteData = {
-                                anchorEl: { getBoundingClientRect },
-                                listIndex: 0,
-                                searchValue: "",
-                                targetRange: range
-                            }
-
-                            setAutoCompleteData(autoCompleteData)
-
-                            return
-                        }
-
-                        const wordBefore = Editor.before(editor, start, { unit: 'word' })
-                        const before = wordBefore && Editor.before(editor, wordBefore)
-                        const beforeRange = before && Editor.range(editor, before, start)
-                        const beforeText = beforeRange && Editor.string(editor, beforeRange)
-
-                        const beforeMatch = beforeText && beforeText.match(/^#(\w+)$/)
-                        const after = Editor.after(editor, start)
-                        const afterRange = Editor.range(editor, start, after)
-                        const afterText = Editor.string(editor, afterRange)
-                        const afterMatch = afterText.match(/^(\s|$)/)
-
-                        if (beforeMatch && afterMatch) {
-                            const getBoundingClientRect = () =>
-                                GetBoundingClientRectFromRange(editor, beforeRange)
-
-                            const autoCompleteData: AutoCompleteData = {
-                                anchorEl: { getBoundingClientRect },
-                                listIndex: 0,
-                                searchValue: beforeMatch[1],
-                                targetRange: beforeRange
-                            }
-
-                            setAutoCompleteData(autoCompleteData)
-                            return
-                        }
-                    }
-
-                    setAutoCompleteData(null)
+            <Box
+                sx={{
+                    paddingRight: "50px"
                 }}
             >
-                <SlateToolBar />
+                <Slate
+                    editor={editor}
+                    value={value}
+                    onChange={value => {
+                        onChange(value)
+                        const { selection } = editor
 
-                <Editable
-                    className='editable'
-                    onKeyDown={handleKeyDown}
-                    renderElement={renderElement}
-                    renderLeaf={renderLeaf}
-                    onBlur={handleBlur}
-                    spellCheck
-                    autoFocus
-                />
-            </Slate>
+                        if (selection && Range.isCollapsed(selection)) {
+                            const [start] = Range.edges(selection)
+
+                            const charBefore = Editor.before(editor, start, { unit: 'character' })
+                            const range = charBefore && Editor.range(editor, charBefore, start)
+                            const character = range && Editor.string(editor, range)
+
+                            if (character === "#") {
+                                const getBoundingClientRect = () =>
+                                    GetBoundingClientRectFromRange(editor, range)
+
+                                const autoCompleteData: AutoCompleteData = {
+                                    anchorEl: { getBoundingClientRect },
+                                    listIndex: 0,
+                                    searchValue: "",
+                                    targetRange: range
+                                }
+
+                                setAutoCompleteData(autoCompleteData)
+
+                                return
+                            }
+
+                            const wordBefore = Editor.before(editor, start, { unit: 'word' })
+                            const before = wordBefore && Editor.before(editor, wordBefore)
+                            const beforeRange = before && Editor.range(editor, before, start)
+                            const beforeText = beforeRange && Editor.string(editor, beforeRange)
+
+                            const beforeMatch = beforeText && beforeText.match(/^#(\w+)$/)
+                            const after = Editor.after(editor, start)
+                            const afterRange = Editor.range(editor, start, after)
+                            const afterText = Editor.string(editor, afterRange)
+                            const afterMatch = afterText.match(/^(\s|$)/)
+
+                            if (beforeMatch && afterMatch) {
+                                const getBoundingClientRect = () =>
+                                    GetBoundingClientRectFromRange(editor, beforeRange)
+
+                                const autoCompleteData: AutoCompleteData = {
+                                    anchorEl: { getBoundingClientRect },
+                                    listIndex: 0,
+                                    searchValue: beforeMatch[1],
+                                    targetRange: beforeRange
+                                }
+
+                                setAutoCompleteData(autoCompleteData)
+                                return
+                            }
+                        }
+
+                        setAutoCompleteData(null)
+                    }}
+                >
+                    <SlateToolBar />
+
+                    <Editable
+                        className='editable'
+                        onKeyDown={handleKeyDown}
+                        renderElement={renderElement}
+                        renderLeaf={renderLeaf}
+                        onBlur={handleBlur}
+                        spellCheck
+                        autoFocus
+                    />
+                </Slate>
+            </Box>
+            <EditableList
+                fieldList={list}
+                onChange={onListChange}
+            />
             <AutoCompletePoper
                 anchorEl={autoCompleteData?.anchorEl}
                 chars={chars}

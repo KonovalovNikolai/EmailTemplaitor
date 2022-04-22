@@ -8,38 +8,35 @@ import { initialValue } from './components/Editor/utils/initialDocument';
 
 function App() {
   const [value, setValue] = useState<Descendant[]>(initialValue)
+  const [list, setList] = useState<FieldList>(new FieldList([
+    {
+      name: "City",
+      isDeletable: true
+    },
+    {
+      name: "Name",
+      isDeletable: true
+    },
+    {
+      name: "LastName",
+      isDeletable: true
+    },
+    {
+      name: "Phone",
+      isDeletable: true
+    },
+  ]))
 
   return (
     <div>
-      <CustomEditor value={value} onChange={setValue}/>
+      <CustomEditor
+        value={value}
+        list={list}
+        onChange={setValue}
+        onListChange={setList}
+      />
     </div>
   );
-
-  // const [list, setList] = useState<FieldList>(new FieldList([
-  //   {
-  //     name: "City",
-  //     isDeletable: true
-  //   },
-  //   {
-  //     name: "Name",
-  //     isDeletable: true
-  //   },
-  //   {
-  //     name: "LastName",
-  //     isDeletable: true
-  //   },
-  //   {
-  //     name: "Phone",
-  //     isDeletable: true
-  //   },
-  // ]))
-
-  // return (
-  //   <EditableList
-  //     fieldList={list}
-  //     onChange={setList}
-  //   />
-  // )
 }
 
 export default App;

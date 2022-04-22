@@ -22,7 +22,7 @@ export const SlateToolBar = memo(() => {
                 display: "flex",
                 justifyContent: "center",
                 "& > :not(style)": {
-                    m: "0 20px 0 20px"
+                    m: "0 5px 0 5px"
                 }
             }}
         >

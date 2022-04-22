@@ -11,7 +11,7 @@ type ToolbarButtonBaseProps = {
 
 export const ToolbarButtonBase = memo(({ onClick, children }: ToolbarButtonBaseProps) => {
     return (
-        <IconButton
+        <IconButton size="small"
             onClick={onClick}
         >
             {children}

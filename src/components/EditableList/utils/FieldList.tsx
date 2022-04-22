@@ -31,6 +31,10 @@ export class FieldList {
         return filter === "" ? list : list.filter(element => element.name.toLowerCase().startsWith(filter))
     }
 
+    public GetListOfNames(filter:string): string[] {
+        return this.GetList(filter).map<string>(element => element.name)
+    }
+
     public Replace(element: ListElement, newElement: ListElement): FieldList {
         if (element === this.importantElement) {
             return null;

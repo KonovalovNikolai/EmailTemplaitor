@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import { Box, Popover } from '@mui/material';
 
 import { FieldList, ListElement } from "./utils/FieldList"
@@ -26,7 +26,7 @@ export type TopBarData = {
     sortState: SortButtonState
 }
 
-export const EditableList = ({ fieldList, onChange }: Props) => {
+export const EditableList = memo(({ fieldList, onChange }: Props) => {
     //#region - Top Bar -
     // Состояние верхней панели
     const [barState, setBarState] = React.useState<TopBarData>(
@@ -111,8 +111,8 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
     return (
         <Box
             sx={{
-                width: 200,
-                height: 300,
+                minWidth: "100px",
+                height: 1,
             }}
         >
             <ListTopBar
@@ -177,4 +177,4 @@ export const EditableList = ({ fieldList, onChange }: Props) => {
             </Box>
         </Box >
     )
-}
+})
