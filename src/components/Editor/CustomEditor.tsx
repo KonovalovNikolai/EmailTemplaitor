@@ -20,10 +20,18 @@ import './Editor.css'
 import { AutocompleteListItem } from './AutocompleteListItem'
 import { SlateToolBar } from './Toolbar'
 import { Box, Paper, Popper, PopperProps, Typography } from '@mui/material'
+import AutoCompletePoper from './AutoCompletePoper'
 
 interface Props {
     value: Descendant[];
     onChange: React.Dispatch<any>;
+}
+
+type AutoCompleteData = {
+    searchValue: string
+    targetRange: Range
+    anchorEl: PopperProps['anchorEl']
+    listIndex: number
 }
 
 const CustomEditor = ({ value, onChange }: Props) => {
@@ -35,47 +43,54 @@ const CustomEditor = ({ value, onChange }: Props) => {
     const renderElement = useCallback(props => <RenderElement {...props} />, [])
     const renderLeaf = useCallback(props => <RenderLeaf {...props} />, [])
 
-    const [index, setIndex] = useState(0)
-    const [search, setSearch] = useState('')
-    const [open, setOpen] = React.useState(false);
-    const [target, setTarget] = useState<Range | undefined>()
-    const [anchorEl, setAnchorEl] = React.useState<PopperProps['anchorEl']>(null);
+    const [autoCompleteData, setAutoCompleteData] = useState<AutoCompleteData | null>(null)
 
     const chars = CHARACTERS.filter(c =>
-        c.toLowerCase().startsWith(search.toLowerCase())
+        c.toLowerCase().startsWith(autoCompleteData?.searchValue.toLowerCase())
     ).slice(0, 10)
 
-    const onKeyDown = useCallback(
+    const handleKeyDown = useCallback(
         event => {
-            if (open) {
+            if (!!autoCompleteData) {
+
                 switch (event.key) {
                     case 'ArrowDown':
                         event.preventDefault()
-                        const prevIndex = index >= chars.length - 1 ? 0 : index + 1
-                        setIndex(prevIndex)
+                        setAutoCompleteData(prevData => {
+                            const index = prevData.listIndex
+                            const newData = { ...prevData }
+                            newData.listIndex = index >= chars.length - 1 ? 0 : index + 1
+                            return newData
+                        })
                         break
                     case 'ArrowUp':
                         event.preventDefault()
-                        const nextIndex = index <= 0 ? chars.length - 1 : index - 1
-                        setIndex(nextIndex)
+                        setAutoCompleteData(prevData => {
+                            const index = prevData.listIndex
+                            const newData = { ...prevData }
+                            newData.listIndex = index >= chars.length - 1 ? 0 : index - 1
+                            return newData
+                        })
                         break
                     case 'Tab':
                     case 'Enter':
                         event.preventDefault()
-                        Transforms.select(editor, target)
-                        insertMention(editor, chars[index])
-                        setTarget(null)
-                        setAnchorEl(null)
-                        setOpen(false)
+                        Transforms.select(editor, autoCompleteData.targetRange)
+                        insertMention(editor, chars[autoCompleteData.listIndex])
                         break
                     case 'Escape':
                         event.preventDefault()
-                        setTarget(null)
+                        setAutoCompleteData(null)
                         break
                 }
             }
         },
-        [index, search, target]
+        [chars, autoCompleteData]
+    )
+
+    const handleBlur = useCallback(
+        () => setAutoCompleteData(null),
+        []
     )
 
     return (
@@ -105,11 +120,15 @@ const CustomEditor = ({ value, onChange }: Props) => {
                             const getBoundingClientRect = () =>
                                 GetBoundingClientRectFromRange(editor, range)
 
-                            setAnchorEl({ getBoundingClientRect })
-                            setTarget(range)
-                            setOpen(true)
-                            setSearch("")
-                            setIndex(0)
+                            const autoCompleteData: AutoCompleteData = {
+                                anchorEl: { getBoundingClientRect },
+                                listIndex: 0,
+                                searchValue: "",
+                                targetRange: range
+                            }
+
+                            setAutoCompleteData(autoCompleteData)
+
                             return
                         }
 
@@ -128,53 +147,43 @@ const CustomEditor = ({ value, onChange }: Props) => {
                             const getBoundingClientRect = () =>
                                 GetBoundingClientRectFromRange(editor, beforeRange)
 
-                            setAnchorEl({ getBoundingClientRect })
-                            setOpen(true)
-                            setTarget(beforeRange)
-                            setSearch(beforeMatch[1])
-                            setIndex(0)
+                            const autoCompleteData: AutoCompleteData = {
+                                anchorEl: { getBoundingClientRect },
+                                listIndex: 0,
+                                searchValue: beforeMatch[1],
+                                targetRange: beforeRange
+                            }
+
+                            setAutoCompleteData(autoCompleteData)
                             return
                         }
                     }
 
-                    setAnchorEl(null)
-                    setTarget(null)
-                    setOpen(false)
+                    setAutoCompleteData(null)
                 }}
             >
                 <SlateToolBar />
 
                 <Editable
                     className='editable'
-                    onKeyDown={onKeyDown}
+                    onKeyDown={handleKeyDown}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
+                    onBlur={handleBlur}
                     spellCheck
                     autoFocus
                 />
-
-                <Popper
-                    id="auto-complete-list-popper"
-                    open={open}
-                    anchorEl={anchorEl}
-                    placement="bottom-start"
-                >
-                    <Paper>
-                        {chars.map((char, i) => (
-                            <AutocompleteListItem
-                                key={char}
-                                char={char}
-                                isSelected={i === index}
-                                onClick={() => {
-                                    Transforms.select(editor, target)
-                                    insertMention(editor, char)
-                                    setTarget(null)
-                                }}
-                            />
-                        ))}
-                    </Paper>
-                </Popper>
             </Slate>
+            <AutoCompletePoper
+                anchorEl={autoCompleteData?.anchorEl}
+                chars={chars}
+                open={!!autoCompleteData}
+                index={autoCompleteData?.listIndex}
+                onInsert={(value) => {
+                    Transforms.select(editor, autoCompleteData?.targetRange)
+                    insertMention(editor, value)
+                }}
+            />
         </Box >
     );
 }
