@@ -20,10 +20,12 @@ export const SlateToolBar = memo(() => {
         <Box
             sx={{
                 display: "flex",
+                alignItems: "center",
                 justifyContent: "center",
                 "& > :not(style)": {
                     m: "0 5px 0 5px"
-                }
+                },
+                height: 0.2
             }}
         >
             <Box>

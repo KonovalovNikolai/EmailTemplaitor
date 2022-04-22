@@ -1,4 +1,4 @@
-import { Chip } from "@mui/material"
+import { Chip, Grid } from "@mui/material"
 import { on } from "events"
 import React, { memo } from "react"
 import { ListElement } from "../utils/FieldList"
@@ -12,16 +12,18 @@ type ListItemBaseProps = {
 
 export const ListItemBase = ({ label, color, onDelete = null, onClick = null }: ListItemBaseProps, ...rest) => {
     return (
-        <Chip
-            sx={{
-                m: "2px", width: "95px"
-            }}
-            color={color}
-            label={label}
-            onDelete={onDelete}
-            onClick={onClick}
-            {...rest}
-        />
+        <Grid item xs={6}>
+            <Chip
+                sx={{
+                    width: 1
+                }}
+                color={color}
+                label={label}
+                onDelete={onDelete}
+                onClick={onClick}
+                {...rest}
+            />
+        </Grid>
     )
 }
 
@@ -33,13 +35,13 @@ type DeletableListItemProps = {
 
 export const DeletableListItem = memo(({ element, onDelete, onClick }: DeletableListItemProps) => {
 
-    
+
     return (
         <ListItemBase
-        label={element.name}
-        color="default"
-        onDelete={() => onDelete(element)}
-        onClick={(event) => onClick(event, element)} />
+            label={element.name}
+            color="default"
+            onDelete={() => onDelete(element)}
+            onClick={(event) => onClick(event, element)} />
     )
 })
 

@@ -38,7 +38,8 @@ const CustomEditor = ({ value, list, onChange, onListChange }: Props) => {
         <Box
             sx={{
                 display: "flex",
-                maxWidth: "800px",
+                width: "800px",
+                height: "300px",
                 m: "20px auto",
                 p: "20px",
                 background: "white",

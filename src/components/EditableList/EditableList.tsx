@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useState } from 'react';
-import { Box, Popover } from '@mui/material';
+import { Box, Grid, Popover } from '@mui/material';
 
 import { FieldList, ListElement } from "./utils/FieldList"
 import { hasWhiteSpace } from './utils/hasWhiteSpace';
@@ -111,8 +111,7 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
     return (
         <Box
             sx={{
-                minWidth: "250px",
-                height: 1,
+                width: 0.3,
             }}
         >
             <ListTopBar
@@ -121,60 +120,69 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
 
             <Box
                 sx={{
-                    display: "flex",
-                    flexWrap: 'wrap',
-                    alignContent: 'flex-start',
-                    height: 1
+                    overflowY: "scroll",
+                    height: 0.8,
+                    p: "0 10px 0 10px"
                 }}
             >
-                {list.length > 0 &&
-                    list.map((element) => {
-                        const { name, isDeletable } = element;
+                <Grid
+                    container
+                    justifyContent="flex-start"
+                    alignItems="baseline"
+                    spacing={0.5}
+                >
+                    {list.length > 0 &&
+                        list.map((element) => {
+                            const { name, isDeletable } = element;
 
-                        return isDeletable ?
-                            <DeletableListItem
-                                key={name}
-                                element={element}
-                                onDelete={handleDelete}
-                                onClick={handleClick}
-                            />
-                            :
-                            <UndeletableListItem
-                                key={name}
-                                label={name}
-                            />
-                    })
-                }
+                            return isDeletable ?
+                                <DeletableListItem
+                                    key={name}
+                                    element={element}
+                                    onDelete={handleDelete}
+                                    onClick={handleClick}
+                                />
+                                :
+                                <UndeletableListItem
+                                    key={name}
+                                    label={name}
+                                />
+                        })
+                    }
 
-                <NewFieldButton
-                    onClick={handleClick}
-                />
-
-                {!!selectedElement &&
-                    <Popover
-                        id="change-field-name-popover"
-                        open={true}
-                        anchorEl={selectedElement.anchorEl}
-                        onClose={handleClose}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'center',
-                        }}
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'center',
-                        }}
+                    <Grid item xs={1}
                     >
-                        <FieldNameInputField
-                            id="new-field-name-input"
-                            helperText="Введите название поля"
-                            defaultValue={selectedElement.element.name}
-                            onEnter={handleEnter}
-                            validator={validator}
+                        <NewFieldButton
+                            onClick={handleClick}
                         />
-                    </Popover>
-                }
+                    </Grid>
+                </Grid>
             </Box>
+
+            {!!selectedElement &&
+                <Popover
+                    id="change-field-name-popover"
+                    open={true}
+                    anchorEl={selectedElement.anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                >
+                    <FieldNameInputField
+                        id="new-field-name-input"
+                        helperText="Введите название поля"
+                        defaultValue={selectedElement.element.name}
+                        onEnter={handleEnter}
+                        validator={validator}
+                    />
+                </Popover>
+            }
         </Box >
     )
 })

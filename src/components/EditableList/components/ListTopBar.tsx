@@ -5,6 +5,7 @@ import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { memo } from "react";
 import { TopBarData } from "../EditableList";
+import { height } from "@mui/system";
 
 type ListTopBarProps = {
     onChange: React.Dispatch<React.SetStateAction<TopBarData>>
@@ -15,7 +16,7 @@ const ListTopBar = ({onChange}: ListTopBarProps) => {
         <Box
         sx={{
             display: 'flex',
-            padding: '10px'
+            height: 0.2,
         }}
     >
         <TextField
@@ -46,9 +47,9 @@ const ListTopBar = ({onChange}: ListTopBarProps) => {
         />
         <IconButton
             sx={{
-                width: "auto"
+                margin: "auto"
             }}
-            size="small"
+            size="medium"
             onClick={() => {
                 onChange(prevState => {
                     const newState = {...prevState}
