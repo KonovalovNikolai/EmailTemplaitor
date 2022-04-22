@@ -159,7 +159,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
     return (
         <Box
             sx={{
-                width:0.7,
+                width: 0.7,
                 paddingRight: "20px"
             }}
         >
@@ -176,15 +176,21 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                         overflowY: "scroll",
                     }}
                 >
-                    <Editable
-                        className='editable'
-                        onKeyDown={handleKeyDown}
-                        renderElement={renderElement}
-                        renderLeaf={renderLeaf}
-                        onBlur={handleBlur}
-                        spellCheck
-                        autoFocus
-                    />
+                    <Box
+                        sx={{
+                            p: "10px 0 10px 0"
+                        }}
+                    >
+                        <Editable
+                            className='editable'
+                            onKeyDown={handleKeyDown}
+                            renderElement={renderElement}
+                            renderLeaf={renderLeaf}
+                            onBlur={handleBlur}
+                            spellCheck
+                            autoFocus
+                        />
+                    </Box>
                 </Box>
             </Slate>
             <AutoCompletePoper
