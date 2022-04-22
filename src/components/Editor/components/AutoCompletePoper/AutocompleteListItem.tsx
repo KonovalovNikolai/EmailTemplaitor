@@ -7,7 +7,7 @@ type Props = {
 export const AutocompleteListItem = ({ char, isSelected, onClick }: Props) => {
     return (
         <div
-            onClick={onClick}
+            onMouseDown={onClick}
             style={{
                 padding: '1px 3px',
                 borderRadius: '3px',

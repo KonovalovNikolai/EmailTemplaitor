@@ -111,7 +111,7 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
     return (
         <Box
             sx={{
-                minWidth: "100px",
+                minWidth: "250px",
                 height: 1,
             }}
         >
