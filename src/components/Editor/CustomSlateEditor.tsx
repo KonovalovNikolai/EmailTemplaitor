@@ -1,40 +1,24 @@
-import { Box, PopperProps, } from "@mui/material";
+import { Box, PopperProps } from "@mui/material";
 import { FunctionComponent, memo, useCallback, useState } from "react";
 import {
-    Descendant,
-    Transforms,
-    Range,
-    Editor,
-    BaseRange
-} from 'slate'
-import { Editable, ReactEditor, Slate } from "slate-react";
+    Descendant, Editor, Range, Transforms
+} from 'slate';
+import { Editable, Slate } from "slate-react";
 import { FieldList } from "../EditableList/utils/FieldList";
 import ScrollableBox from "../ScrollableBox";
 import AutoCompletePoper from "./components/AutoCompletePoper/AutoCompletePoper";
 import { SlateToolBar } from "./components/Toolbar/Toolbar";
-import { MentionElement } from "./custom-types";
 import RenderElement from "./elements/RenderElement";
 import RenderLeaf from "./elements/RenderLeaf";
+import { getAutoCompleteData } from "./utils/getAutoCompleteData";
+import { GetBoundingClientRectFromRange } from "./utils/GetBoundingClientRectFromRange";
+import { insertMention } from "./utils/insertMention";
 
 interface CustomSlateEditorProps {
     editor: Editor
     value: Descendant[]
     fieldList: FieldList
     onChange: React.Dispatch<any>;
-}
-
-function GetBoundingClientRectFromRange(editor: Editor, range: BaseRange) {
-    return ReactEditor.toDOMRange(editor, range).getBoundingClientRect();
-}
-
-const insertMention = (editor, character) => {
-    const mention: MentionElement = {
-        type: 'mention',
-        character,
-        children: [{ text: '' }],
-    }
-    Transforms.insertNodes(editor, mention)
-    Transforms.move(editor)
 }
 
 type AutoCompleteData = {
@@ -54,60 +38,25 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
 
     const handleChange = useCallback(
         (value: Descendant[]) => {
-            onChange(value)
-            const { selection } = editor
+            onChange(value);
 
-            if (selection && Range.isCollapsed(selection)) {
-                const [start] = Range.edges(selection)
+            const data = getAutoCompleteData(editor);
+            if (!data) {
+                setAutoCompleteData(null);
+                return;
+            };
 
-                const charBefore = Editor.before(editor, start, { unit: 'character' })
-                const range = charBefore && Editor.range(editor, charBefore, start)
-                const character = range && Editor.string(editor, range)
+            const getBoundingClientRect = () =>
+                GetBoundingClientRectFromRange(editor, data.targetRange);
 
-                if (character === "#") {
-                    const getBoundingClientRect = () =>
-                        GetBoundingClientRectFromRange(editor, range)
+            const autoCompleteData: AutoCompleteData = {
+                anchorEl: { getBoundingClientRect },
+                listIndex: 0,
+                searchValue: data.searchValue,
+                targetRange: data.targetRange
+            };
 
-                    const autoCompleteData: AutoCompleteData = {
-                        anchorEl: { getBoundingClientRect },
-                        listIndex: 0,
-                        searchValue: "",
-                        targetRange: range
-                    }
-
-                    setAutoCompleteData(autoCompleteData)
-
-                    return
-                }
-
-                const wordBefore = Editor.before(editor, start, { unit: 'word' })
-                const before = wordBefore && Editor.before(editor, wordBefore)
-                const beforeRange = before && Editor.range(editor, before, start)
-                const beforeText = beforeRange && Editor.string(editor, beforeRange)
-
-                const beforeMatch = beforeText && beforeText.match(/^#(\w+)$/)
-                const after = Editor.after(editor, start)
-                const afterRange = Editor.range(editor, start, after)
-                const afterText = Editor.string(editor, afterRange)
-                const afterMatch = afterText.match(/^(\s|$)/)
-
-                if (beforeMatch && afterMatch) {
-                    const getBoundingClientRect = () =>
-                        GetBoundingClientRectFromRange(editor, beforeRange)
-
-                    const autoCompleteData: AutoCompleteData = {
-                        anchorEl: { getBoundingClientRect },
-                        listIndex: 0,
-                        searchValue: beforeMatch[1],
-                        targetRange: beforeRange
-                    }
-
-                    setAutoCompleteData(autoCompleteData)
-                    return
-                }
-            }
-
-            setAutoCompleteData(null)
+            setAutoCompleteData(autoCompleteData)
         },
         []
     )

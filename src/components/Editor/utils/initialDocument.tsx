@@ -28,10 +28,6 @@ export const initialValue: Descendant[] = [
         ],
     },
     {
-        type: 'block-quote',
-        children: [{ text: 'A wise quote.' }],
-    },
-    {
         type: 'heading',
         align: 'center',
         children: [{ text: 'Try it out for yourself!' }],
