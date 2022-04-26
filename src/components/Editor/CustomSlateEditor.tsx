@@ -15,26 +15,26 @@ import { GetBoundingClientRectFromRange } from "./utils/GetBoundingClientRectFro
 import { insertMention } from "./utils/insertMention";
 
 interface CustomSlateEditorProps {
-    editor: Editor
-    value: Descendant[]
-    fieldList: FieldList
+    editor: Editor;
+    value: Descendant[];
+    fieldList: FieldList;
     onChange: React.Dispatch<any>;
 }
 
 type AutoCompleteData = {
-    searchValue: string
-    targetRange: Range
-    anchorEl: PopperProps['anchorEl']
-    listIndex: number
-}
+    searchValue: string;
+    targetRange: Range;
+    anchorEl: PopperProps['anchorEl'];
+    listIndex: number;
+};
 
 const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, value, fieldList, onChange }) => {
-    const renderElement = useCallback(props => <RenderElement {...props} />, [])
-    const renderLeaf = useCallback(props => <RenderLeaf {...props} />, [])
+    const renderElement = useCallback(props => <RenderElement {...props} />, []);
+    const renderLeaf = useCallback(props => <RenderLeaf {...props} />, []);
 
-    const [autoCompleteData, setAutoCompleteData] = useState<AutoCompleteData | null>(null)
+    const [autoCompleteData, setAutoCompleteData] = useState<AutoCompleteData | null>(null);
 
-    const chars = fieldList.GetListOfNames(autoCompleteData?.searchValue).sort().slice(0, 10)
+    const chars = fieldList.GetListOfNames(autoCompleteData?.searchValue).sort().slice(0, 10);
 
     const handleChange = useCallback(
         (value: Descendant[]) => {
@@ -56,15 +56,15 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                 targetRange: data.targetRange
             };
 
-            setAutoCompleteData(autoCompleteData)
+            setAutoCompleteData(autoCompleteData);
         },
         []
-    )
+    );
 
     const handleBlur = useCallback(
         () => setAutoCompleteData(null),
         []
-    )
+    );
 
     const handleKeyDown = useCallback(
         event => {
@@ -72,38 +72,38 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
 
                 switch (event.key) {
                     case 'ArrowDown':
-                        event.preventDefault()
+                        event.preventDefault();
                         setAutoCompleteData(prevData => {
-                            const index = prevData.listIndex
-                            const newData = { ...prevData }
-                            newData.listIndex = index >= chars.length - 1 ? 0 : index + 1
-                            return newData
-                        })
-                        break
+                            const index = prevData.listIndex;
+                            const newData = { ...prevData };
+                            newData.listIndex = index >= chars.length - 1 ? 0 : index + 1;
+                            return newData;
+                        });
+                        break;
                     case 'ArrowUp':
-                        event.preventDefault()
+                        event.preventDefault();
                         setAutoCompleteData(prevData => {
-                            const index = prevData.listIndex
-                            const newData = { ...prevData }
-                            newData.listIndex = index >= chars.length - 1 ? 0 : index - 1
-                            return newData
-                        })
-                        break
+                            const index = prevData.listIndex;
+                            const newData = { ...prevData };
+                            newData.listIndex = index >= chars.length - 1 ? 0 : index - 1;
+                            return newData;
+                        });
+                        break;
                     case 'Tab':
                     case 'Enter':
-                        event.preventDefault()
-                        Transforms.select(editor, autoCompleteData.targetRange)
-                        insertMention(editor, chars[autoCompleteData.listIndex])
-                        break
+                        event.preventDefault();
+                        Transforms.select(editor, autoCompleteData.targetRange);
+                        insertMention(editor, chars[autoCompleteData.listIndex]);
+                        break;
                     case 'Escape':
-                        event.preventDefault()
-                        setAutoCompleteData(null)
-                        break
+                        event.preventDefault();
+                        setAutoCompleteData(null);
+                        break;
                 }
             }
         },
         [chars, autoCompleteData]
-    )
+    );
 
     return (
         <Box
@@ -148,12 +148,12 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                 open={!!autoCompleteData}
                 index={autoCompleteData?.listIndex}
                 onInsert={(value) => {
-                    Transforms.select(editor, autoCompleteData?.targetRange)
-                    insertMention(editor, value)
+                    Transforms.select(editor, autoCompleteData?.targetRange);
+                    insertMention(editor, value);
                 }}
             />
         </Box>
     );
-}
+};
 
 export default memo(CustomSlateEditor);

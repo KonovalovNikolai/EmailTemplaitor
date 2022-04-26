@@ -5,12 +5,6 @@ const RenderElement = ({ attributes, children, element }: any) => {
 
     const style = { textAlign: element.align }
     switch (element.type) {
-        case 'block-quote':
-            return (
-                <blockquote style={style} {...attributes}>
-                    {children}
-                </blockquote>
-            )
         case 'bulleted-list':
             return (
                 <ul style={style} {...attributes}>

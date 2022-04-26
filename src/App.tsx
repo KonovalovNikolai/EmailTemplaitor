@@ -4,6 +4,7 @@ import CustomEditor from './components/Editor/CustomEditor';
 import { FieldList } from './components/EditableList/utils/FieldList';
 
 import { initialValue } from './components/Editor/utils/initialDocument';
+import { SerializedDocument } from './components/SerializedDocument';
 
 function App() {
   const [value, setValue] = useState<Descendant[]>(initialValue)
@@ -34,6 +35,7 @@ function App() {
         onChange={setValue}
         onListChange={setList}
       />
+      <SerializedDocument nodes={value}/>
     </div>
   );
 }
