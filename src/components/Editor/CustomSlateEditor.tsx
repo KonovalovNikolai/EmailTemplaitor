@@ -1,7 +1,6 @@
-import { Box, PopperProps } from "@mui/material";
+import { Box, PopperProps, } from "@mui/material";
 import { FunctionComponent, memo, useCallback, useState } from "react";
 import {
-    createEditor,
     Descendant,
     Transforms,
     Range,
@@ -10,6 +9,7 @@ import {
 } from 'slate'
 import { Editable, ReactEditor, Slate } from "slate-react";
 import { FieldList } from "../EditableList/utils/FieldList";
+import ScrollableBox from "../ScrollableBox";
 import AutoCompletePoper from "./components/AutoCompletePoper/AutoCompletePoper";
 import { SlateToolBar } from "./components/Toolbar/Toolbar";
 import { MentionElement } from "./custom-types";
@@ -170,15 +170,15 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
             >
                 <SlateToolBar />
 
-                <Box
+                <ScrollableBox
                     sx={{
+                        overflowY: "overlay",
                         height: 0.8,
-                        overflowY: "scroll",
                     }}
                 >
                     <Box
                         sx={{
-                            p: "10px 0 10px 0"
+                            p: "10px 10px 0 10px"
                         }}
                     >
                         <Editable
@@ -191,7 +191,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                             autoFocus
                         />
                     </Box>
-                </Box>
+                </ScrollableBox>
             </Slate>
             <AutoCompletePoper
                 anchorEl={autoCompleteData?.anchorEl}

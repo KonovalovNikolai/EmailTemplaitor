@@ -15,10 +15,14 @@ export const ListItemBase = ({ label, color, onDelete = null, onClick = null }: 
         <Grid item xs={6}>
             <Chip
                 sx={{
-                    width: 1
+                    width: 1,
+                    "&>.MuiChip-label": {
+                        margin: "auto",
+                        flex: "auto"
+                    }
                 }}
                 color={color}
-                label={label}
+                label={`#${label}`}
                 onDelete={onDelete}
                 onClick={onClick}
                 {...rest}

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Descendant, Editor } from 'slate';
-import { EditableList } from './components/EditableList/EditableList';
+import { Descendant } from 'slate';
 import CustomEditor from './components/Editor/CustomEditor';
 import { FieldList } from './components/EditableList/utils/FieldList';
 

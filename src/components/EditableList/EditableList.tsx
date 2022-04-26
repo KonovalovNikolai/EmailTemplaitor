@@ -9,6 +9,7 @@ import ListTopBar from './components/ListTopBar';
 import { FieldNameInputField } from './components/FieldNameInputField';
 import NewFieldButton from './components/AddNewFieldButton';
 import { DefaultSortButtonState, SortButtonState } from './utils/SortButtonState';
+import ScrollableBox from '../ScrollableBox';
 
 type Props = {
     fieldList: FieldList
@@ -118,11 +119,11 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
                 onChange={setBarState}
             />
 
-            <Box
+            <ScrollableBox
                 sx={{
-                    overflowY: "scroll",
+                    overflowY: "overlay",
                     height: 0.8,
-                    p: "0 10px 0 10px"
+                    p: "0 10px 0 10px",
                 }}
             >
                 <Grid
@@ -157,7 +158,7 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
                         />
                     </Grid>
                 </Grid>
-            </Box>
+            </ScrollableBox>
 
             {!!selectedElement &&
                 <Popover
