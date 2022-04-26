@@ -106,7 +106,18 @@ function serializeListItem(node: ListItemElement) {
 }
 
 function serializeMention(node: MentionElement) {
-    return (`${node.character}`);
+    let element = <>{node.character}</>;
+
+    if (node.bold) {
+        element = <strong>{element}</strong>;
+    }
+    if (node.italic) {
+        element = <i>{element}</i>;
+    }
+    if (node.underline) {
+        element = <u>{element}</u>;
+    }
+    return element;
 }
 
 function serializeParagraph(node: ParagraphElement) {
