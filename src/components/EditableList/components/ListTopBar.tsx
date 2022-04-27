@@ -1,11 +1,9 @@
-import { Box, TextField, InputAdornment, IconButton } from "@mui/material"
+import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
 
 import SearchIcon from '@mui/icons-material/Search';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { memo } from "react";
 import { TopBarData } from "../EditableList";
-import { height } from "@mui/system";
 
 type ListTopBarProps = {
     onChange: React.Dispatch<React.SetStateAction<TopBarData>>
@@ -16,7 +14,6 @@ const ListTopBar = ({onChange}: ListTopBarProps) => {
         <Box
         sx={{
             display: 'flex',
-            height: 0.2,
         }}
     >
         <TextField

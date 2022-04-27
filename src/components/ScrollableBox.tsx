@@ -7,7 +7,7 @@ const ScrollableBox = styled(Box)({
     },
 
     "&::-webkit-scrollbar-track": {
-        backgroundColor: "#e4e4e4",
+        backgroundColor: "#e3e3e3",
         borderRadius: "100px",
     },
 

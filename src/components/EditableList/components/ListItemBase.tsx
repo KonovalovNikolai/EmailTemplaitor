@@ -5,7 +5,7 @@ import { ListElement } from "../utils/FieldList"
 
 type ListItemBaseProps = {
     label: string,
-    color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning',
+    color: any,
     onDelete: () => any,
     onClick: (event: React.MouseEvent) => any
 }

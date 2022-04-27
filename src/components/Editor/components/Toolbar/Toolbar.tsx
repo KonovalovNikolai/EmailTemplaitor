@@ -1,6 +1,6 @@
-import { Box } from "@mui/system"
-import { memo } from "react"
-import { BlockButton, MarkButton } from "./ToolbarButtonBase"
+import { Box } from "@mui/system";
+import { memo } from "react";
+import { BlockButton, MarkButton } from "./ToolbarButtonBase";
 
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
@@ -15,63 +15,71 @@ import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
 import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 
-export const SlateToolBar = memo(() => {
+interface SlateToolBarProps {
+    isMarkActive: (format: string) => boolean;
+    toggleMark: (format: string) => void;
+    isBlockActive: (format: string, blockType: string) => boolean;
+    toggleBlock: (format: string) => void;
+}
+
+export const SlateToolBar = memo(({ isBlockActive, isMarkActive, toggleBlock, toggleMark }: SlateToolBarProps) => {
+    const markButtonProps = {
+        isMarkActive,
+        toggleMark
+    };
+
+    const blockButtonProps = {
+        isBlockActive,
+        toggleBlock
+    };
+
     return (
         <Box
             sx={{
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                "& > :not(style)": {
-                    m: "0 5px 0 5px"
-                },
-                height: 0.2
             }}
         >
             <Box>
-                <MarkButton format='bold'>
+                <MarkButton format='bold' {...markButtonProps}>
                     <FormatBoldIcon />
                 </MarkButton>
-                <MarkButton format='italic'>
+                <MarkButton format='italic' {...markButtonProps}>
                     <FormatItalicIcon />
                 </MarkButton>
-                <MarkButton format='underline'>
+                <MarkButton format='underline' {...markButtonProps}>
                     <FormatUnderlinedIcon />
                 </MarkButton>
-            </Box>
 
-            <Box>
-                <BlockButton format='heading-one'>
+                <BlockButton format='heading-one' {...blockButtonProps}>
                     <LooksOneIcon />
                 </BlockButton>
-                <BlockButton format="heading-two">
+                <BlockButton format="heading-two" {...blockButtonProps}>
                     <LooksTwoIcon />
                 </BlockButton>
             </Box>
-
             <Box>
-                <BlockButton format="numbered-list">
+                <BlockButton format="numbered-list" {...blockButtonProps}>
                     <FormatListNumberedIcon />
                 </BlockButton>
-                <BlockButton format="bulleted-list">
+                <BlockButton format="bulleted-list" {...blockButtonProps}>
                     <FormatListBulletedIcon />
                 </BlockButton>
-            </Box>
-
-            <Box>
-                <BlockButton format="left">
+                <BlockButton format="left" {...blockButtonProps}>
                     <FormatAlignLeftIcon />
                 </BlockButton>
-                <BlockButton format="center">
+                <BlockButton format="center" {...blockButtonProps}>
                     <FormatAlignCenterIcon />
                 </BlockButton>
-                <BlockButton format="right">
+                <BlockButton format="right" {...blockButtonProps}>
                     <FormatAlignRightIcon />
                 </BlockButton>
-                <BlockButton format="justify">
+                <BlockButton format="justify" {...blockButtonProps}>
                     <FormatAlignJustifyIcon />
                 </BlockButton>
             </Box>
         </Box>
-    )
-})
+    );
+});

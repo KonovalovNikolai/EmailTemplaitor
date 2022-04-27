@@ -19,17 +19,21 @@ export const ToolbarButtonBase = memo(({ onClick, children }: ToolbarButtonBaseP
     )
 })
 
-type ButtonProps = {
+interface ButtonProps {
     format: string
     children: React.ReactNode
 }
  
-export const MarkButton = ({ format, children }: ButtonProps) => {
-    const editor = useSlate()
+interface MarkButtonProps extends ButtonProps {
+    isMarkActive: (format: string) => boolean
+    toggleMark: (format: string) => void
+}
+
+export const MarkButton = ({ format, children, isMarkActive, toggleMark }: MarkButtonProps) => {
     const handleClick = useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault()
-            toggleMark(editor, format)
+            toggleMark(format)
         },
         []
     )
@@ -43,12 +47,16 @@ export const MarkButton = ({ format, children }: ButtonProps) => {
     )
 }
 
-export const BlockButton = ({ format, children }: ButtonProps) => {
-    const editor = useSlate()
+interface BlockButtonProps extends ButtonProps {
+    isBlockActive: (format: string, blockType: string) => boolean
+    toggleBlock: (format: string) => void
+}
+
+export const BlockButton = ({ format, children, isBlockActive, toggleBlock }: BlockButtonProps) => {
     const handleClick = useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault()
-            toggleBlock(editor, format)
+            toggleBlock(format)
         },
         []
     )

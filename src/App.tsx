@@ -35,7 +35,7 @@ function App() {
         onChange={setValue}
         onListChange={setList}
       />
-      <SerializedDocument nodes={value}/>
+      {/* <SerializedDocument nodes={value}/> */}
     </div>
   );
 }
