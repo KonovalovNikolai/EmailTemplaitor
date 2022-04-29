@@ -129,8 +129,7 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
 
             <ScrollableBox
                 sx={{
-                    overflowY: "auto",
-                    border: "2px solid transparent",
+                    overflowY: "overlay",
                 }}
             >
                 <Grid
@@ -139,7 +138,7 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
                     alignItems="baseline"
                     spacing={0.5}
                     sx={{
-                        padding: "0 4px 0 4px",
+                        padding: "0 20px 0 0",
                     }}
                 >
                     {list.length > 0 &&

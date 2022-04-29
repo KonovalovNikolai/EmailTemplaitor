@@ -68,17 +68,14 @@ const CustomEditor = ({ value, list, onChange, onListChange }: Props) => {
         <Box
             sx={{
                 display: "flex",
-                width: "800px",
-                height: "300px",
-                m: "20px auto",
-                p: "20px",
-                background: "white",
+                height: "-webkit-fill-available",
             }}
         >
             <Box
                 sx={{
+                    display: "flex",
                     width: 0.7,
-                    paddingRight: "20px",
+                    paddingRight: "10px",
                 }}
             >
                 <CustomSlateEditor
@@ -92,7 +89,7 @@ const CustomEditor = ({ value, list, onChange, onListChange }: Props) => {
             <Box
                 sx={{
                     width: 0.3,
-                    paddingLeft: "20px",
+                    paddingLeft: "10px",
                 }}
             >
                 <Box height={0.25}>
