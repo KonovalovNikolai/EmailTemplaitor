@@ -41,7 +41,7 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
     //#region - Field List -
     // Список элементов списка
     // Список сортируется по текущему состоянию сортировки
-    // Список фильтруется по текущему значению строки посика
+    // Список фильтруется по текущему значению строки поиска
     const list = barState.sortState.Sort(fieldList.GetList(barState.searchValue));
     // Обработка удаление элемента
     const handleDelete = useCallback(
@@ -52,7 +52,7 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
     );
 
     // Обработка нажатия на элемент
-    // Вызвать попап для ввода имени поля
+    // Вызвать поппап для ввода имени поля
     const handleClick = useCallback(
         (event: React.MouseEvent, element: ListElement) => {
             setSelectedElement({
@@ -90,7 +90,7 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
             onChange(fieldList.Replace(selectedElement.element, newElement));
         }
 
-        // Закрыть попап
+        // Закрыть поппап
         handleClose();
     };
 
