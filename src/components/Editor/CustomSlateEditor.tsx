@@ -108,7 +108,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
     return (
         <Box
             sx={{
-                width: 0.7,
+                height: "-webkit-fill-available"
             }}
         >
             <Slate
@@ -120,7 +120,6 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                     sx={{
                         overflowY: "overlay",
                         height: "-webkit-fill-available",
-                        marginRight: "20px",
                     }}
                 >
                     <Box

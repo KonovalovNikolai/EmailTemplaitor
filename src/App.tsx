@@ -25,6 +25,34 @@ function App() {
       name: "Phone",
       isDeletable: true
     },
+    {
+      name: "1",
+      isDeletable: true
+    },
+    {
+      name: "2",
+      isDeletable: true
+    },
+    {
+      name: "3",
+      isDeletable: true
+    },
+    {
+      name: "4",
+      isDeletable: true
+    },
+    {
+      name: "5",
+      isDeletable: true
+    },
+    {
+      name: "7",
+      isDeletable: true
+    },
+    {
+      name: "8",
+      isDeletable: true
+    },
   ]))
 
   return (

@@ -8,7 +8,7 @@ import { withReact } from 'slate-react';
 
 import { withMentions } from './plugins/withMentions';
 
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 
 import { EditableList } from '../EditableList/EditableList';
 import { FieldList } from '../EditableList/utils/FieldList';
@@ -28,7 +28,7 @@ interface Props {
 }
 
 const CustomEditor = ({ value, list, onChange, onListChange }: Props) => {
-    // Инициализайия редактора
+    // Инициализация редактора
     const editor = useMemo(
         () => withMentions(withReact(withHistory(createEditor()))),
         []
@@ -75,22 +75,27 @@ const CustomEditor = ({ value, list, onChange, onListChange }: Props) => {
                 background: "white",
             }}
         >
-            <CustomSlateEditor
-                editor={editor}
-                fieldList={list}
-                value={value}
-                onChange={onChange}
-            />
+            <Box
+                sx={{
+                    width: 0.7,
+                    paddingRight: "20px",
+                }}
+            >
+                <CustomSlateEditor
+                    editor={editor}
+                    fieldList={list}
+                    value={value}
+                    onChange={onChange}
+                />
+            </Box>
+            <Divider orientation='vertical' />
             <Box
                 sx={{
                     width: 0.3,
+                    paddingLeft: "20px",
                 }}
             >
-                <Box
-                    sx={{
-                        height: 0.25,
-                    }}
-                >
+                <Box height={0.25}>
                     <SlateToolBar
                         isMarkActive={isMarkActiveCallback}
                         toggleMark={toggleMarkCallback}
@@ -98,10 +103,13 @@ const CustomEditor = ({ value, list, onChange, onListChange }: Props) => {
                         toggleBlock={toggleBlockCallback}
                     />
                 </Box>
-                <EditableList
-                    fieldList={list}
-                    onChange={onListChange}
-                />
+                <Divider />
+                <Box height={0.75}>
+                    <EditableList
+                        fieldList={list}
+                        onChange={onListChange}
+                    />
+                </Box>
             </Box>
         </Box >
     );

@@ -94,7 +94,7 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
         handleClose();
     };
 
-    // Обработка закрытия попапа
+    // Обработка закрытия поппапа
     const handleClose = () => {
         setSelectedElement(null);
     };
@@ -112,12 +112,14 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
     return (
         <Box
             sx={{
-                height: 0.75,
+                height: "-webkit-fill-available",
+                display: "flex",
+                flexDirection: "column",
             }}
         >
             <Box
                 sx={{
-                    height: 0.25,
+                    padding: "10px 10px 10px 10px"
                 }}
             >
                 <ListTopBar
@@ -127,7 +129,6 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
 
             <ScrollableBox
                 sx={{
-                    height: 0.75,
                     overflowY: "auto",
                     border: "2px solid transparent",
                 }}
