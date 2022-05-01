@@ -133,7 +133,7 @@ function App() {
       </Tabs>
       <Box
         sx={{
-          padding: "10px 5px",
+          padding: "20px 10px 10px 10px",
           flex: "auto",
           backgroundColor: "white",
         }}

@@ -92,7 +92,7 @@ const CustomEditor = ({ value, list, onChange, onListChange }: Props) => {
                     paddingLeft: "10px",
                 }}
             >
-                <Box height={0.25}>
+                <Box height={0.3}>
                     <SlateToolBar
                         isMarkActive={isMarkActiveCallback}
                         toggleMark={toggleMarkCallback}
@@ -101,7 +101,7 @@ const CustomEditor = ({ value, list, onChange, onListChange }: Props) => {
                     />
                 </Box>
                 <Divider />
-                <Box height={0.75}>
+                <Box height={0.7}>
                     <EditableList
                         fieldList={list}
                         onChange={onListChange}

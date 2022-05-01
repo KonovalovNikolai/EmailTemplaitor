@@ -112,6 +112,7 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
     return (
         <Box
             sx={{
+                flex: "auto",
                 height: "-webkit-fill-available",
                 display: "flex",
                 flexDirection: "column",
@@ -119,7 +120,8 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
         >
             <Box
                 sx={{
-                    padding: "10px 10px 10px 10px"
+                    flex: "none",
+                    padding: "10px 10px 10px 10px",
                 }}
             >
                 <ListTopBar
@@ -129,7 +131,8 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
 
             <ScrollableBox
                 sx={{
-                    overflowY: "overlay",
+                    flex: "auto",
+                    overflowY: "scroll",
                 }}
             >
                 <Grid
@@ -138,7 +141,7 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
                     alignItems="baseline"
                     spacing={0.5}
                     sx={{
-                        padding: "0 20px 0 0",
+                        padding: "0 5px 0 0",
                     }}
                 >
                     {list.length > 0 &&

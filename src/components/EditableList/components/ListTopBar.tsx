@@ -46,7 +46,7 @@ const ListTopBar = ({onChange}: ListTopBarProps) => {
             sx={{
                 margin: "auto"
             }}
-            size="medium"
+            size="small"
             onClick={() => {
                 onChange(prevState => {
                     const newState = {...prevState}

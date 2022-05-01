@@ -118,13 +118,13 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
             >
                 <ScrollableBox
                     sx={{
-                        overflowY: "overlay",
+                        overflowY: "scroll",
                         height: "-webkit-fill-available",
                     }}
                 >
                     <Box
                         sx={{
-                            padding: "15px",
+                            paddingLeft: "5px",
                         }}
                     >
                         <Editable

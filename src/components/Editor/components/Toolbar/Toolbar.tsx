@@ -52,21 +52,22 @@ export const SlateToolBar = memo(({ isBlockActive, isMarkActive, toggleBlock, to
                 <MarkButton format='underline' {...markButtonProps}>
                     <FormatUnderlinedIcon />
                 </MarkButton>
-
+            </Box>
+            <Box>
                 <BlockButton format='heading-one' {...blockButtonProps}>
                     <LooksOneIcon />
                 </BlockButton>
                 <BlockButton format="heading-two" {...blockButtonProps}>
                     <LooksTwoIcon />
                 </BlockButton>
-            </Box>
-            <Box>
                 <BlockButton format="numbered-list" {...blockButtonProps}>
                     <FormatListNumberedIcon />
                 </BlockButton>
                 <BlockButton format="bulleted-list" {...blockButtonProps}>
                     <FormatListBulletedIcon />
                 </BlockButton>
+            </Box>
+            <Box>
                 <BlockButton format="left" {...blockButtonProps}>
                     <FormatAlignLeftIcon />
                 </BlockButton>
