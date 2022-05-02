@@ -11,7 +11,7 @@ import { withMentions } from './plugins/withMentions';
 import { Box, Divider } from '@mui/material';
 
 import { EditableList } from '../EditableList/EditableList';
-import { FieldList } from '../EditableList/utils/FieldList';
+import { FieldList } from '../../utils/FieldList';
 import { SlateToolBar } from './components/Toolbar/Toolbar';
 import CustomSlateEditor from './CustomSlateEditor';
 

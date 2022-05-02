@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useState } from 'react';
 import { Box, Grid, Popover } from '@mui/material';
 
-import { FieldList, ListElement } from "./utils/FieldList";
+import { FieldList, ListElement } from "../../utils/FieldList";
 import { hasWhiteSpace } from './utils/hasWhiteSpace';
 
 import { DeletableListItem, UndeletableListItem } from './components/ListItemBase';

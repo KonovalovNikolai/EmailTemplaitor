@@ -1,6 +1,6 @@
 import { IconButton } from "@mui/material"
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { ListElement } from "../utils/FieldList";
+import { ListElement } from "../../../utils/FieldList";
 import { memo } from "react";
 
 type Props = {

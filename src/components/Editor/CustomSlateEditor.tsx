@@ -4,7 +4,7 @@ import {
     Descendant, Editor, Range, Transforms
 } from 'slate';
 import { Editable, Slate } from "slate-react";
-import { FieldList } from "../EditableList/utils/FieldList";
+import { FieldList } from "../../utils/FieldList";
 import ScrollableBox from "../ScrollableBox";
 import AutoCompletePoper from "./components/AutoCompletePoper/AutoCompletePoper";
 import { SlateToolBar } from "./components/Toolbar/Toolbar";

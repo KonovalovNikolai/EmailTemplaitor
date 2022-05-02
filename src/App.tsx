@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Descendant } from 'slate';
-import { FieldList } from './components/EditableList/utils/FieldList';
+import { FieldList } from './utils/FieldList';
 import CustomEditor from './components/Editor/CustomEditor';
 
 import { Box, Tab, Tabs, Typography } from '@mui/material';
@@ -9,6 +9,7 @@ import { initialValue } from './components/Editor/utils/initialDocument';
 import EditIcon from '@mui/icons-material/Edit';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import SendIcon from '@mui/icons-material/Send';
+import DataGridTest from './components/DataGridTest';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -69,35 +70,9 @@ function App() {
       name: "Phone",
       isDeletable: true
     },
-    {
-      name: "1",
-      isDeletable: true
-    },
-    {
-      name: "2",
-      isDeletable: true
-    },
-    {
-      name: "3",
-      isDeletable: true
-    },
-    {
-      name: "4",
-      isDeletable: true
-    },
-    {
-      name: "5",
-      isDeletable: true
-    },
-    {
-      name: "7",
-      isDeletable: true
-    },
-    {
-      name: "8",
-      isDeletable: true
-    },
-  ]));
+  ],
+    null)
+  );
 
   const [tabsValue, setTabsValue] = React.useState(0);
 
@@ -147,7 +122,7 @@ function App() {
           />
         </TabPanel>
         <TabPanel value={tabsValue} index={1}>
-          Item Two
+          <DataGridTest fieldList={list} />
         </TabPanel>
         <TabPanel value={tabsValue} index={2}>
           Item Three

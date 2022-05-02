@@ -1,4 +1,4 @@
-import { ListElement } from "./FieldList"
+import { ListElement } from "../../../utils/FieldList"
 
 export interface SortButtonState {
     Sort(list: ListElement[]): ListElement[]
