@@ -4,6 +4,7 @@ import {
     Descendant, Editor, Range, Transforms
 } from 'slate';
 import { Editable, Slate } from "slate-react";
+import { AppDataController } from "../../utils/AppDataController";
 import { FieldList } from "../../utils/FieldList";
 import ScrollableBox from "../ScrollableBox";
 import AutoCompletePoper from "./components/AutoCompletePoper/AutoCompletePoper";
@@ -17,7 +18,7 @@ import { insertMention } from "./utils/insertMention";
 interface CustomSlateEditorProps {
     editor: Editor;
     value: Descendant[];
-    fieldList: FieldList;
+    appData: AppDataController;
     onChange: React.Dispatch<any>;
 }
 
@@ -28,13 +29,13 @@ type AutoCompleteData = {
     listIndex: number;
 };
 
-const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, value, fieldList, onChange }) => {
+const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, value, appData, onChange }) => {
     const renderElement = useCallback(props => <RenderElement {...props} />, []);
     const renderLeaf = useCallback(props => <RenderLeaf {...props} />, []);
 
     const [autoCompleteData, setAutoCompleteData] = useState<AutoCompleteData | null>(null);
 
-    const chars = fieldList.GetListOfNames(autoCompleteData?.searchValue).sort().slice(0, 10);
+    const chars = appData.GetFieldList().GetListOfNames(autoCompleteData?.searchValue).sort().slice(0, 10);
 
     const handleChange = useCallback(
         (value: Descendant[]) => {

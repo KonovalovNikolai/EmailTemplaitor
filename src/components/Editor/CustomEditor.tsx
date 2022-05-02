@@ -10,24 +10,25 @@ import { withMentions } from './plugins/withMentions';
 
 import { Box, Divider } from '@mui/material';
 
-import { EditableList } from '../EditableList/EditableList';
 import { FieldList } from '../../utils/FieldList';
+import { EditableList } from '../EditableList/EditableList';
 import { SlateToolBar } from './components/Toolbar/Toolbar';
 import CustomSlateEditor from './CustomSlateEditor';
 
-import isMarkActive from './utils/isMarkActive';
-import toggleMark from './utils/toggleMark';
+import { AppDataController } from '../../utils/AppDataController';
 import isBlockActive from './utils/isBlockActive';
+import isMarkActive from './utils/isMarkActive';
 import toggleBlock from './utils/toggleBlock';
+import toggleMark from './utils/toggleMark';
 
 interface Props {
     value: Descendant[];
-    list: FieldList;
+    appData: AppDataController;
     onChange: React.Dispatch<any>;
-    onListChange: React.Dispatch<React.SetStateAction<FieldList>>;
+    onDataChange: React.Dispatch<React.SetStateAction<AppDataController>>;
 }
 
-const CustomEditor = ({ value, list, onChange, onListChange }: Props) => {
+const CustomEditor = ({ value, appData, onChange, onDataChange }: Props) => {
     // Инициализация редактора
     const editor = useMemo(
         () => withMentions(withReact(withHistory(createEditor()))),
@@ -80,7 +81,7 @@ const CustomEditor = ({ value, list, onChange, onListChange }: Props) => {
             >
                 <CustomSlateEditor
                     editor={editor}
-                    fieldList={list}
+                    appData={appData}
                     value={value}
                     onChange={onChange}
                 />
@@ -103,8 +104,8 @@ const CustomEditor = ({ value, list, onChange, onListChange }: Props) => {
                 <Divider />
                 <Box height={0.7}>
                     <EditableList
-                        fieldList={list}
-                        onChange={onListChange}
+                        appData={appData}
+                        onChange={onDataChange}
                     />
                 </Box>
             </Box>

@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Descendant } from 'slate';
-import { FieldList } from './utils/FieldList';
+import { Field, FieldList } from './utils/FieldList';
 import CustomEditor from './components/Editor/CustomEditor';
 
-import { Box, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 import { initialValue } from './components/Editor/utils/initialDocument';
 
 import EditIcon from '@mui/icons-material/Edit';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import SendIcon from '@mui/icons-material/Send';
 import DataGridTest from './components/DataGridTest';
+import { AppDataController } from './utils/AppDataController';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -51,28 +52,28 @@ function a11yProps(index: number) {
   };
 }
 
+const initialFields = [
+  {
+    name: "City",
+    isDeletable: true
+  },
+  {
+    name: "Name",
+    isDeletable: true
+  },
+  {
+    name: "LastName",
+    isDeletable: true
+  },
+  {
+    name: "Phone",
+    isDeletable: true
+  },
+] as Field[]
+
 function App() {
   const [documentValue, setDocumentValue] = useState<Descendant[]>(initialValue);
-  const [list, setList] = useState<FieldList>(new FieldList([
-    {
-      name: "City",
-      isDeletable: true
-    },
-    {
-      name: "Name",
-      isDeletable: true
-    },
-    {
-      name: "LastName",
-      isDeletable: true
-    },
-    {
-      name: "Phone",
-      isDeletable: true
-    },
-  ],
-    null)
-  );
+  const [appData, setAppData] = useState<AppDataController>(new AppDataController(null, null, initialFields, null));
 
   const [tabsValue, setTabsValue] = React.useState(0);
 
@@ -116,13 +117,13 @@ function App() {
         <TabPanel value={tabsValue} index={0}>
           <CustomEditor
             value={documentValue}
-            list={list}
+            appData={appData}
             onChange={setDocumentValue}
-            onListChange={setList}
+            onDataChange={setAppData}
           />
         </TabPanel>
         <TabPanel value={tabsValue} index={1}>
-          <DataGridTest fieldList={list} />
+          <DataGridTest appData={appData} onDataChange={setAppData} />
         </TabPanel>
         <TabPanel value={tabsValue} index={2}>
           Item Three

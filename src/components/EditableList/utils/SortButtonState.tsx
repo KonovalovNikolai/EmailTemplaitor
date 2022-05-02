@@ -1,13 +1,13 @@
-import { ListElement } from "../../../utils/FieldList"
+import { Field } from "../../../utils/FieldList"
 
 export interface SortButtonState {
-    Sort(list: ListElement[]): ListElement[]
+    Sort(list: Field[]): Field[]
 
     ChangeState(): SortButtonState
 }
 
 export class DefaultSortButtonState implements SortButtonState {
-    public Sort(list: ListElement[]): ListElement[] {
+    public Sort(list: Field[]): Field[] {
         return list
     }
 
@@ -18,7 +18,7 @@ export class DefaultSortButtonState implements SortButtonState {
 }
 
 class AlphabeticalSortButtonState implements SortButtonState {
-    Sort(list: ListElement[]): ListElement[] {
+    Sort(list: Field[]): Field[] {
         return list.sort((a, b) => {
             if (a.name > b.name) return 1;
             if (a.name < b.name) return -1;
@@ -32,7 +32,7 @@ class AlphabeticalSortButtonState implements SortButtonState {
 }
 
 class ReverseAlphabeticalSortButtonState implements SortButtonState {
-    Sort(list: ListElement[]): ListElement[] {
+    Sort(list: Field[]): Field[] {
         return list.sort((a, b) => {
             if (a.name > b.name) return -1;
             if (a.name < b.name) return 1;

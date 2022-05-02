@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useState } from 'react';
 import { Box, Grid, Popover } from '@mui/material';
 
-import { FieldList, ListElement } from "../../utils/FieldList";
+import { FieldList, Field } from "../../utils/FieldList";
 import { hasWhiteSpace } from './utils/hasWhiteSpace';
 
 import { DeletableListItem, UndeletableListItem } from './components/ListItemBase';
@@ -10,16 +10,17 @@ import { FieldNameInputField } from './components/FieldNameInputField';
 import NewFieldButton from './components/AddNewFieldButton';
 import { DefaultSortButtonState, SortButtonState } from './utils/SortButtonState';
 import ScrollableBox from '../ScrollableBox';
+import { AppDataController } from '../../utils/AppDataController';
 
 type Props = {
-    fieldList: FieldList;
-    onChange: React.Dispatch<React.SetStateAction<FieldList>>;
+    appData: AppDataController;
+    onChange: React.Dispatch<React.SetStateAction<AppDataController>>;
 };
 
 // Дата состояния выделенного элемента
 type SelectedElementData = {
     anchorEl: Element;
-    element: ListElement;
+    element: Field;
 };
 
 export type TopBarData = {
@@ -27,7 +28,7 @@ export type TopBarData = {
     sortState: SortButtonState;
 };
 
-export const EditableList = memo(({ fieldList, onChange }: Props) => {
+export const EditableList = memo(({ appData, onChange }: Props) => {
     //#region - Top Bar -
     // Состояние верхней панели
     const [barState, setBarState] = React.useState<TopBarData>(
@@ -42,11 +43,14 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
     // Список элементов списка
     // Список сортируется по текущему состоянию сортировки
     // Список фильтруется по текущему значению строки поиска
-    const list = barState.sortState.Sort(fieldList.GetList(barState.searchValue));
+    const list = barState.sortState.Sort(appData.GetFieldList().GetList(barState.searchValue));
     // Обработка удаление элемента
     const handleDelete = useCallback(
-        (element: ListElement) => {
-            onChange(prevList => prevList.Delete(element));
+        (element: Field) => {
+            onChange(data => {
+                data.RemoveField(element);
+                return data.CreateNew();
+            });
         },
         []
     );
@@ -54,7 +58,7 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
     // Обработка нажатия на элемент
     // Вызвать поппап для ввода имени поля
     const handleClick = useCallback(
-        (event: React.MouseEvent, element: ListElement) => {
+        (event: React.MouseEvent, element: Field) => {
             setSelectedElement({
                 anchorEl: event.currentTarget,
                 element: element,
@@ -81,13 +85,15 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
             // Добавление нового элемента в список
             const newElement = selectedElement.element;
             newElement.name = value;
-            onChange(fieldList.Add(newElement));
+            appData.AddField(newElement);
+            onChange(appData.CreateNew());
         }
         else {
             // Изменение имени выбранного элемента
             const newElement = selectedElement.element;
             newElement.name = value;
-            onChange(fieldList.Replace(selectedElement.element, newElement));
+            appData.RenameField(selectedElement.element, newElement);
+            onChange(appData.CreateNew());
         }
 
         // Закрыть поппап
@@ -101,7 +107,7 @@ export const EditableList = memo(({ fieldList, onChange }: Props) => {
 
     // Валидатор значения поля ввода нового имени
     const validator = (value: string) => {
-        if (hasWhiteSpace(value) || fieldList.ContainName(value)) {
+        if (hasWhiteSpace(value) || appData.GetFieldList().ContainName(value)) {
             return false;
         }
         return true;
