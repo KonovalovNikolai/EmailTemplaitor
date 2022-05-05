@@ -1,30 +1,19 @@
-import React from 'react';
-import { DataGrid, GridRowsProp, GridRowId, GridToolbar, GridActionsCellItem, GridColumns } from '@mui/x-data-grid';
-import { FieldList } from '../utils/FieldList';
+import { DataGrid, GridActionsCellItem, GridColumns, GridRowId, GridRowsProp, GridToolbar } from '@mui/x-data-grid';
+import React, { useMemo } from 'react';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Button } from '@mui/material';
-import { AppDataController } from '../utils/AppDataController';
+import { Addressee } from '../utils/Addressee';
+import { AddAddresseeAction, IFieldsReducerAction, RemoveAddresseeAction } from '../hooks/FieldListReducer';
+import { Field, getFieldNameList } from '../utils/FieldList';
 
 type DataGridTestProps = {
-    appData: AppDataController;
-    onDataChange: React.Dispatch<React.SetStateAction<AppDataController>>;
+    fieldList: Field[];
+    addresseeList: Addressee[];
+    onChange: React.Dispatch<IFieldsReducerAction>;
 };
 
-const DataGridTest = ({ appData, onDataChange }: DataGridTestProps) => {
-    const columns: GridColumns = appData.GetFieldList().GetListOfNames("").map((name: string) => {
-        return {
-            field: name
-        };
-    });
-
-    const handleDelete = (id: GridRowId) => {
-        onDataChange(data => {
-            data.GetAddressees().Remove(id as number);
-            return data.CreateNew();
-        });
-    };
-
+function generateColumns(list: Field[]) {
     const actionColum = {
         field: 'actions',
         type: 'actions',
@@ -35,30 +24,47 @@ const DataGridTest = ({ appData, onDataChange }: DataGridTestProps) => {
                 label="Delete"
                 onClick={() => {
                     console.log(params);
-                }
-                }
+                }}
             />
         ]
     };
 
+    const columns: GridColumns = list.map((field: Field) => {
+        return {
+            field: field.name,
+        };
+    });
+
     columns.push(actionColum);
 
-    const addressees = appData.GetAddressees().GetAddressees();
-    let rows = [];
-    for (let id in addressees) {
-        rows.push({
-            id: id,
-            ...addressees[id]
-        });
-    }
+    return columns;
+}
 
-    const gridRows: GridRowsProp = rows;
+function generateRows(list: Addressee[]) {
+    return list.map((addressee: Addressee, index: number) => {
+        return {
+            id: index,
+            ...addressee
+        };
+    }) as GridRowsProp;
+}
+
+const DataGridTest = ({ fieldList, addresseeList, onChange }: DataGridTestProps) => {
+    const columns = useMemo(
+        () => generateColumns(fieldList),
+        [fieldList]
+    );
+
+    // const handleDelete = (id: GridRowId) => {
+    //     const action = new RemoveAddresseeAction(id as number);
+    //     onChange(action);
+    // };
+
+    const gridRows: GridRowsProp = generateRows(addresseeList);
 
     const handleAddRow = () => {
-        onDataChange(data => {
-            data.AddAddressee();
-            return data.CreateNew();
-        });
+        const action = new AddAddresseeAction();
+        onChange(action);
     };
 
     return (

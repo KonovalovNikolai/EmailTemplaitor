@@ -10,25 +10,25 @@ import { withMentions } from './plugins/withMentions';
 
 import { Box, Divider } from '@mui/material';
 
-import { FieldList } from '../../utils/FieldList';
 import { EditableList } from '../EditableList/EditableList';
 import { SlateToolBar } from './components/Toolbar/Toolbar';
 import CustomSlateEditor from './CustomSlateEditor';
 
-import { AppDataController } from '../../utils/AppDataController';
+import { Field } from '../../utils/FieldList';
 import isBlockActive from './utils/isBlockActive';
 import isMarkActive from './utils/isMarkActive';
 import toggleBlock from './utils/toggleBlock';
 import toggleMark from './utils/toggleMark';
+import { IFieldsReducerAction } from '../../hooks/FieldListReducer';
 
 interface Props {
     value: Descendant[];
-    appData: AppDataController;
-    onChange: React.Dispatch<any>;
-    onDataChange: React.Dispatch<React.SetStateAction<AppDataController>>;
+    fieldList: Field[];
+    onDocumentChange: React.Dispatch<any>;
+    onFieldListChange: React.Dispatch<IFieldsReducerAction>;
 }
 
-const CustomEditor = ({ value, appData, onChange, onDataChange }: Props) => {
+const CustomEditor = ({ value, fieldList, onDocumentChange, onFieldListChange }: Props) => {
     // Инициализация редактора
     const editor = useMemo(
         () => withMentions(withReact(withHistory(createEditor()))),
@@ -81,9 +81,9 @@ const CustomEditor = ({ value, appData, onChange, onDataChange }: Props) => {
             >
                 <CustomSlateEditor
                     editor={editor}
-                    appData={appData}
+                    fieldList={fieldList}
                     value={value}
-                    onChange={onChange}
+                    onChange={onDocumentChange}
                 />
             </Box>
             <Divider orientation='vertical' />
@@ -104,8 +104,8 @@ const CustomEditor = ({ value, appData, onChange, onDataChange }: Props) => {
                 <Divider />
                 <Box height={0.7}>
                     <EditableList
-                        appData={appData}
-                        onChange={onDataChange}
+                        fieldList={fieldList}
+                        onChange={onFieldListChange}
                     />
                 </Box>
             </Box>

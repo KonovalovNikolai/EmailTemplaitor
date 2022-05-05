@@ -16,57 +16,53 @@ export interface EmailField extends UnDeletableField {
 
 export type Field = DeletableField | UnDeletableField | EmailField;
 
-/**
- * Класс представляющий поля пользователя.
- * 
- * Реализует методы для модификации списка полей.
- */
-export class FieldList {
-    private list: Field[];
-
-    private importantElement: EmailField = {
+export const initialFieldList: Field[] = [
+    {
         name: "Email",
         isDeletable: false,
         isEmail: true
-    };
+    },
+    {
+        name: "City",
+        isDeletable: true
+    },
+    {
+        name: "Name",
+        isDeletable: true
+    },
+    {
+        name: "LastName",
+        isDeletable: true
+    },
+    {
+        name: "Phone",
+        isDeletable: true
+    },
+];
 
-    public constructor(list: Field[]) {
-        this.list = list;
+export function filterFieldList(list: Field[], filter: string) {
+    return !filter ? list : list.filter(element => element.name.toLowerCase().startsWith(filter));
+}
+
+export function getFieldNameList(list: Field[]) {
+    return list.map<string>(element => element.name);
+}
+
+export function removeFieldFromList(list: Field[], field: Field) {
+    return list.filter(e => e !== field);
+}
+
+export function renameFieldInList(list: Field[], field: Field): Field[] {
+    const index = list.indexOf(field);
+
+    if (!list[index].isDeletable) {
+        return list;
     }
 
-    public GetList(filter: string): Field[] {
-        const list = [this.importantElement, ...this.list];
-        return filter === "" ? list : list.filter(element => element.name.toLowerCase().startsWith(filter));
-    }
+    list[index] = field;
+    return list;
+}
 
-    public GetListOfNames(filter: string): string[] {
-        return this.GetList(filter).map<string>(element => element.name);
-    }
-
-    public Replace(field: Field, newElement: Field) {
-        if (field === this.importantElement) {
-            return;
-        }
-
-        const index = this.list.indexOf(field);
-        if (~index) {
-            this.list[index] = newElement;
-        }
-    }
-
-    public Add(field: Field) {
-        this.list.push(field);
-    }
-
-    public Delete(field: Field) {
-        this.list = this.list.filter(e => e !== field);
-    }
-
-    public ContainName(name: string): boolean {
-        if (name === this.importantElement.name) {
-            return true;
-        }
-
-        return this.list.find(e => e.name === name) !== undefined;
-    }
+export function isFieldListContainName(list: Field[], fieldName: string): boolean {
+    return list.find(element => element.name.toLowerCase() === fieldName) !== undefined;
 }

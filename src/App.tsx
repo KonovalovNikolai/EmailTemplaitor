@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import { Descendant } from 'slate';
-import { Field, FieldList } from './utils/FieldList';
 import CustomEditor from './components/Editor/CustomEditor';
+import { initialFieldList } from './utils/FieldList';
 
 import { Box, Tab, Tabs } from '@mui/material';
 import { initialValue } from './components/Editor/utils/initialDocument';
@@ -10,7 +10,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import SendIcon from '@mui/icons-material/Send';
 import DataGridTest from './components/DataGridTest';
-import { AppDataController } from './utils/AppDataController';
+import { fieldsReducer, initFieldReducer } from './hooks/FieldListReducer';
+import { createAddressee } from './utils/Addressee';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -52,28 +53,15 @@ function a11yProps(index: number) {
   };
 }
 
-const initialFields = [
-  {
-    name: "City",
-    isDeletable: true
-  },
-  {
-    name: "Name",
-    isDeletable: true
-  },
-  {
-    name: "LastName",
-    isDeletable: true
-  },
-  {
-    name: "Phone",
-    isDeletable: true
-  },
-] as Field[]
-
 function App() {
   const [documentValue, setDocumentValue] = useState<Descendant[]>(initialValue);
-  const [appData, setAppData] = useState<AppDataController>(new AppDataController(null, null, initialFields, null));
+
+  const [fieldReducerState, fieldDispatch] = useReducer(
+    fieldsReducer,
+    initFieldReducer(initialFieldList, [createAddressee(initialFieldList)])
+  );
+
+  const { fieldList, addresseeList } = { ...fieldReducerState };
 
   const [tabsValue, setTabsValue] = React.useState(0);
 
@@ -117,13 +105,17 @@ function App() {
         <TabPanel value={tabsValue} index={0}>
           <CustomEditor
             value={documentValue}
-            appData={appData}
-            onChange={setDocumentValue}
-            onDataChange={setAppData}
+            fieldList={fieldList}
+            onDocumentChange={setDocumentValue}
+            onFieldListChange={fieldDispatch}
           />
         </TabPanel>
         <TabPanel value={tabsValue} index={1}>
-          <DataGridTest appData={appData} onDataChange={setAppData} />
+          <DataGridTest
+            fieldList={fieldList}
+            addresseeList={addresseeList}
+            onChange={fieldDispatch}
+          />
         </TabPanel>
         <TabPanel value={tabsValue} index={2}>
           Item Three

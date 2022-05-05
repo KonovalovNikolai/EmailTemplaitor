@@ -1,26 +1,26 @@
-import React, { memo, useCallback, useState } from 'react';
 import { Box, Grid, Popover } from '@mui/material';
+import React, { memo, useCallback, useState } from 'react';
 
-import { FieldList, Field } from "../../utils/FieldList";
+import { DeletableField, Field, filterFieldList, isFieldListContainName } from "../../utils/FieldList";
 import { hasWhiteSpace } from './utils/hasWhiteSpace';
 
+import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAction } from '../../hooks/FieldListReducer';
+import ScrollableBox from '../ScrollableBox';
+import NewFieldButton from './components/AddNewFieldButton';
+import { FieldNameInputField } from './components/FieldNameInputField';
 import { DeletableListItem, UndeletableListItem } from './components/ListItemBase';
 import ListTopBar from './components/ListTopBar';
-import { FieldNameInputField } from './components/FieldNameInputField';
-import NewFieldButton from './components/AddNewFieldButton';
 import { DefaultSortButtonState, SortButtonState } from './utils/SortButtonState';
-import ScrollableBox from '../ScrollableBox';
-import { AppDataController } from '../../utils/AppDataController';
 
 type Props = {
-    appData: AppDataController;
-    onChange: React.Dispatch<React.SetStateAction<AppDataController>>;
+    fieldList: Field[];
+    onChange: React.Dispatch<IFieldsReducerAction>;
 };
 
 // Дата состояния выделенного элемента
 type SelectedElementData = {
     anchorEl: Element;
-    element: Field;
+    element: DeletableField;
 };
 
 export type TopBarData = {
@@ -28,7 +28,7 @@ export type TopBarData = {
     sortState: SortButtonState;
 };
 
-export const EditableList = memo(({ appData, onChange }: Props) => {
+export const EditableList = memo(({ fieldList, onChange }: Props) => {
     //#region - Top Bar -
     // Состояние верхней панели
     const [barState, setBarState] = React.useState<TopBarData>(
@@ -43,22 +43,21 @@ export const EditableList = memo(({ appData, onChange }: Props) => {
     // Список элементов списка
     // Список сортируется по текущему состоянию сортировки
     // Список фильтруется по текущему значению строки поиска
-    const list = barState.sortState.Sort(appData.GetFieldList().GetList(barState.searchValue));
+    const list = barState.sortState.Sort(filterFieldList(fieldList, barState.searchValue));
+
     // Обработка удаление элемента
     const handleDelete = useCallback(
         (element: Field) => {
-            onChange(data => {
-                data.RemoveField(element);
-                return data.CreateNew();
-            });
+            const action = new DeleteFieldAction(element);
+            onChange(action);
         },
         []
     );
 
     // Обработка нажатия на элемент
-    // Вызвать поппап для ввода имени поля
+    // Вызвать popup для ввода имени поля
     const handleClick = useCallback(
-        (event: React.MouseEvent, element: Field) => {
+        (event: React.MouseEvent, element: DeletableField) => {
             setSelectedElement({
                 anchorEl: event.currentTarget,
                 element: element,
@@ -83,17 +82,21 @@ export const EditableList = memo(({ appData, onChange }: Props) => {
         // значит это создание нового элемента
         if (selectedElement.element.name === "") {
             // Добавление нового элемента в список
-            const newElement = selectedElement.element;
-            newElement.name = value;
-            appData.AddField(newElement);
-            onChange(appData.CreateNew());
+            const newElement: DeletableField = {
+                ...selectedElement.element,
+                name: value,
+            };
+            const action = new AddFieldAction(newElement);
+            onChange(action);
         }
         else {
             // Изменение имени выбранного элемента
-            const newElement = selectedElement.element;
-            newElement.name = value;
-            appData.RenameField(selectedElement.element, newElement);
-            onChange(appData.CreateNew());
+            const newElement: DeletableField = {
+                ...selectedElement.element,
+                name: value,
+            };
+            const action = new RenameFieldAction(selectedElement.element, newElement);
+            onChange(action);
         }
 
         // Закрыть поппап
@@ -107,7 +110,7 @@ export const EditableList = memo(({ appData, onChange }: Props) => {
 
     // Валидатор значения поля ввода нового имени
     const validator = (value: string) => {
-        if (hasWhiteSpace(value) || appData.GetFieldList().ContainName(value)) {
+        if (hasWhiteSpace(value) || isFieldListContainName(fieldList, value.toLowerCase())) {
             return false;
         }
         return true;

@@ -1,50 +1,50 @@
-export interface AddresseeData {
+import { Field } from "./FieldList";
+
+export interface Addressee {
     [fieldName: string]: string;
 }
 
-export class Addressee {
-    private id: number;
+export function createAddressee(fieldList: Field[]) {
+    const addressee: Addressee = {};
+    fieldList.forEach(f => addressee[f.name] = "");
+    return addressee;
+}
 
-    private data: AddresseeData = {};
-
-    public constructor(data: AddresseeData) {
-        this.data = data;
+function addAddresseeField(addressee: Addressee, field: string) {
+    if (field in addressee) {
+        return addressee;
     }
 
-    public GetId(): number {
-        return this.id;
+    addressee[field] = "";
+}
+
+function removeAddresseeField(addressee: Addressee, field: string) {
+    if (field in addressee) {
+        delete this.data[field];
+        return addressee;
     }
 
-    public SetId(id: number) {
-        this.id = id;
+    return addressee;
+}
+
+function renameAddresseeField(addressee: Addressee, field: string, newField: string) {
+    if (field in addressee && !(newField in addressee)) {
+        addressee[newField] = addressee[field];
+        delete addressee[field];
+        return addressee;
     }
 
-    public GetData() {
-        return this.data;
-    }
+    return addressee;
+}
 
-    public AddField(fieldName: string) {
-        if (fieldName in this.data) {
-            return;
-        }
+export function addAddresseeFieldToList(addresseeList: Addressee[], field: Field) {
+    return addresseeList.map(a => addAddresseeField(a, field.name));
+}
 
-        this.data[fieldName] = "";
-    }
-    public RemoveField(fieldName: string) {
-        if (fieldName in this.data) {
-            delete this.data[fieldName];
-        }
-    }
+export function removeAddresseeFieldFromList(addresseeList: Addressee[], field: Field) {
+    return addresseeList.map(a => removeAddresseeField(a, field.name));
+}
 
-    public RenameField(fieldName: string, newName: string) {
-        if (fieldName in this.data && !(newName in this.data)) {
-            this.data[newName] = this.data[fieldName];
-            delete this.data[fieldName];
-        }
-    }
-    public SetField(fieldName: string, value: string) {
-        if (fieldName in this.data) {
-            this.data[fieldName] = value;
-        }
-    }
+export function renameAddresseeFieldInList(addresseeList: Addressee[], field: Field, newField: Field) {
+    return addresseeList.map(a => renameAddresseeField(a, field.name, newField.name));
 }

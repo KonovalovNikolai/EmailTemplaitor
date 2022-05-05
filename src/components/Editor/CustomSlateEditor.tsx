@@ -1,14 +1,10 @@
 import { Box, PopperProps } from "@mui/material";
 import { FunctionComponent, memo, useCallback, useState } from "react";
-import {
-    Descendant, Editor, Range, Transforms
-} from 'slate';
+import { Descendant, Editor, Range, Transforms } from 'slate';
 import { Editable, Slate } from "slate-react";
-import { AppDataController } from "../../utils/AppDataController";
-import { FieldList } from "../../utils/FieldList";
+import { Field, filterFieldList, getFieldNameList } from "../../utils/FieldList";
 import ScrollableBox from "../ScrollableBox";
 import AutoCompletePoper from "./components/AutoCompletePoper/AutoCompletePoper";
-import { SlateToolBar } from "./components/Toolbar/Toolbar";
 import RenderElement from "./elements/RenderElement";
 import RenderLeaf from "./elements/RenderLeaf";
 import { getAutoCompleteData } from "./utils/getAutoCompleteData";
@@ -18,7 +14,7 @@ import { insertMention } from "./utils/insertMention";
 interface CustomSlateEditorProps {
     editor: Editor;
     value: Descendant[];
-    appData: AppDataController;
+    fieldList: Field[];
     onChange: React.Dispatch<any>;
 }
 
@@ -29,13 +25,14 @@ type AutoCompleteData = {
     listIndex: number;
 };
 
-const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, value, appData, onChange }) => {
+const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, value, fieldList, onChange }) => {
     const renderElement = useCallback(props => <RenderElement {...props} />, []);
     const renderLeaf = useCallback(props => <RenderLeaf {...props} />, []);
 
     const [autoCompleteData, setAutoCompleteData] = useState<AutoCompleteData | null>(null);
 
-    const chars = appData.GetFieldList().GetListOfNames(autoCompleteData?.searchValue).sort().slice(0, 10);
+    const filteredFields = filterFieldList(fieldList, autoCompleteData?.searchValue);
+    const fieldNames = getFieldNameList(filteredFields).sort().slice(0, 10);
 
     const handleChange = useCallback(
         (value: Descendant[]) => {
@@ -77,7 +74,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                         setAutoCompleteData(prevData => {
                             const index = prevData.listIndex;
                             const newData = { ...prevData };
-                            newData.listIndex = index >= chars.length - 1 ? 0 : index + 1;
+                            newData.listIndex = index >= fieldNames.length - 1 ? 0 : index + 1;
                             return newData;
                         });
                         break;
@@ -86,7 +83,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                         setAutoCompleteData(prevData => {
                             const index = prevData.listIndex;
                             const newData = { ...prevData };
-                            newData.listIndex = index >= chars.length - 1 ? 0 : index - 1;
+                            newData.listIndex = index >= fieldNames.length - 1 ? 0 : index - 1;
                             return newData;
                         });
                         break;
@@ -94,7 +91,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                     case 'Enter':
                         event.preventDefault();
                         Transforms.select(editor, autoCompleteData.targetRange);
-                        insertMention(editor, chars[autoCompleteData.listIndex]);
+                        insertMention(editor, fieldNames[autoCompleteData.listIndex]);
                         break;
                     case 'Escape':
                         event.preventDefault();
@@ -103,7 +100,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                 }
             }
         },
-        [chars, autoCompleteData]
+        [fieldNames, autoCompleteData]
     );
 
     return (
@@ -142,7 +139,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
             </Slate>
             <AutoCompletePoper
                 anchorEl={autoCompleteData?.anchorEl}
-                chars={chars}
+                chars={fieldNames}
                 open={!!autoCompleteData}
                 index={autoCompleteData?.listIndex}
                 onInsert={(value) => {
