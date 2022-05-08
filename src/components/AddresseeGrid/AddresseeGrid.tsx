@@ -1,6 +1,6 @@
 import { DataGrid } from "@mui/x-data-grid";
-import { memo, useMemo } from "react";
-import { IFieldsReducerAction, SetAddresseeValueAction } from "../../hooks/FieldListReducer";
+import { memo, useCallback, useMemo, useState } from "react";
+import { AddAddresseeAction, DeleteAddresseeAction, IFieldsReducerAction, SetAddresseeValueAction } from "../../hooks/FieldListReducer";
 import { Addressee } from "../../utils/Addressee";
 import { Field } from "../../utils/FieldList";
 import AddresseeGridToolbar from "./utils/components/AddresseeGridToolbar";
@@ -30,10 +30,31 @@ const AddresseeGrid = ({ fieldList, addresseeList, onChange }: AddresseeGridProp
         [addresseeList]
     );
 
+    const handleAddRow = useCallback(
+        () => {
+            const action = new AddAddresseeAction(false);
+            onChange(action);
+            return {
+                id: action.newAddresseeIndex,
+                ...action.newAddressee
+            };
+        },
+        []
+    );
+
+    const handleDeleteRow = useCallback(
+        (ids: Set<number>) => {
+            const action = new DeleteAddresseeAction(ids, true);
+            onChange(action);
+        },
+        []
+    );
+
     const toolBar = () => {
         return (
             <AddresseeGridToolbar
-                onChange={onChange}
+                onAdd={handleAddRow}
+                onDelete={handleDeleteRow}
             />
         );
     };
