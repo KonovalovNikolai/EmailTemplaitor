@@ -1,4 +1,7 @@
-import { memo } from "react";
+import AddIcon from '@mui/icons-material/Add';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
+import { Box, IconButton } from "@mui/material";
 import {
     GridToolbarContainer,
     GridToolbarDensitySelector,
@@ -6,35 +9,53 @@ import {
     GridToolbarFilterButton,
     useGridApiContext
 } from "@mui/x-data-grid";
-import { IconButton } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
-import { AddAddresseeAction, IFieldsReducerAction } from "../../../../hooks/FieldListReducer";
+import { memo } from "react";
 
 interface GridToolbarProps {
-    onChange: React.Dispatch<IFieldsReducerAction>;
+    onAdd: () => any;
+    onDelete: (ids: Set<number>) => void;
 }
 
-const AddresseeGridToolbar = ({ onChange: onAdd }: GridToolbarProps) => {
+const AddresseeGridToolbar = ({ onAdd: onAdd, onDelete }: GridToolbarProps) => {
     const apiRef = useGridApiContext();
 
     return (
         <GridToolbarContainer>
-            <GridToolbarFilterButton />
-            <GridToolbarDensitySelector />
-            <GridToolbarExport />
-            <IconButton
-                color="primary"
-                onClick={() => {
-                    const action = new AddAddresseeAction(false);
-                    onAdd(action);
-                    apiRef.current.updateRows([{
-                        id: action.newAddresseeIndex,
-                        ...action.newAddressee
-                    }]);
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
                 }}
             >
-                <AddIcon />
-            </IconButton>
+                <Box>
+                    <GridToolbarFilterButton />
+                    <GridToolbarDensitySelector />
+                    <GridToolbarExport />
+                </Box>
+                <Box>
+                    <IconButton
+                        color="primary"
+                        onClick={() => {
+                            apiRef.current.updateRows([{
+                                ...onAdd()
+                            }]);
+                        }}
+                    >
+                        <AddIcon />
+                    </IconButton>
+                    <IconButton
+                        color="primary"
+                        onClick={() => {
+                            const selectedRows = apiRef.current.getSelectedRows();
+                            const ids = new Set(Array.from(selectedRows.keys()) as number[]);
+                            
+                            onDelete(ids);
+                        }}
+                    >
+                        <DeleteOutlineIcon />
+                    </IconButton>
+                </Box>
+            </Box>
         </GridToolbarContainer>
     );
 };

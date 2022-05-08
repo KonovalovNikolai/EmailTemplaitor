@@ -96,22 +96,26 @@ export class AddAddresseeAction implements IFieldsReducerAction {
     }
 }
 
-export class RemoveAddresseeAction implements IFieldsReducerAction {
-    private _index: number;
-    public constructor(index: number) {
-        this._index = index;
-    }
+export class DeleteAddresseeAction implements IFieldsReducerAction {
+    public constructor(private _indexes: Set<number>, private _shouldUpdate: boolean) { }
 
     public Action(state: FieldsReducerState): FieldsReducerState {
-        const addresseeList = state.addresseeList;
-        if (this._index > addresseeList.length) {
-            return state;
+        const newAddresseeList: Addressee[] = [];
+        for (let index = 0; index < state.addresseeList.length; index++) {
+            if (!this._indexes.has(index)) {
+                newAddresseeList.push(state.addresseeList[index]);
+            }
         }
 
-        return {
-            ...state,
-            addresseeList: addresseeList.splice(this._index, 1)
-        };
+        if (this._shouldUpdate) {
+            return {
+                fieldList: state.fieldList,
+                addresseeList: newAddresseeList
+            };
+        }
+        else {
+            return state;
+        }
     }
 }
 
