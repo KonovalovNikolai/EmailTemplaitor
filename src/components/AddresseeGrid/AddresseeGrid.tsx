@@ -1,8 +1,6 @@
-
-import { Add } from "@mui/icons-material";
-import { DataGrid, GridCellEditStopParams, GridToolbarColumnsButton, GridToolbarContainer, GridToolbarDensitySelector, GridToolbarExport, GridToolbarFilterButton, MuiEvent, useGridApiContext } from "@mui/x-data-grid";
-import { memo, useCallback, useMemo } from "react";
-import { AddAddresseeAction, IFieldsReducerAction } from "../../hooks/FieldListReducer";
+import { DataGrid } from "@mui/x-data-grid";
+import { memo, useMemo } from "react";
+import { IFieldsReducerAction, SetAddresseeValueAction } from "../../hooks/FieldListReducer";
 import { Addressee } from "../../utils/Addressee";
 import { Field } from "../../utils/FieldList";
 import AddresseeGridToolbar from "./utils/components/AddresseeGridToolbar";
@@ -17,7 +15,13 @@ type AddresseeGridProps = {
 
 const AddresseeGrid = ({ fieldList, addresseeList, onChange }: AddresseeGridProps) => {
     const columns = useMemo(
-        () => generateColumns(fieldList),
+        () => generateColumns(
+            fieldList,
+            (id, value, field) => {
+                const action = new SetAddresseeValueAction(id, field, value);
+                onChange(action);
+            }
+        ),
         [fieldList]
     );
 
@@ -29,7 +33,7 @@ const AddresseeGrid = ({ fieldList, addresseeList, onChange }: AddresseeGridProp
     const toolBar = () => {
         return (
             <AddresseeGridToolbar
-                onAdd={onChange}
+                onChange={onChange}
             />
         );
     };

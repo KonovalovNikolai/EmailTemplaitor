@@ -11,10 +11,10 @@ import AddIcon from '@mui/icons-material/Add';
 import { AddAddresseeAction, IFieldsReducerAction } from "../../../../hooks/FieldListReducer";
 
 interface GridToolbarProps {
-    onAdd: React.Dispatch<IFieldsReducerAction>;
+    onChange: React.Dispatch<IFieldsReducerAction>;
 }
 
-const AddresseeGridToolbar = ({ onAdd }: GridToolbarProps) => {
+const AddresseeGridToolbar = ({ onChange: onAdd }: GridToolbarProps) => {
     const apiRef = useGridApiContext();
 
     return (
