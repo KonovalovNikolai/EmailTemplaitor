@@ -3,16 +3,20 @@ import {
     GridToolbarContainer,
     GridToolbarDensitySelector,
     GridToolbarExport,
-    GridToolbarFilterButton
+    GridToolbarFilterButton,
+    useGridApiContext
 } from "@mui/x-data-grid";
 import { IconButton } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
+import { AddAddresseeAction, IFieldsReducerAction } from "../../../../hooks/FieldListReducer";
 
 interface GridToolbarProps {
-    onAdd: () => void;
+    onAdd: React.Dispatch<IFieldsReducerAction>;
 }
 
 const AddresseeGridToolbar = ({ onAdd }: GridToolbarProps) => {
+    const apiRef = useGridApiContext();
+
     return (
         <GridToolbarContainer>
             <GridToolbarFilterButton />
@@ -20,7 +24,14 @@ const AddresseeGridToolbar = ({ onAdd }: GridToolbarProps) => {
             <GridToolbarExport />
             <IconButton
                 color="primary"
-                onClick={onAdd}
+                onClick={() => {
+                    const action = new AddAddresseeAction(false);
+                    onAdd(action);
+                    apiRef.current.updateRows([{
+                        id: action.newAddresseeIndex,
+                        ...action.newAddressee
+                    }]);
+                }}
             >
                 <AddIcon />
             </IconButton>

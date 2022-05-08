@@ -71,23 +71,30 @@ export class RenameFieldAction implements IFieldsReducerAction {
 }
 
 export class AddAddresseeAction implements IFieldsReducerAction {
-    private _newAddressee: Addressee;
-    public constructor(newAddressee: Addressee = undefined) {
-        this._newAddressee = newAddressee;
+    public newAddressee: Addressee;
+    public newAddresseeIndex: number;
+    public constructor(private _shouldUpdate: boolean, newAddressee?: Addressee) {
+        this.newAddressee = newAddressee;
     }
 
     public Action(state: FieldsReducerState): FieldsReducerState {
-        if (!this._newAddressee) {
-            this._newAddressee = createAddressee(state.fieldList);
+        if (!this.newAddressee) {
+            this.newAddressee = createAddressee(state.fieldList);
         }
 
-        const newAddresseeList = [...state.addresseeList];
-        newAddresseeList.push(this._newAddressee);
+        state.addresseeList.push(this.newAddressee);
 
-        return {
-            fieldList: state.fieldList,
-            addresseeList: newAddresseeList
-        };
+        this.newAddresseeIndex = state.addresseeList.length - 1;
+
+        if (this._shouldUpdate) {
+            return {
+                fieldList: state.fieldList,
+                addresseeList: [...state.addresseeList]
+            };
+        }
+        else {
+            return state;
+        }
     }
 }
 
