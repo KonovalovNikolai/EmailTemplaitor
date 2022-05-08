@@ -9,9 +9,8 @@ import { initialValue } from './components/Editor/utils/initialDocument';
 import EditIcon from '@mui/icons-material/Edit';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import SendIcon from '@mui/icons-material/Send';
-import DataGridTest from './components/DataGridTest';
 import { fieldsReducer, initFieldReducer } from './hooks/FieldListReducer';
-import { createAddressee } from './utils/Addressee';
+import AddresseeGrid from './components/AddresseeGrid/AddresseeGrid';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,7 +57,7 @@ function App() {
 
   const [fieldReducerState, fieldDispatch] = useReducer(
     fieldsReducer,
-    initFieldReducer(initialFieldList, [createAddressee(initialFieldList)])
+    initFieldReducer(initialFieldList, [])
   );
 
   const { fieldList, addresseeList } = { ...fieldReducerState };
@@ -111,7 +110,7 @@ function App() {
           />
         </TabPanel>
         <TabPanel value={tabsValue} index={1}>
-          <DataGridTest
+          <AddresseeGrid
             fieldList={fieldList}
             addresseeList={addresseeList}
             onChange={fieldDispatch}

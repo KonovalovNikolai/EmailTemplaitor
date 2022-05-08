@@ -1,3 +1,4 @@
+import { log } from "console";
 import { useState } from "react";
 import { addAddresseeFieldToList, Addressee, createAddressee, removeAddresseeFieldFromList, renameAddresseeFieldInList } from "../utils/Addressee";
 import { Field, removeFieldFromList, renameFieldInList } from "../utils/FieldList";
@@ -70,17 +71,28 @@ export class RenameFieldAction implements IFieldsReducerAction {
 }
 
 export class AddAddresseeAction implements IFieldsReducerAction {
+    private _newAddressee: Addressee;
+    public constructor(newAddressee: Addressee = undefined) {
+        this._newAddressee = newAddressee;
+    }
+
     public Action(state: FieldsReducerState): FieldsReducerState {
-        const newAddressee = createAddressee(state.fieldList);
-        state.addresseeList.push(newAddressee);
-        return {
-            ...state,
+        if (!this._newAddressee) {
+            this._newAddressee = createAddressee(state.fieldList);
         }
+
+        const newAddresseeList = [...state.addresseeList];
+        newAddresseeList.push(this._newAddressee);
+
+        return {
+            fieldList: state.fieldList,
+            addresseeList: newAddresseeList
+        };
     }
 }
 
 export class RemoveAddresseeAction implements IFieldsReducerAction {
-    private _index: number
+    private _index: number;
     public constructor(index: number) {
         this._index = index;
     }
@@ -88,13 +100,13 @@ export class RemoveAddresseeAction implements IFieldsReducerAction {
     public Action(state: FieldsReducerState): FieldsReducerState {
         const addresseeList = state.addresseeList;
         if (this._index > addresseeList.length) {
-            return;
+            return state;
         }
-        
+
         return {
             ...state,
             addresseeList: addresseeList.splice(this._index, 1)
-        }
+        };
     }
 }
 
