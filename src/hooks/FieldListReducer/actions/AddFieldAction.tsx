@@ -15,7 +15,7 @@ export class AddFieldAction implements IFieldsReducerAction {
         const newAddresseeList = addAddresseeFieldToList(addresseeList, this._newField);
 
         return {
-            fieldList: fieldList,
+            fieldList: [...fieldList],
             addresseeList: newAddresseeList
         };
     }

@@ -16,11 +16,15 @@ function addAddresseeField(addressee: Addressee, field: string) {
     }
 
     addressee[field] = "";
+    return {
+        ...addressee,
+        [field]: ""
+    };
 }
 
 function removeAddresseeField(addressee: Addressee, field: string) {
     if (field in addressee) {
-        delete this.data[field];
+        delete addressee[field];
         return addressee;
     }
 

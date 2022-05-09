@@ -14,7 +14,7 @@ export class RenameFieldAction implements IFieldsReducerAction {
 
     public Action(state: FieldsReducerState): FieldsReducerState {
         const { fieldList, addresseeList } = { ...state };
-        const newFieldList = renameFieldInList(fieldList, this._field);
+        const newFieldList = renameFieldInList(fieldList, this._field, this._newField);
         const newAddresseeList = renameAddresseeFieldInList(addresseeList, this._field, this._newField);
 
         return {

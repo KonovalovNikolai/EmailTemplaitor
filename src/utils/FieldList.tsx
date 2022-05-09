@@ -52,15 +52,22 @@ export function removeFieldFromList(list: Field[], field: Field) {
     return list.filter(e => e !== field);
 }
 
-export function renameFieldInList(list: Field[], field: Field): Field[] {
-    const index = list.indexOf(field);
-
-    if (!list[index].isDeletable) {
-        return list;
+export function renameFieldInList(list: Field[], field: Field, newField: Field): Field[] {
+    const newList = [...list];
+    
+    const fieldIndex = newList.indexOf(field);
+    if (fieldIndex === -1) {
+        return newList;
     }
 
-    list[index] = field;
-    return list;
+    const newFieldIndex = newList.indexOf(newField);
+    if (newFieldIndex !== -1) {
+        return newList;
+    }
+
+    newList[fieldIndex] = newField;
+
+    return newList;
 }
 
 export function isFieldListContainName(list: Field[], fieldName: string): boolean {
