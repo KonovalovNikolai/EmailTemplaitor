@@ -1,7 +1,6 @@
-import AddIcon from '@mui/icons-material/Add';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-
 import { Box, IconButton } from "@mui/material";
+import { memo } from "react";
+
 import {
     GridToolbarContainer,
     GridToolbarDensitySelector,
@@ -9,12 +8,11 @@ import {
     GridToolbarFilterButton,
     useGridApiContext
 } from "@mui/x-data-grid";
-import { memo } from "react";
 
-interface GridToolbarProps {
-    onAdd: () => any;
-    onDelete: (ids: Set<number>) => void;
-}
+import AddIcon from '@mui/icons-material/Add';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
+import { GridToolbarProps } from "../types";
 
 const AddresseeGridToolbar = ({ onAdd: onAdd, onDelete }: GridToolbarProps) => {
     const apiRef = useGridApiContext();
@@ -27,12 +25,12 @@ const AddresseeGridToolbar = ({ onAdd: onAdd, onDelete }: GridToolbarProps) => {
                     alignItems: "center",
                 }}
             >
-                <Box>
+                <div>
                     <GridToolbarFilterButton />
                     <GridToolbarDensitySelector />
                     <GridToolbarExport />
-                </Box>
-                <Box>
+                </div>
+                <div>
                     <IconButton
                         color="primary"
                         onClick={() => {
@@ -48,13 +46,13 @@ const AddresseeGridToolbar = ({ onAdd: onAdd, onDelete }: GridToolbarProps) => {
                         onClick={() => {
                             const selectedRows = apiRef.current.getSelectedRows();
                             const ids = new Set(Array.from(selectedRows.keys()) as number[]);
-                            
+
                             onDelete(ids);
                         }}
                     >
                         <DeleteOutlineIcon />
                     </IconButton>
-                </Box>
+                </div>
             </Box>
         </GridToolbarContainer>
     );

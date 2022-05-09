@@ -4,13 +4,14 @@ import CustomEditor from './components/Editor/CustomEditor';
 import { initialFieldList } from './utils/FieldList';
 
 import { Box, Tab, Tabs } from '@mui/material';
-import { initialValue } from './components/Editor/utils/initialDocument';
+import { initialValue } from './utils/initialDocument';
 
 import EditIcon from '@mui/icons-material/Edit';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import SendIcon from '@mui/icons-material/Send';
+
 import { fieldsReducer, initFieldReducer } from './hooks/FieldListReducer';
-import AddresseeGrid from './components/AddresseeGrid/AddresseeGrid';
+import { AddresseeGrid } from './components/AddresseeGrid';
 
 interface TabPanelProps {
   children?: React.ReactNode;

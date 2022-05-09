@@ -1,19 +1,19 @@
 import { DataGrid } from "@mui/x-data-grid";
-import { memo, useCallback, useMemo, useState } from "react";
-import { AddAddresseeAction, DeleteAddresseeAction, IFieldsReducerAction, SetAddresseeValueAction } from "../../hooks/FieldListReducer";
-import { Addressee } from "../../utils/Addressee";
-import { Field } from "../../utils/FieldList";
-import AddresseeGridToolbar from "./utils/components/AddresseeGridToolbar";
-import { generateColumns } from "./utils/generateColumns";
-import { generateRows } from "./utils/generateRows";
+import { memo, useCallback, useMemo } from "react";
 
-type AddresseeGridProps = {
-    fieldList: Field[];
-    addresseeList: Addressee[];
-    onChange: React.Dispatch<IFieldsReducerAction>;
-};
+import AddresseeGridToolbar from "./AddresseeGridToolbar";
 
-const AddresseeGrid = ({ fieldList, addresseeList, onChange }: AddresseeGridProps) => {
+import { generateColumns } from "../utils/generateColumns";
+import { generateRows } from "../utils/generateRows";
+
+import {
+    AddAddresseeAction,
+    DeleteAddresseeAction, SetAddresseeValueAction
+} from "../../../hooks/FieldListReducer";
+
+import { AddresseeGridProps } from "../types";
+
+export const AddresseeGrid = memo(({ fieldList, addresseeList, onChange }: AddresseeGridProps) => {
     const columns = useMemo(
         () => generateColumns(
             fieldList,
@@ -72,6 +72,4 @@ const AddresseeGrid = ({ fieldList, addresseeList, onChange }: AddresseeGridProp
             </div>
         </div>
     );
-};
-
-export default memo(AddresseeGrid);
+});

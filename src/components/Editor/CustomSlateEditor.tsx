@@ -8,7 +8,7 @@ import AutoCompletePoper from "./components/AutoCompletePoper/AutoCompletePoper"
 import RenderElement from "./elements/RenderElement";
 import RenderLeaf from "./elements/RenderLeaf";
 import { getAutoCompleteData } from "./utils/getAutoCompleteData";
-import { GetBoundingClientRectFromRange } from "./utils/GetBoundingClientRectFromRange";
+import { getBoundingClientRectFromRange } from "./utils/GetBoundingClientRectFromRange";
 import { insertMention } from "./utils/insertMention";
 
 interface CustomSlateEditorProps {
@@ -45,7 +45,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
             };
 
             const getBoundingClientRect = () =>
-                GetBoundingClientRectFromRange(editor, data.targetRange);
+                getBoundingClientRectFromRange(editor, data.targetRange);
 
             const autoCompleteData: AutoCompleteData = {
                 anchorEl: { getBoundingClientRect },

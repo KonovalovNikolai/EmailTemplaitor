@@ -1,6 +1,6 @@
 import { Editor, Element as SlateElement } from "slate";
 
-const isBlockActive = (editor: Editor, format: string, blockType = 'type') => {
+export const isBlockActive = (editor: Editor, format: string, blockType = 'type') => {
     const { selection } = editor
     if (!selection) return false
 
@@ -16,5 +16,3 @@ const isBlockActive = (editor: Editor, format: string, blockType = 'type') => {
 
     return !!match
 }
-
-export default isBlockActive;

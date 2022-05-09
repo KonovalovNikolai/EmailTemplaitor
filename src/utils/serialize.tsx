@@ -1,7 +1,19 @@
 import {
-    Descendant, Element as SlateElement, Text
+    Descendant,
+    Element as SlateElement,
+    Text
 } from 'slate';
-import { BulletedListElement, CustomText, HeadingElement, HeadingTwoElement, ListItemElement, MentionElement, NumberedListElement, ParagraphElement } from '../components/Editor/custom-types';
+
+import {
+    BulletedListElement,
+    CustomText,
+    HeadingElement,
+    HeadingTwoElement,
+    ListItemElement,
+    MentionElement,
+    NumberedListElement,
+    ParagraphElement
+} from '../components/Editor/types';
 
 export const serializeNode = (node: Descendant) => {
     if (Text.isText(node)) {

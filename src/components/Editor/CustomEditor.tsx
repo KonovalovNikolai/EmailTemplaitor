@@ -5,21 +5,17 @@ import {
 } from 'slate';
 import { withHistory } from 'slate-history';
 import { withReact } from 'slate-react';
-
 import { withMentions } from './plugins/withMentions';
 
 import { Box, Divider } from '@mui/material';
 
-import { EditableList } from '../EditableList/EditableList';
 import { SlateToolBar } from './components/Toolbar/Toolbar';
 import CustomSlateEditor from './CustomSlateEditor';
 
 import { Field } from '../../utils/FieldList';
-import isBlockActive from './utils/isBlockActive';
-import isMarkActive from './utils/isMarkActive';
-import toggleBlock from './utils/toggleBlock';
-import toggleMark from './utils/toggleMark';
 import { IFieldsReducerAction } from '../../hooks/FieldListReducer';
+import { EditableList } from '../EditableList';
+import { isMarkActive, toggleMark, isBlockActive, toggleBlock } from './utils';
 
 interface Props {
     value: Descendant[];

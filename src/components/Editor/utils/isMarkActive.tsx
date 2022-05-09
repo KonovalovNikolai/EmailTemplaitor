@@ -1,8 +1,6 @@
 import { Editor, Element as SlateElement } from "slate"
 
-const isMarkActive = (editor: Editor, format: string) => {
+export const isMarkActive = (editor: Editor, format: string) => {
     const marks = Editor.marks(editor)
     return marks ? marks[format] === true : false
 }
-
-export default isMarkActive;

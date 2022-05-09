@@ -1,21 +1,18 @@
 import { Box, Grid, Popover } from '@mui/material';
 import React, { memo, useCallback, useState } from 'react';
 
-import { DeletableField, Field, filterFieldList, isFieldListContainName } from "../../utils/FieldList";
-import { hasWhiteSpace } from './utils/hasWhiteSpace';
+import { DeletableField, Field, filterFieldList, isFieldListContainName } from "../../../utils/FieldList";
+import { hasWhiteSpace } from '../utils/hasWhiteSpace';
 
-import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAction } from '../../hooks/FieldListReducer';
-import ScrollableBox from '../ScrollableBox';
-import NewFieldButton from './components/AddNewFieldButton';
-import { FieldNameInputField } from './components/FieldNameInputField';
-import { DeletableListItem, UndeletableListItem } from './components/ListItemBase';
-import ListTopBar from './components/ListTopBar';
-import { DefaultSortButtonState, SortButtonState } from './utils/SortButtonState';
+import ScrollableBox from '../../ScrollableBox';
+import { DefaultSortButtonState } from '../utils/SortButtonState';
+import NewFieldButton from './AddNewFieldButton';
+import { FieldNameInputField } from './FieldNameInput';
+import { DeletableListItem, UndeletableListItem } from './ListItemBase';
+import ListTopBar from './ListTopBar';
 
-type Props = {
-    fieldList: Field[];
-    onChange: React.Dispatch<IFieldsReducerAction>;
-};
+import { AddFieldAction, DeleteFieldAction, RenameFieldAction } from '../../../hooks/FieldListReducer';
+import { EditableListProps, EditableListTopBarData } from '../types';
 
 // Дата состояния выделенного элемента
 type SelectedElementData = {
@@ -23,15 +20,10 @@ type SelectedElementData = {
     element: DeletableField;
 };
 
-export type TopBarData = {
-    searchValue: string;
-    sortState: SortButtonState;
-};
-
-export const EditableList = memo(({ fieldList, onChange }: Props) => {
+export const EditableList = memo(({ fieldList, onChange }: EditableListProps) => {
     //#region - Top Bar -
     // Состояние верхней панели
-    const [barState, setBarState] = React.useState<TopBarData>(
+    const [barState, setBarState] = React.useState<EditableListTopBarData>(
         {
             searchValue: "",
             sortState: new DefaultSortButtonState()

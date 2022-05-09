@@ -1,7 +1,7 @@
 import { Editor, Element as SlateElement, Transforms } from "slate";
-import isMarkActive from "./isMarkActive";
+import { isMarkActive } from "./isMarkActive";
 
-const toggleMark = (editor: any, format: string) => {
+export const toggleMark = (editor: any, format: string) => {
     const isActive = isMarkActive(editor, format)
 
     // Применяем изменение для обычных узлов
@@ -31,5 +31,3 @@ const toggleMark = (editor: any, format: string) => {
         }
     );
 }
-
-export default toggleMark;

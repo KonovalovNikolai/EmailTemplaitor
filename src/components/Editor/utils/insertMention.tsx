@@ -1,5 +1,5 @@
 import { Editor, Transforms } from "slate"
-import { MentionElement } from "../custom-types"
+import { MentionElement } from "../types"
 
 export const insertMention = (editor: Editor, character: string) => {
     const mention: MentionElement = {
