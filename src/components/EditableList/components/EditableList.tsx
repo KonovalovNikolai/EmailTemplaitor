@@ -1,7 +1,6 @@
 import { Box, Grid, Popover } from '@mui/material';
 import React, { memo, useCallback, useState } from 'react';
 
-import { DeletableField, Field, filterFieldList, isFieldListContainName } from "../../../utils/FieldList";
 import { hasWhiteSpace } from '../utils/hasWhiteSpace';
 
 import ScrollableBox from '../../ScrollableBox';
@@ -11,45 +10,36 @@ import { FieldNameInputField } from './FieldNameInput';
 import { DeletableListItem, UndeletableListItem } from './ListItemBase';
 import ListTopBar from './ListTopBar';
 
-import { AddFieldAction, DeleteFieldAction, RenameFieldAction } from '../../../hooks/FieldListReducer';
 import { EditableListProps, EditableListTopBarData } from '../types';
 
 // Дата состояния выделенного элемента
-type SelectedElementData = {
+interface SelectedElementData<T> {
     anchorEl: Element;
-    element: DeletableField;
+    element: T | null;
 };
 
-export const EditableList = memo(({ fieldList, onChange }: EditableListProps) => {
-    //#region - Top Bar -
+export const EditableList = memo(({ elementList, getLabel, isChangeable, onAdd, onRename, onRemove }: EditableListProps<any>) => {
     // Состояние верхней панели
     const [barState, setBarState] = React.useState<EditableListTopBarData>(
         {
             searchValue: "",
-            sortState: new DefaultSortButtonState()
+            sortState: new DefaultSortButtonState<any>()
         }
     );
-    //#endregion
 
-    //#region - Field List -
+    // Состояние выделенного элемента
+    const [selectedElement, setSelectedElement] = useState<SelectedElementData<any> | null>(null);
+
     // Список элементов списка
     // Список сортируется по текущему состоянию сортировки
     // Список фильтруется по текущему значению строки поиска
-    const list = barState.sortState.Sort(filterFieldList(fieldList, barState.searchValue));
-
-    // Обработка удаление элемента
-    const handleDelete = useCallback(
-        (element: Field) => {
-            const action = new DeleteFieldAction(element);
-            onChange(action);
-        },
-        []
-    );
+    let filteredList = elementList.filter(element => getLabel(element).startsWith(barState.searchValue));
+    filteredList = barState.sortState.Sort(filteredList, getLabel);
 
     // Обработка нажатия на элемент
     // Вызвать popup для ввода имени поля
     const handleClick = useCallback(
-        (event: React.MouseEvent, element: DeletableField) => {
+        (event: React.MouseEvent, element: any) => {
             setSelectedElement({
                 anchorEl: event.currentTarget,
                 element: element,
@@ -58,37 +48,21 @@ export const EditableList = memo(({ fieldList, onChange }: EditableListProps) =>
         []
     );
 
-    //#endregion
-
-    //#region - Field Name Input Popover -
-    // Состояние выделенного элемента
-    const [selectedElement, setSelectedElement] = useState<SelectedElementData | null>(null);
-
     // Обработка нажатия Enter при вводе имени
     const handleEnter = (value: string) => {
         // Если поле пустое или имеет тоже значение, что и текущее имя элемента,
         // то изменения не будут приняты
-        if (value === "" || value === selectedElement.element.name) return;
+        if (value === "") return;
 
         // Если текущий выделенный элемент не имеет имени,
         // значит это создание нового элемента
-        if (selectedElement.element.name === "") {
+        if (selectedElement.element === null) {
             // Добавление нового элемента в список
-            const newElement: DeletableField = {
-                ...selectedElement.element,
-                name: value,
-            };
-            const action = new AddFieldAction(newElement);
-            onChange(action);
+            onAdd(value);
         }
         else {
             // Изменение имени выбранного элемента
-            const newElement: DeletableField = {
-                ...selectedElement.element,
-                name: value,
-            };
-            const action = new RenameFieldAction(selectedElement.element, newElement);
-            onChange(action);
+            onRename(selectedElement.element, value);
         }
 
         // Закрыть поппап
@@ -102,13 +76,17 @@ export const EditableList = memo(({ fieldList, onChange }: EditableListProps) =>
 
     // Валидатор значения поля ввода нового имени
     const validator = (value: string) => {
-        if (hasWhiteSpace(value) || isFieldListContainName(fieldList, value.toLowerCase())) {
+        const element = elementList.find(element => {
+            if (getLabel(element) === value) {
+                return true;
+            }
+        });
+
+        if (hasWhiteSpace(value) || element !== undefined) {
             return false;
         }
         return true;
     };
-
-    //#endregion
 
     return (
         <Box
@@ -145,15 +123,15 @@ export const EditableList = memo(({ fieldList, onChange }: EditableListProps) =>
                         padding: "0 5px 0 0",
                     }}
                 >
-                    {list.length > 0 &&
-                        list.map((element) => {
+                    {filteredList.length > 0 &&
+                        filteredList.map((element) => {
                             const { name, isDeletable } = element;
 
                             return isDeletable ?
                                 <DeletableListItem
                                     key={name}
                                     element={element}
-                                    onDelete={handleDelete}
+                                    onDelete={onRemove}
                                     onClick={handleClick}
                                 />
                                 :
@@ -191,7 +169,7 @@ export const EditableList = memo(({ fieldList, onChange }: EditableListProps) =>
                     <FieldNameInputField
                         id="new-field-name-input"
                         helperText="Введите название поля"
-                        defaultValue={selectedElement.element.name}
+                        defaultValue={selectedElement.element ? getLabel(selectedElement.element) : ""}
                         onEnter={handleEnter}
                         validator={validator}
                     />

@@ -40,6 +40,20 @@ export const initialFieldList: Field[] = [
     },
 ];
 
+export function createDeletableField(name: string): DeletableField {
+    return {
+        name: name,
+        isDeletable: true
+    };
+}
+
+export function getFieldName(field: Field) {
+    return field.name;
+}
+
+export function isFieldDeletable(field: Field) {
+    return field.isDeletable;
+}
 export function filterFieldList(list: Field[], filter: string) {
     return !filter ? list : list.filter(element => element.name.toLowerCase().startsWith(filter));
 }
@@ -54,7 +68,7 @@ export function removeFieldFromList(list: Field[], field: Field) {
 
 export function renameFieldInList(list: Field[], field: Field, newField: Field): Field[] {
     const newList = [...list];
-    
+
     const fieldIndex = newList.indexOf(field);
     if (fieldIndex === -1) {
         return newList;

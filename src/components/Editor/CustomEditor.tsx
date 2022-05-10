@@ -12,8 +12,8 @@ import { Box, Divider } from '@mui/material';
 import { SlateToolBar } from './components/Toolbar/Toolbar';
 import CustomSlateEditor from './CustomSlateEditor';
 
-import { Field } from '../../utils/FieldList';
-import { IFieldsReducerAction } from '../../hooks/FieldListReducer';
+import { createDeletableField, Field, getFieldName, isFieldDeletable } from '../../utils/FieldList';
+import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAction } from '../../hooks/FieldListReducer';
 import { EditableList } from '../EditableList';
 import { isMarkActive, toggleMark, isBlockActive, toggleBlock } from './utils';
 
@@ -31,7 +31,6 @@ const CustomEditor = ({ value, fieldList, onDocumentChange, onFieldListChange }:
         []
     );
 
-    //#region -- Format change callbacks --
     const isMarkActiveCallback = useCallback(
         (format: string) => {
             return isMarkActive(editor, format);
@@ -59,7 +58,32 @@ const CustomEditor = ({ value, fieldList, onDocumentChange, onFieldListChange }:
         },
         [editor]
     );
-    //#endregion
+
+    const handleAddField = useCallback(
+        (newFieldName: string) => {
+            const newField = createDeletableField(newFieldName);
+            const action = new AddFieldAction(newField);
+            onFieldListChange(action);
+        },
+        []
+    );
+
+    const handleRenameField = useCallback(
+        (field: Field, newName: string) => {
+            const newField = createDeletableField(newName);
+            const action = new RenameFieldAction(field, newField);
+            onFieldListChange(action);
+        },
+        []
+    );
+
+    const handleRemoveField = useCallback(
+        (field: Field) => {
+            const action = new DeleteFieldAction(field);
+            onFieldListChange(action);
+        },
+        []
+    );
 
     return (
         <Box
@@ -100,8 +124,12 @@ const CustomEditor = ({ value, fieldList, onDocumentChange, onFieldListChange }:
                 <Divider />
                 <Box height={0.7}>
                     <EditableList
-                        fieldList={fieldList}
-                        onChange={onFieldListChange}
+                        elementList={fieldList}
+                        getLabel={getFieldName}
+                        isChangeable={isFieldDeletable}
+                        onAdd={handleAddField}
+                        onRename={handleRenameField}
+                        onRemove={handleRemoveField}
                     />
                 </Box>
             </Box>
