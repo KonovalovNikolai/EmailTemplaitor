@@ -33,7 +33,9 @@ export const EditableList = memo(({ elementList, getLabel, isChangeable, onAdd, 
     // Список элементов списка
     // Список сортируется по текущему состоянию сортировки
     // Список фильтруется по текущему значению строки поиска
-    let filteredList = elementList.filter(element => getLabel(element).startsWith(barState.searchValue));
+    let filteredList = elementList.filter(element =>
+        getLabel(element).toLowerCase().startsWith(barState.searchValue)
+    );
     filteredList = barState.sortState.Sort(filteredList, getLabel);
 
     // Обработка нажатия на элемент
