@@ -12,10 +12,11 @@ import { Box, Divider } from '@mui/material';
 import { SlateToolBar } from './components/Toolbar/Toolbar';
 import CustomSlateEditor from './CustomSlateEditor';
 
-import { createDeletableField, Field, getFieldName, isFieldDeletable } from '../../utils/FieldList';
 import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAction } from '../../hooks/FieldListReducer';
+import { createDeletableField, Field, getFieldName, isFieldDeletable } from '../../utils/FieldList';
 import { EditableList } from '../EditableList';
-import { isMarkActive, toggleMark, isBlockActive, toggleBlock } from './utils';
+import { toggleBlock, toggleMark } from './utils';
+import { EditorContainer } from '../ScrollableBox';
 
 interface Props {
     value: Descendant[];
@@ -31,23 +32,9 @@ const CustomEditor = ({ value, fieldList, onDocumentChange, onFieldListChange }:
         []
     );
 
-    const isMarkActiveCallback = useCallback(
-        (format: string) => {
-            return isMarkActive(editor, format);
-        },
-        [editor]
-    );
-
     const toggleMarkCallback = useCallback(
         (format: string) => {
             toggleMark(editor, format);
-        },
-        [editor]
-    );
-
-    const isBlockActiveCallback = useCallback(
-        (format: string, blockType: string) => {
-            return isBlockActive(editor, format, blockType);
         },
         [editor]
     );
@@ -86,54 +73,32 @@ const CustomEditor = ({ value, fieldList, onDocumentChange, onFieldListChange }:
     );
 
     return (
-        <Box
-            sx={{
-                display: "flex",
-                height: "-webkit-fill-available",
-            }}
-        >
-            <Box
-                sx={{
-                    display: "flex",
-                    width: 0.7,
-                    paddingRight: "10px",
-                }}
-            >
+        <EditorContainer>
+            <div className='left-side'>
                 <CustomSlateEditor
                     editor={editor}
                     fieldList={fieldList}
                     value={value}
                     onChange={onDocumentChange}
                 />
-            </Box>
+            </div>
             <Divider orientation='vertical' />
-            <Box
-                sx={{
-                    width: 0.3,
-                    paddingLeft: "10px",
-                }}
-            >
-                <Box height={0.3}>
-                    <SlateToolBar
-                        isMarkActive={isMarkActiveCallback}
-                        toggleMark={toggleMarkCallback}
-                        isBlockActive={isBlockActiveCallback}
-                        toggleBlock={toggleBlockCallback}
-                    />
-                </Box>
+            <div className='right-side'>
+                <SlateToolBar
+                    toggleMark={toggleMarkCallback}
+                    toggleBlock={toggleBlockCallback}
+                />
                 <Divider />
-                <Box height={0.7}>
-                    <EditableList
-                        elementList={fieldList}
-                        getLabel={getFieldName}
-                        isChangeable={isFieldDeletable}
-                        onAdd={handleAddField}
-                        onRename={handleRenameField}
-                        onRemove={handleRemoveField}
-                    />
-                </Box>
-            </Box>
-        </Box >
+                <EditableList
+                    elementList={fieldList}
+                    getLabel={getFieldName}
+                    isChangeable={isFieldDeletable}
+                    onAdd={handleAddField}
+                    onRename={handleRenameField}
+                    onRemove={handleRemoveField}
+                />
+            </div>
+        </EditorContainer >
     );
 };
 

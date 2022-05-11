@@ -22,11 +22,10 @@ interface ButtonProps {
 }
  
 interface MarkButtonProps extends ButtonProps {
-    isMarkActive: (format: string) => boolean
     toggleMark: (format: string) => void
 }
 
-export const MarkButton = ({ format, children, isMarkActive, toggleMark }: MarkButtonProps) => {
+export const MarkButton = ({ format, children, toggleMark }: MarkButtonProps) => {
     const handleClick = useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault()
@@ -45,11 +44,10 @@ export const MarkButton = ({ format, children, isMarkActive, toggleMark }: MarkB
 }
 
 interface BlockButtonProps extends ButtonProps {
-    isBlockActive: (format: string, blockType: string) => boolean
     toggleBlock: (format: string) => void
 }
 
-export const BlockButton = ({ format, children, isBlockActive, toggleBlock }: BlockButtonProps) => {
+export const BlockButton = ({ format, children, toggleBlock }: BlockButtonProps) => {
     const handleClick = useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault()

@@ -1,21 +1,28 @@
-import { Box, } from "@mui/material";
 import { styled } from "@mui/system";
 
-const ScrollableBox = styled(Box)({
-    "&::-webkit-scrollbar": {
-        width: "10px"
-    },
-
-    "&::-webkit-scrollbar-track": {
-        backgroundColor: "#e3e3e3",
-        borderRadius: "100px",
-    },
-
-    "&::-webkit-scrollbar-thumb": {
-        borderRadius: "100px",
-        border: "5px solid transparent",
-        backgroundColor: "#1976d2",
-    },
+export const EditableContainer = styled("div")({
+    overflowY: "scroll",
+    height: "-webkit-fill-available",
+    "& .editable": {
+        paddingRight: "10px"
+    }
 });
 
-export default ScrollableBox;
+export const EditorContainer = styled("div")({
+    display: "flex",
+    height: "100%",
+    "& .left-side": {
+        width: "70%",
+        paddingRight: "10px",
+    },
+    "& .right-side": {
+        width: "30%",
+        paddingLeft: "10px",
+    },
+    "& .slate-toolbar": {
+        height: "30%",
+    },
+    "& .editable-list": {
+        height: "70%",
+    },
+})

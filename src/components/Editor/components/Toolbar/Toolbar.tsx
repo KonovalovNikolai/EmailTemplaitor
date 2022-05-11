@@ -14,35 +14,31 @@ import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
 import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
+import { styled } from "@mui/material";
 
 interface SlateToolBarProps {
-    isMarkActive: (format: string) => boolean;
     toggleMark: (format: string) => void;
-    isBlockActive: (format: string, blockType: string) => boolean;
     toggleBlock: (format: string) => void;
 }
 
-export const SlateToolBar = memo(({ isBlockActive, isMarkActive, toggleBlock, toggleMark }: SlateToolBarProps) => {
+const SlateToolbarContainer = styled("div")({
+    textAlign: "center",
+    justifyContent: "center",
+
+});
+
+export const SlateToolBar = memo(({ toggleBlock, toggleMark }: SlateToolBarProps) => {
     const markButtonProps = {
-        isMarkActive,
         toggleMark
     };
 
     const blockButtonProps = {
-        isBlockActive,
         toggleBlock
     };
 
     return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <Box>
+        <SlateToolbarContainer className="slate-toolbar">
+            <div>
                 <MarkButton format='bold' {...markButtonProps}>
                     <FormatBoldIcon />
                 </MarkButton>
@@ -52,8 +48,8 @@ export const SlateToolBar = memo(({ isBlockActive, isMarkActive, toggleBlock, to
                 <MarkButton format='underline' {...markButtonProps}>
                     <FormatUnderlinedIcon />
                 </MarkButton>
-            </Box>
-            <Box>
+            </div>
+            <div>
                 <BlockButton format='heading-one' {...blockButtonProps}>
                     <LooksOneIcon />
                 </BlockButton>
@@ -66,8 +62,8 @@ export const SlateToolBar = memo(({ isBlockActive, isMarkActive, toggleBlock, to
                 <BlockButton format="bulleted-list" {...blockButtonProps}>
                     <FormatListBulletedIcon />
                 </BlockButton>
-            </Box>
-            <Box>
+            </div>
+            <div>
                 <BlockButton format="left" {...blockButtonProps}>
                     <FormatAlignLeftIcon />
                 </BlockButton>
@@ -80,7 +76,7 @@ export const SlateToolBar = memo(({ isBlockActive, isMarkActive, toggleBlock, to
                 <BlockButton format="justify" {...blockButtonProps}>
                     <FormatAlignJustifyIcon />
                 </BlockButton>
-            </Box>
-        </Box>
+            </div>
+        </SlateToolbarContainer>
     );
 });

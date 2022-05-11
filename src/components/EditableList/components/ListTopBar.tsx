@@ -1,20 +1,32 @@
-import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
+import { Box, IconButton, InputAdornment, styled, TextField } from "@mui/material";
 
 import SearchIcon from '@mui/icons-material/Search';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
-import { memo } from "react";
+import React, { memo } from "react";
 
 import { EditableListTopBarProps } from "../types";
 
+const ListTopBarContainer = styled("div")({
+    display: 'flex',
+    marginBottom: "5px",
+    "& .list-search-field": {},
+    "& .MuiIconButton-root": {
+        margin: "auto",
+    }
+});
+
 const ListTopBar = ({ onChange }: EditableListTopBarProps) => {
+    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        onChange(prevState => {
+            const newState = { ...prevState };
+            newState.searchValue = e.target.value.toLowerCase();
+            return newState;
+        });
+    };
+
     return (
-        <Box
-            sx={{
-                display: 'flex',
-            }}
-        >
+        <ListTopBarContainer>
             <TextField
-                id="search-field"
                 label="Search"
                 size='small'
                 InputProps={{
@@ -25,24 +37,9 @@ const ListTopBar = ({ onChange }: EditableListTopBarProps) => {
                     ),
                 }}
                 variant="standard"
-                sx={{
-                    marginRight: "5px"
-                }}
-
-                onChange={
-                    (e) => {
-                        onChange(prevState => {
-                            const newState = { ...prevState };
-                            newState.searchValue = e.target.value.toLowerCase();
-                            return newState;
-                        });
-                    }
-                }
+                onChange={handleOnChange}
             />
             <IconButton
-                sx={{
-                    margin: "auto"
-                }}
                 size="small"
                 onClick={() => {
                     onChange(prevState => {
@@ -54,7 +51,7 @@ const ListTopBar = ({ onChange }: EditableListTopBarProps) => {
             >
                 <SortByAlphaIcon />
             </IconButton>
-        </Box>
+        </ListTopBarContainer>
     );
 };
 

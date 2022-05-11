@@ -1,9 +1,9 @@
-import { Box, PopperProps } from "@mui/material";
+import { Box, PopperProps, styled } from "@mui/material";
 import { FunctionComponent, memo, useCallback, useState } from "react";
 import { Descendant, Editor, Range, Transforms } from 'slate';
 import { Editable, Slate } from "slate-react";
 import { Field, filterFieldList, getFieldNameList } from "../../utils/FieldList";
-import ScrollableBox from "../ScrollableBox";
+import { EditableContainer } from "../ScrollableBox";
 import AutoCompletePoper from "./components/AutoCompletePoper/AutoCompletePoper";
 import RenderElement from "./elements/RenderElement";
 import RenderLeaf from "./elements/RenderLeaf";
@@ -104,38 +104,23 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
     );
 
     return (
-        <Box
-            sx={{
-                height: "-webkit-fill-available"
-            }}
-        >
+        <>
             <Slate
                 editor={editor}
                 value={value}
                 onChange={handleChange}
             >
-                <ScrollableBox
-                    sx={{
-                        overflowY: "scroll",
-                        height: "-webkit-fill-available",
-                    }}
-                >
-                    <Box
-                        sx={{
-                            paddingLeft: "5px",
-                        }}
-                    >
-                        <Editable
-                            className='editable'
-                            onKeyDown={handleKeyDown}
-                            renderElement={renderElement}
-                            renderLeaf={renderLeaf}
-                            onBlur={handleBlur}
-                            spellCheck
-                            autoFocus
-                        />
-                    </Box>
-                </ScrollableBox>
+                <EditableContainer>
+                    <Editable
+                        className='editable'
+                        onKeyDown={handleKeyDown}
+                        renderElement={renderElement}
+                        renderLeaf={renderLeaf}
+                        onBlur={handleBlur}
+                        spellCheck
+                        autoFocus
+                    />
+                </EditableContainer>
             </Slate>
             <AutoCompletePoper
                 anchorEl={autoCompleteData?.anchorEl}
@@ -147,7 +132,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                     insertMention(editor, value);
                 }}
             />
-        </Box>
+        </>
     );
 };
 

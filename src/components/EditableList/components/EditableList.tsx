@@ -1,9 +1,8 @@
-import { Box, Grid, Popover } from '@mui/material';
+import { Box, Grid, Popover, styled } from '@mui/material';
 import React, { memo, useCallback, useState } from 'react';
 
 import { hasWhiteSpace } from '../utils/hasWhiteSpace';
 
-import ScrollableBox from '../../ScrollableBox';
 import { DefaultSortButtonState } from '../utils/SortButtonState';
 import NewFieldButton from './AddNewFieldButton';
 import { FieldNameInputField } from './FieldNameInput';
@@ -17,6 +16,16 @@ interface SelectedElementData<T> {
     anchorEl: Element;
     element: T | null;
 };
+
+const EditableListContainer = styled("div")({
+    display: "flex",
+    flexDirection: "column",
+});
+
+const ScrollableListContainer = styled("div")({
+    flex: "auto",
+    overflowY: "scroll",
+})
 
 export const EditableList = memo(({ elementList, getLabel, isChangeable, onAdd, onRename, onRemove }: EditableListProps<any>) => {
     // Состояние верхней панели
@@ -91,39 +100,17 @@ export const EditableList = memo(({ elementList, getLabel, isChangeable, onAdd, 
     };
 
     return (
-        <Box
-            sx={{
-                flex: "auto",
-                height: "-webkit-fill-available",
-                display: "flex",
-                flexDirection: "column",
-            }}
-        >
-            <Box
-                sx={{
-                    flex: "none",
-                    padding: "10px 10px 10px 10px",
-                }}
-            >
-                <ListTopBar
-                    onChange={setBarState}
-                />
-            </Box>
+        <EditableListContainer className='editable-list'>
 
-            <ScrollableBox
-                sx={{
-                    flex: "auto",
-                    overflowY: "scroll",
-                }}
-            >
+            <ListTopBar onChange={setBarState} />
+
+            <ScrollableListContainer>
                 <Grid
                     container
                     justifyContent="flex-start"
                     alignItems="baseline"
                     spacing={0.5}
-                    sx={{
-                        padding: "0 5px 0 0",
-                    }}
+                    paddingRight={"5px"}
                 >
                     {filteredList.length > 0 &&
                         filteredList.map((element) => {
@@ -151,7 +138,7 @@ export const EditableList = memo(({ elementList, getLabel, isChangeable, onAdd, 
                         />
                     </Grid>
                 </Grid>
-            </ScrollableBox>
+            </ScrollableListContainer>
 
             {!!selectedElement &&
                 <Popover
@@ -177,6 +164,6 @@ export const EditableList = memo(({ elementList, getLabel, isChangeable, onAdd, 
                     />
                 </Popover>
             }
-        </Box >
+        </EditableListContainer >
     );
 });
