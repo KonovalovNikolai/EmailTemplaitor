@@ -1,7 +1,7 @@
 import { FunctionComponent, memo, SetStateAction, useCallback } from "react";
 import { Editor, Transforms } from 'slate';
 import { Editable } from "slate-react";
-import { EditableContainer } from "../../../../ScrollableBox";
+import { EditableContainer } from "../../ScrollableBox";
 import AutoCompletePopper from "./AutoCompletePopper/AutoCompletePopper";
 import RenderElement from "../elements/RenderElement";
 import RenderLeaf from "../elements/RenderLeaf";

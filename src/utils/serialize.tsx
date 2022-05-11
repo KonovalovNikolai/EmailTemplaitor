@@ -3,17 +3,12 @@ import {
     Element as SlateElement,
     Text
 } from 'slate';
-
 import {
     BulletedListElement,
-    CustomText,
-    HeadingElement,
-    HeadingTwoElement,
-    ListItemElement,
-    MentionElement,
-    NumberedListElement,
-    ParagraphElement
-} from '../components/Editor/components/CustomSlateEditor/elementTypes';
+    HeadingElement, CustomText,
+    HeadingTwoElement, ListItemElement,
+    MentionElement, NumberedListElement, ParagraphElement
+} from '../components/CustomSlateEditor';
 
 export const serializeNode = (node: Descendant) => {
     if (Text.isText(node)) {

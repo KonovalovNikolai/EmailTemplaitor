@@ -5,18 +5,18 @@ import {
 } from 'slate';
 import { withHistory } from 'slate-history';
 import { Slate, withReact } from 'slate-react';
-import { withMentions } from './CustomSlateEditor/plugins/withMentions';
+import { withMentions } from '../../CustomSlateEditor/plugins/withMentions';
 
 import { Divider } from '@mui/material';
 
-import { SlateToolBar } from './CustomSlateEditor/components/Toolbar/Toolbar';
+import { SlateToolBar } from '../../CustomSlateEditor/components/Toolbar/Toolbar';
 
 import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAction } from '../../../hooks/FieldListReducer';
 import { createDeletableField, Field, getFieldName, getFieldNameList, isFieldDeletable } from '../../../utils/FieldList';
 import { EditableList } from '../../EditableList';
 import { EditorContainer } from '../../ScrollableBox';
 import { getAutoCompleteData, getBoundingClientRectFromRange } from '../utils';
-import { AutoCompleteData, CustomSlateEditor } from './CustomSlateEditor';
+import { AutoCompleteData, CustomSlateEditor } from '../../CustomSlateEditor';
 
 interface CustomEditorProps {
     value: Descendant[];
