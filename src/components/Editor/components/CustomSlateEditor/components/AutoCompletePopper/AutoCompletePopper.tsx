@@ -3,7 +3,7 @@ import { FunctionComponent, useCallback, useState } from "react";
 
 import { AutocompleteListItem } from "./AutocompleteListItem";
 
-interface AutoCompletePoperProps {
+interface AutoCompletePopperProps {
     open: boolean
     anchorEl: PopperProps['anchorEl']
     chars: string[]
@@ -11,7 +11,7 @@ interface AutoCompletePoperProps {
     onInsert: (word: string) => void
 }
 
-const AutoCompletePoper: FunctionComponent<AutoCompletePoperProps> = ({ open, anchorEl, chars, index, onInsert }) => {
+const AutoCompletePopper: FunctionComponent<AutoCompletePopperProps> = ({ open, anchorEl, chars, index, onInsert }) => {
 
     return (
         <Popper
@@ -36,4 +36,4 @@ const AutoCompletePoper: FunctionComponent<AutoCompletePoperProps> = ({ open, an
     );
 }
 
-export default AutoCompletePoper;
+export default AutoCompletePopper;

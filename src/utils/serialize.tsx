@@ -13,7 +13,7 @@ import {
     MentionElement,
     NumberedListElement,
     ParagraphElement
-} from '../components/Editor/types';
+} from '../components/Editor/components/CustomSlateEditor/elementTypes';
 
 export const serializeNode = (node: Descendant) => {
     if (Text.isText(node)) {

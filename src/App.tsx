@@ -1,6 +1,6 @@
 import React, { useReducer, useState } from 'react';
 import { Descendant } from 'slate';
-import CustomEditor from './components/Editor/CustomEditor';
+import { CustomEditor } from "./components/Editor";
 import { initialFieldList } from './utils/FieldList';
 
 import { Box, Tab, Tabs } from '@mui/material';

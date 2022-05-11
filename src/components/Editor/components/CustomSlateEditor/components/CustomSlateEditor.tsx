@@ -1,12 +1,12 @@
 import { FunctionComponent, memo, SetStateAction, useCallback } from "react";
 import { Editor, Transforms } from 'slate';
 import { Editable } from "slate-react";
-import { EditableContainer } from "../ScrollableBox";
-import AutoCompletePoper from "./components/AutoCompletePoper/AutoCompletePoper";
-import { AutoCompleteData } from "./CustomEditor";
-import RenderElement from "./elements/RenderElement";
-import RenderLeaf from "./elements/RenderLeaf";
-import { insertMention } from "./utils/insertMention";
+import { EditableContainer } from "../../../../ScrollableBox";
+import AutoCompletePopper from "./AutoCompletePopper/AutoCompletePopper";
+import RenderElement from "../elements/RenderElement";
+import RenderLeaf from "../elements/RenderLeaf";
+import { AutoCompleteData } from "../types";
+import { insertMention } from "../utils";
 
 interface CustomSlateEditorProps {
     editor: Editor;
@@ -15,7 +15,7 @@ interface CustomSlateEditorProps {
     setAutoCompleteData: React.Dispatch<SetStateAction<AutoCompleteData>>;
 }
 
-const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, autoCompleteList, autoCompleteData, setAutoCompleteData }) => {
+export const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = memo(({ editor, autoCompleteList, autoCompleteData, setAutoCompleteData }) => {
     const renderElement = useCallback(props => <RenderElement {...props} />, []);
     const renderLeaf = useCallback(props => <RenderLeaf {...props} />, []);
 
@@ -85,7 +85,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                     autoFocus
                 />
             </EditableContainer>
-            <AutoCompletePoper
+            <AutoCompletePopper
                 anchorEl={autoCompleteData?.anchorEl}
                 chars={filteredList}
                 open={!!autoCompleteData}
@@ -97,6 +97,4 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
             />
         </>
     );
-};
-
-export default memo(CustomSlateEditor);
+});

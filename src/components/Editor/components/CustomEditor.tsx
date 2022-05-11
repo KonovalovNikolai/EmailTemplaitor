@@ -1,39 +1,31 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import {
     createEditor,
-    Descendant,
-    Range
+    Descendant
 } from 'slate';
 import { withHistory } from 'slate-history';
 import { Slate, withReact } from 'slate-react';
-import { withMentions } from './plugins/withMentions';
+import { withMentions } from './CustomSlateEditor/plugins/withMentions';
 
-import { Divider, PopperProps } from '@mui/material';
+import { Divider } from '@mui/material';
 
-import { SlateToolBar } from './components/Toolbar/Toolbar';
-import CustomSlateEditor from './CustomSlateEditor';
+import { SlateToolBar } from './CustomSlateEditor/components/Toolbar/Toolbar';
 
-import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAction } from '../../hooks/FieldListReducer';
-import { createDeletableField, Field, getFieldName, getFieldNameList, isFieldDeletable } from '../../utils/FieldList';
-import { EditableList } from '../EditableList';
-import { EditorContainer } from '../ScrollableBox';
-import { getAutoCompleteData, getBoundingClientRectFromRange, toggleBlock, toggleMark } from './utils';
+import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAction } from '../../../hooks/FieldListReducer';
+import { createDeletableField, Field, getFieldName, getFieldNameList, isFieldDeletable } from '../../../utils/FieldList';
+import { EditableList } from '../../EditableList';
+import { EditorContainer } from '../../ScrollableBox';
+import { getAutoCompleteData, getBoundingClientRectFromRange } from '../utils';
+import { AutoCompleteData, CustomSlateEditor } from './CustomSlateEditor';
 
-interface Props {
+interface CustomEditorProps {
     value: Descendant[];
     fieldList: Field[];
     onDocumentChange: React.Dispatch<any>;
     onFieldListChange: React.Dispatch<IFieldsReducerAction>;
 }
 
-export interface AutoCompleteData {
-    searchValue: string;
-    targetRange: Range;
-    anchorEl: PopperProps['anchorEl'];
-    listIndex: number;
-};
-
-const CustomEditor = ({ value, fieldList, onDocumentChange, onFieldListChange }: Props) => {
+export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldListChange }: CustomEditorProps) => {
     // Инициализация редактора
     const editor = useMemo(
         () => withMentions(withReact(withHistory(createEditor()))),
@@ -126,6 +118,4 @@ const CustomEditor = ({ value, fieldList, onDocumentChange, onFieldListChange }:
             </Slate>
         </EditorContainer >
     );
-};
-
-export default CustomEditor;
+});

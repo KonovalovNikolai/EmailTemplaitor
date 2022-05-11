@@ -1,8 +1,7 @@
 import { IconButton } from "@mui/material";
 import React, { memo, useCallback } from "react";
 import { useSlate } from "slate-react";
-import { toggleMark, toggleBlock, isMarkActive, isBlockActive } from "../../utils";
-import { TEXT_ALIGN_TYPES } from "../../utils/toggleBlock";
+import { isBlockActive, isMarkActive, TEXT_ALIGN_TYPES, toggleBlock, toggleMark } from "../../utils";
 
 type ToolbarButtonBaseProps = {
     color: "default" | "primary";
