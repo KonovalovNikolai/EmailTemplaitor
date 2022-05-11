@@ -25,7 +25,7 @@ const EditableListContainer = styled("div")({
 const ScrollableListContainer = styled("div")({
     flex: "auto",
     overflowY: "scroll",
-})
+});
 
 export const EditableList = memo(({ elementList, getLabel, isChangeable, onAdd, onRename, onRemove }: EditableListProps<any>) => {
     // Состояние верхней панели
@@ -114,9 +114,10 @@ export const EditableList = memo(({ elementList, getLabel, isChangeable, onAdd, 
                 >
                     {filteredList.length > 0 &&
                         filteredList.map((element) => {
-                            const { name, isDeletable } = element;
+                            const name = getLabel(element);
+                            const isElementChangeable = isChangeable(element);
 
-                            return isDeletable ?
+                            return isElementChangeable ?
                                 <DeletableListItem
                                     key={name}
                                     element={element}

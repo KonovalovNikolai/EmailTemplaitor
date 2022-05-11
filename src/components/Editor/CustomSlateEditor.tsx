@@ -1,66 +1,35 @@
-import { Box, PopperProps, styled } from "@mui/material";
-import { FunctionComponent, memo, useCallback, useState } from "react";
-import { Descendant, Editor, Range, Transforms } from 'slate';
-import { Editable, Slate } from "slate-react";
-import { Field, filterFieldList, getFieldNameList } from "../../utils/FieldList";
+import { FunctionComponent, memo, SetStateAction, useCallback } from "react";
+import { Editor, Transforms } from 'slate';
+import { Editable } from "slate-react";
 import { EditableContainer } from "../ScrollableBox";
 import AutoCompletePoper from "./components/AutoCompletePoper/AutoCompletePoper";
+import { AutoCompleteData } from "./CustomEditor";
 import RenderElement from "./elements/RenderElement";
 import RenderLeaf from "./elements/RenderLeaf";
-import { getAutoCompleteData } from "./utils/getAutoCompleteData";
-import { getBoundingClientRectFromRange } from "./utils/GetBoundingClientRectFromRange";
 import { insertMention } from "./utils/insertMention";
 
 interface CustomSlateEditorProps {
     editor: Editor;
-    value: Descendant[];
-    fieldList: Field[];
-    onChange: React.Dispatch<any>;
+    autoCompleteList: string[];
+    autoCompleteData: AutoCompleteData;
+    setAutoCompleteData: React.Dispatch<SetStateAction<AutoCompleteData>>;
 }
 
-type AutoCompleteData = {
-    searchValue: string;
-    targetRange: Range;
-    anchorEl: PopperProps['anchorEl'];
-    listIndex: number;
-};
-
-const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, value, fieldList, onChange }) => {
+const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, autoCompleteList, autoCompleteData, setAutoCompleteData }) => {
     const renderElement = useCallback(props => <RenderElement {...props} />, []);
     const renderLeaf = useCallback(props => <RenderLeaf {...props} />, []);
 
-    const [autoCompleteData, setAutoCompleteData] = useState<AutoCompleteData | null>(null);
+    let filteredList = [];
+    if (autoCompleteData) {
+        const searchValue = autoCompleteData.searchValue;
+        filteredList = autoCompleteList.filter(e => e.toLowerCase().startsWith(searchValue)).sort().slice(0, 10);
+    }
 
-    const filteredFields = filterFieldList(fieldList, autoCompleteData?.searchValue);
-    const fieldNames = getFieldNameList(filteredFields).sort().slice(0, 10);
-
-    const handleChange = useCallback(
-        (value: Descendant[]) => {
-            onChange(value);
-
-            const data = getAutoCompleteData(editor);
-            if (!data) {
-                setAutoCompleteData(null);
-                return;
-            };
-
-            const getBoundingClientRect = () =>
-                getBoundingClientRectFromRange(editor, data.targetRange);
-
-            const autoCompleteData: AutoCompleteData = {
-                anchorEl: { getBoundingClientRect },
-                listIndex: 0,
-                searchValue: data.searchValue,
-                targetRange: data.targetRange
-            };
-
-            setAutoCompleteData(autoCompleteData);
+    const handleBlur: React.FocusEventHandler<HTMLElement> = useCallback(
+        (event) => {
+            event.preventDefault();
+            setAutoCompleteData(null);
         },
-        []
-    );
-
-    const handleBlur = useCallback(
-        () => setAutoCompleteData(null),
         []
     );
 
@@ -74,7 +43,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                         setAutoCompleteData(prevData => {
                             const index = prevData.listIndex;
                             const newData = { ...prevData };
-                            newData.listIndex = index >= fieldNames.length - 1 ? 0 : index + 1;
+                            newData.listIndex = index >= filteredList.length - 1 ? 0 : index + 1;
                             return newData;
                         });
                         break;
@@ -83,7 +52,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                         setAutoCompleteData(prevData => {
                             const index = prevData.listIndex;
                             const newData = { ...prevData };
-                            newData.listIndex = index >= fieldNames.length - 1 ? 0 : index - 1;
+                            newData.listIndex = index >= filteredList.length - 1 ? 0 : index - 1;
                             return newData;
                         });
                         break;
@@ -91,7 +60,7 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                     case 'Enter':
                         event.preventDefault();
                         Transforms.select(editor, autoCompleteData.targetRange);
-                        insertMention(editor, fieldNames[autoCompleteData.listIndex]);
+                        insertMention(editor, filteredList[autoCompleteData.listIndex]);
                         break;
                     case 'Escape':
                         event.preventDefault();
@@ -100,31 +69,25 @@ const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = ({ editor, 
                 }
             }
         },
-        [fieldNames, autoCompleteData]
+        [filteredList, autoCompleteData]
     );
 
     return (
         <>
-            <Slate
-                editor={editor}
-                value={value}
-                onChange={handleChange}
-            >
-                <EditableContainer>
-                    <Editable
-                        className='editable'
-                        onKeyDown={handleKeyDown}
-                        renderElement={renderElement}
-                        renderLeaf={renderLeaf}
-                        onBlur={handleBlur}
-                        spellCheck
-                        autoFocus
-                    />
-                </EditableContainer>
-            </Slate>
+            <EditableContainer>
+                <Editable
+                    className='editable'
+                    onKeyDown={handleKeyDown}
+                    renderElement={renderElement}
+                    renderLeaf={renderLeaf}
+                    onBlur={handleBlur}
+                    spellCheck
+                    autoFocus
+                />
+            </EditableContainer>
             <AutoCompletePoper
                 anchorEl={autoCompleteData?.anchorEl}
-                chars={fieldNames}
+                chars={filteredList}
                 open={!!autoCompleteData}
                 index={autoCompleteData?.listIndex}
                 onInsert={(value) => {

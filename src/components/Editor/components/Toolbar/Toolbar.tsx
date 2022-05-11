@@ -16,64 +16,52 @@ import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import { styled } from "@mui/material";
 
-interface SlateToolBarProps {
-    toggleMark: (format: string) => void;
-    toggleBlock: (format: string) => void;
-}
-
 const SlateToolbarContainer = styled("div")({
     textAlign: "center",
     justifyContent: "center",
 
 });
 
-export const SlateToolBar = memo(({ toggleBlock, toggleMark }: SlateToolBarProps) => {
-    const markButtonProps = {
-        toggleMark
-    };
-
-    const blockButtonProps = {
-        toggleBlock
-    };
+export const SlateToolBar = memo(() => {
 
     return (
         <SlateToolbarContainer className="slate-toolbar">
             <div>
-                <MarkButton format='bold' {...markButtonProps}>
+                <MarkButton format='bold'>
                     <FormatBoldIcon />
                 </MarkButton>
-                <MarkButton format='italic' {...markButtonProps}>
+                <MarkButton format='italic'>
                     <FormatItalicIcon />
                 </MarkButton>
-                <MarkButton format='underline' {...markButtonProps}>
+                <MarkButton format='underline'>
                     <FormatUnderlinedIcon />
                 </MarkButton>
             </div>
             <div>
-                <BlockButton format='heading-one' {...blockButtonProps}>
+                <BlockButton format='heading-one'>
                     <LooksOneIcon />
                 </BlockButton>
-                <BlockButton format="heading-two" {...blockButtonProps}>
+                <BlockButton format="heading-two">
                     <LooksTwoIcon />
                 </BlockButton>
-                <BlockButton format="numbered-list" {...blockButtonProps}>
+                <BlockButton format="numbered-list">
                     <FormatListNumberedIcon />
                 </BlockButton>
-                <BlockButton format="bulleted-list" {...blockButtonProps}>
+                <BlockButton format="bulleted-list">
                     <FormatListBulletedIcon />
                 </BlockButton>
             </div>
             <div>
-                <BlockButton format="left" {...blockButtonProps}>
+                <BlockButton format="left">
                     <FormatAlignLeftIcon />
                 </BlockButton>
-                <BlockButton format="center" {...blockButtonProps}>
+                <BlockButton format="center">
                     <FormatAlignCenterIcon />
                 </BlockButton>
-                <BlockButton format="right" {...blockButtonProps}>
+                <BlockButton format="right">
                     <FormatAlignRightIcon />
                 </BlockButton>
-                <BlockButton format="justify" {...blockButtonProps}>
+                <BlockButton format="justify" >
                     <FormatAlignJustifyIcon />
                 </BlockButton>
             </div>

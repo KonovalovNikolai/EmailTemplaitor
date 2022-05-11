@@ -1,22 +1,23 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
     createEditor,
-    Descendant
+    Descendant,
+    Range
 } from 'slate';
 import { withHistory } from 'slate-history';
-import { withReact } from 'slate-react';
+import { Slate, withReact } from 'slate-react';
 import { withMentions } from './plugins/withMentions';
 
-import { Box, Divider } from '@mui/material';
+import { Divider, PopperProps } from '@mui/material';
 
 import { SlateToolBar } from './components/Toolbar/Toolbar';
 import CustomSlateEditor from './CustomSlateEditor';
 
 import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAction } from '../../hooks/FieldListReducer';
-import { createDeletableField, Field, getFieldName, isFieldDeletable } from '../../utils/FieldList';
+import { createDeletableField, Field, getFieldName, getFieldNameList, isFieldDeletable } from '../../utils/FieldList';
 import { EditableList } from '../EditableList';
-import { toggleBlock, toggleMark } from './utils';
 import { EditorContainer } from '../ScrollableBox';
+import { getAutoCompleteData, getBoundingClientRectFromRange, toggleBlock, toggleMark } from './utils';
 
 interface Props {
     value: Descendant[];
@@ -25,25 +26,18 @@ interface Props {
     onFieldListChange: React.Dispatch<IFieldsReducerAction>;
 }
 
+export interface AutoCompleteData {
+    searchValue: string;
+    targetRange: Range;
+    anchorEl: PopperProps['anchorEl'];
+    listIndex: number;
+};
+
 const CustomEditor = ({ value, fieldList, onDocumentChange, onFieldListChange }: Props) => {
     // Инициализация редактора
     const editor = useMemo(
         () => withMentions(withReact(withHistory(createEditor()))),
         []
-    );
-
-    const toggleMarkCallback = useCallback(
-        (format: string) => {
-            toggleMark(editor, format);
-        },
-        [editor]
-    );
-
-    const toggleBlockCallback = useCallback(
-        (format: string) => {
-            toggleBlock(editor, format);
-        },
-        [editor]
     );
 
     const handleAddField = useCallback(
@@ -72,32 +66,64 @@ const CustomEditor = ({ value, fieldList, onDocumentChange, onFieldListChange }:
         []
     );
 
+    const [autoCompleteData, setAutoCompleteData] = useState<AutoCompleteData | null>(null);
+
+    const autoCompleteList = getFieldNameList(fieldList);
+
+    const handleChange = useCallback(
+        (value: Descendant[]) => {
+            onDocumentChange(value);
+
+            const data = getAutoCompleteData(editor);
+            if (!data) {
+                setAutoCompleteData(null);
+                return;
+            };
+
+            const getBoundingClientRect = () =>
+                getBoundingClientRectFromRange(editor, data.targetRange);
+
+            const autoCompleteData: AutoCompleteData = {
+                anchorEl: { getBoundingClientRect },
+                listIndex: 0,
+                searchValue: data.searchValue,
+                targetRange: data.targetRange
+            };
+
+            setAutoCompleteData(autoCompleteData);
+        },
+        []
+    );
+
     return (
         <EditorContainer>
-            <div className='left-side'>
-                <CustomSlateEditor
-                    editor={editor}
-                    fieldList={fieldList}
-                    value={value}
-                    onChange={onDocumentChange}
-                />
-            </div>
-            <Divider orientation='vertical' />
-            <div className='right-side'>
-                <SlateToolBar
-                    toggleMark={toggleMarkCallback}
-                    toggleBlock={toggleBlockCallback}
-                />
-                <Divider />
-                <EditableList
-                    elementList={fieldList}
-                    getLabel={getFieldName}
-                    isChangeable={isFieldDeletable}
-                    onAdd={handleAddField}
-                    onRename={handleRenameField}
-                    onRemove={handleRemoveField}
-                />
-            </div>
+            <Slate
+                editor={editor}
+                value={value}
+                onChange={handleChange}
+            >
+                <div className='left-side'>
+                    <CustomSlateEditor
+                        editor={editor}
+                        autoCompleteList={autoCompleteList}
+                        autoCompleteData={autoCompleteData}
+                        setAutoCompleteData={setAutoCompleteData}
+                    />
+                </div>
+                <Divider orientation='vertical' />
+                <div className='right-side'>
+                    <SlateToolBar/>
+                    <Divider />
+                    <EditableList
+                        elementList={fieldList}
+                        getLabel={getFieldName}
+                        isChangeable={isFieldDeletable}
+                        onAdd={handleAddField}
+                        onRename={handleRenameField}
+                        onRemove={handleRemoveField}
+                    />
+                </div>
+            </Slate>
         </EditorContainer >
     );
 };
