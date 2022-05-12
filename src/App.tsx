@@ -3,7 +3,6 @@ import { Descendant } from 'slate';
 import { CustomEditor } from "./components/Editor";
 import { initialFieldList } from './utils/FieldList';
 
-import { Box, Tab, Tabs } from '@mui/material';
 import { initialValue } from './utils/initialDocument';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -12,46 +11,8 @@ import SendIcon from '@mui/icons-material/Send';
 
 import { fieldsReducer, initFieldReducer } from './hooks/FieldListReducer';
 import { AddresseeGrid } from './components/AddresseeGrid';
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Box
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      sx={{
-        height: "-webkit-fill-available",
-      }}
-      {...other}
-    >
-      {value === index && (
-        <Box
-          sx={{
-            height: "-webkit-fill-available",
-          }}
-        >
-          {children}
-        </Box>
-      )}
-    </Box>
-  );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
-  };
-}
+import { TabButton, TabContent } from './components/CustomTabs';
+import { AppContainer, ContentContainer, TabButtonsContainer } from './components/StyledComponents';
 
 function App() {
   const [documentValue, setDocumentValue] = useState<Descendant[]>(initialValue);
@@ -65,63 +26,55 @@ function App() {
 
   const [tabsValue, setTabsValue] = React.useState(0);
 
-  const handleTabsChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabsChange = (newValue: number) => {
     setTabsValue(newValue);
   };
 
   return (
-    <Box
+    <AppContainer
       sx={{
-        flexGrow: 1,
-        display: 'flex',
-        width: "800px",
-        height: "400px",
         m: "20px auto",
-        p: "20px",
+        backgroundColor: "white",
       }}
     >
-      <Tabs
-        orientation="vertical"
-        value={tabsValue}
-        onChange={handleTabsChange}
-        aria-label="Vertical tabs example"
-        sx={{
-          flex: "none",
-          borderRight: 1,
-          borderColor: 'divider'
-        }}
-      >
-        <Tab icon={<EditIcon />} {...a11yProps(0)} />
-        <Tab icon={<PeopleAltIcon />} {...a11yProps(1)} />
-        <Tab icon={<SendIcon />} {...a11yProps(2)} />
-      </Tabs>
-      <Box
-        sx={{
-          padding: "10px 10px 10px 10px",
-          flex: "auto",
-          backgroundColor: "white",
-        }}
-      >
-        <TabPanel value={tabsValue} index={0}>
+      <TabButtonsContainer sx={{ marginRight: "5px", }} >
+        <TabButton
+          index={0}
+          value={tabsValue}
+          icon={<EditIcon fontSize='large' />}
+          onChange={handleTabsChange}
+        />
+        <TabButton
+          index={1}
+          value={tabsValue}
+          icon={<PeopleAltIcon fontSize='large' />}
+          onChange={handleTabsChange}
+        />
+        <TabButton
+          index={2}
+          value={tabsValue}
+          icon={<SendIcon fontSize='large' />}
+          onChange={handleTabsChange}
+        />
+      </TabButtonsContainer>
+      <ContentContainer>
+        <TabContent index={0} value={tabsValue}>
           <CustomEditor
             value={documentValue}
             fieldList={fieldList}
             onDocumentChange={setDocumentValue}
             onFieldListChange={fieldDispatch}
           />
-        </TabPanel>
-        <TabPanel value={tabsValue} index={1}>
+        </TabContent>
+        <TabContent index={1} value={tabsValue}>
           <AddresseeGrid
             fieldList={fieldList}
             addresseeList={addresseeList}
             onChange={fieldDispatch}
           />
-        </TabPanel>
-        <TabPanel value={tabsValue} index={2}>
-          Item Three
-        </TabPanel>
-      </Box>
-    </Box>
+        </TabContent>
+      </ContentContainer>
+    </AppContainer>
   );
 }
 

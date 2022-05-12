@@ -1,7 +1,6 @@
 import { FunctionComponent, memo, SetStateAction, useCallback } from "react";
 import { Editor, Transforms } from 'slate';
 import { Editable } from "slate-react";
-import { EditableContainer } from "../../ScrollableBox";
 import AutoCompletePopper from "./AutoCompletePopper/AutoCompletePopper";
 import RenderElement from "../elements/RenderElement";
 import RenderLeaf from "../elements/RenderLeaf";
@@ -74,7 +73,7 @@ export const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = memo
 
     return (
         <>
-            <EditableContainer>
+            <div className="editable-container">
                 <Editable
                     className='editable'
                     onKeyDown={handleKeyDown}
@@ -84,7 +83,7 @@ export const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = memo
                     spellCheck
                     autoFocus
                 />
-            </EditableContainer>
+            </div>
             <AutoCompletePopper
                 anchorEl={autoCompleteData?.anchorEl}
                 chars={filteredList}

@@ -14,7 +14,7 @@ import { SlateToolBar } from '../../CustomSlateEditor/components/Toolbar/Toolbar
 import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAction } from '../../../hooks/FieldListReducer';
 import { createDeletableField, Field, getFieldName, getFieldNameList, isFieldDeletable } from '../../../utils/FieldList';
 import { EditableList } from '../../EditableList';
-import { EditorContainer } from '../../ScrollableBox';
+import { EditorContainer, EditorContainerEditableArea, EditorContainerToolbar } from '../../StyledComponents';
 import { getAutoCompleteData, getBoundingClientRectFromRange } from '../utils';
 import { AutoCompleteData, CustomSlateEditor } from '../../CustomSlateEditor';
 
@@ -94,16 +94,16 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
                 value={value}
                 onChange={handleChange}
             >
-                <div className='left-side'>
+                <EditorContainerEditableArea>
                     <CustomSlateEditor
                         editor={editor}
                         autoCompleteList={autoCompleteList}
                         autoCompleteData={autoCompleteData}
                         setAutoCompleteData={setAutoCompleteData}
                     />
-                </div>
+                </EditorContainerEditableArea>
                 <Divider orientation='vertical' />
-                <div className='right-side'>
+                <EditorContainerToolbar>
                     <SlateToolBar/>
                     <Divider />
                     <EditableList
@@ -114,7 +114,7 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
                         onRename={handleRenameField}
                         onRemove={handleRemoveField}
                     />
-                </div>
+                </EditorContainerToolbar>
             </Slate>
         </EditorContainer >
     );
