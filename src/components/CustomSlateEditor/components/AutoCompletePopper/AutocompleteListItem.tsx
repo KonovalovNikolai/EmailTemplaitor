@@ -1,20 +1,30 @@
+import { Typography } from "@mui/material";
+import { styled } from "@mui/system";
+
 type Props = {
-    char: string
-    isSelected: boolean
-    onClick: () => void
-}
+    char: string;
+    isSelected: boolean;
+    onClick: () => void;
+};
+
+
+const AutocompleteItemContainer = styled("div")({
+    padding: '1px 3px', 
+    cursor: 'pointer',
+    ":hover" : {
+        background: "#f3f8ff"
+    }
+});
 
 export const AutocompleteListItem = ({ char, isSelected, onClick }: Props) => {
     return (
-        <div
+        <AutocompleteItemContainer
             onMouseDown={onClick}
-            style={{
-                padding: '1px 3px',
-                borderRadius: '3px',
-                background: isSelected ? '#B4D5FF' : 'transparent',
-            }}
+            sx={{background: isSelected ? '#b4c2ff!important' : 'transparent',}}
         >
-            {char}
-        </div>
-    )
-}
+            <Typography>
+                {char}
+            </Typography>
+        </AutocompleteItemContainer>
+    );
+};

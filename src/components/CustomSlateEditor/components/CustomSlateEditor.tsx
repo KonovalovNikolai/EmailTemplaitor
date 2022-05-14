@@ -6,6 +6,7 @@ import RenderElement from "../elements/RenderElement";
 import RenderLeaf from "../elements/RenderLeaf";
 import { AutoCompleteData } from "../types";
 import { insertMention } from "../utils";
+import { Typography } from "@mui/material";
 
 interface CustomSlateEditorProps {
     editor: Editor;
@@ -73,7 +74,7 @@ export const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = memo
 
     return (
         <>
-            <div className="editable-container">
+            <Typography component={"span"} className="editable-container">
                 <Editable
                     className='editable'
                     onKeyDown={handleKeyDown}
@@ -83,7 +84,7 @@ export const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = memo
                     spellCheck
                     autoFocus
                 />
-            </div>
+            </Typography>
             <AutoCompletePopper
                 anchorEl={autoCompleteData?.anchorEl}
                 chars={filteredList}
