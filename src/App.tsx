@@ -37,23 +37,23 @@ function App() {
         backgroundColor: "white",
       }}
     >
-      <TabButtonsContainer sx={{ marginRight: "5px", }} >
+      <TabButtonsContainer>
         <TabButton
           index={0}
           value={tabsValue}
-          icon={<EditIcon fontSize='large' />}
+          icon={<EditIcon sx={{ fontSize: 30 }} />}
           onChange={handleTabsChange}
         />
         <TabButton
           index={1}
           value={tabsValue}
-          icon={<PeopleAltIcon fontSize='large' />}
+          icon={<PeopleAltIcon sx={{ fontSize: 30 }} />}
           onChange={handleTabsChange}
         />
         <TabButton
           index={2}
           value={tabsValue}
-          icon={<SendIcon fontSize='large' />}
+          icon={<SendIcon sx={{ fontSize: 30 }} />}
           onChange={handleTabsChange}
         />
       </TabButtonsContainer>

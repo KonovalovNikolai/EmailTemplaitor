@@ -13,24 +13,30 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 import { GridToolbarProps } from "../types";
+import { styled } from "@mui/system";
+
+const ToolBarContainer = styled("div", { name: "ToolBarContainer" })({
+    display: "flex",
+    flex: "auto",
+    alignItems: "center",
+});
+
+const ToolBarLeftSideContainer = styled("div", { name: "ToolBarLeftSideContainer" })({
+    marginLeft: "auto",
+})
 
 const AddresseeGridToolbar = ({ onAdd: onAdd, onDelete }: GridToolbarProps) => {
     const apiRef = useGridApiContext();
 
     return (
         <GridToolbarContainer>
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                }}
-            >
+            <ToolBarContainer>
                 <div>
                     <GridToolbarFilterButton />
                     <GridToolbarDensitySelector />
                     <GridToolbarExport />
                 </div>
-                <div>
+                <ToolBarLeftSideContainer>
                     <IconButton
                         color="primary"
                         onClick={() => {
@@ -52,8 +58,8 @@ const AddresseeGridToolbar = ({ onAdd: onAdd, onDelete }: GridToolbarProps) => {
                     >
                         <DeleteOutlineIcon />
                     </IconButton>
-                </div>
-            </Box>
+                </ToolBarLeftSideContainer>
+            </ToolBarContainer>
         </GridToolbarContainer>
     );
 };

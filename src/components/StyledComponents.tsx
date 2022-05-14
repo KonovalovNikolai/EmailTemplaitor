@@ -3,7 +3,7 @@ import { styled } from "@mui/system";
 export const AppContainer = styled("div", { name: "AppContainer" })({
     // fontFamily: 'Roboto, sans-serif',
     display: 'flex',
-    padding: "10px 10px 10px 10px",
+    padding: "3px 3px 3px 3px",
     width: "900px",
     height: "500px",
     borderRadius: "1%",
