@@ -13,6 +13,11 @@ import { fieldsReducer, initFieldReducer } from './hooks/FieldListReducer';
 import { AddresseeGrid } from './components/AddresseeGrid';
 import { TabButton, TabContent } from './components/CustomTabs';
 import { AppContainer, ContentContainer, TabButtonsContainer } from './components/StyledComponents';
+import { createTheme, ThemeProvider } from '@mui/material';
+
+const theme = createTheme({
+  
+});
 
 function App() {
   const [documentValue, setDocumentValue] = useState<Descendant[]>(initialValue);
@@ -31,50 +36,52 @@ function App() {
   };
 
   return (
-    <AppContainer
-      sx={{
-        m: "20px auto",
-        backgroundColor: "white",
-      }}
-    >
-      <TabButtonsContainer>
-        <TabButton
-          index={0}
-          value={tabsValue}
-          icon={<EditIcon sx={{ fontSize: 30 }} />}
-          onChange={handleTabsChange}
-        />
-        <TabButton
-          index={1}
-          value={tabsValue}
-          icon={<PeopleAltIcon sx={{ fontSize: 30 }} />}
-          onChange={handleTabsChange}
-        />
-        <TabButton
-          index={2}
-          value={tabsValue}
-          icon={<SendIcon sx={{ fontSize: 30 }} />}
-          onChange={handleTabsChange}
-        />
-      </TabButtonsContainer>
-      <ContentContainer>
-        <TabContent index={0} value={tabsValue}>
-          <CustomEditor
-            value={documentValue}
-            fieldList={fieldList}
-            onDocumentChange={setDocumentValue}
-            onFieldListChange={fieldDispatch}
+    <ThemeProvider theme={theme}>
+      <AppContainer
+        sx={{
+          m: "20px auto",
+          backgroundColor: "white",
+        }}
+      >
+        <TabButtonsContainer>
+          <TabButton
+            index={0}
+            value={tabsValue}
+            icon={<EditIcon sx={{ fontSize: 30 }} />}
+            onChange={handleTabsChange}
           />
-        </TabContent>
-        <TabContent index={1} value={tabsValue}>
-          <AddresseeGrid
-            fieldList={fieldList}
-            addresseeList={addresseeList}
-            onChange={fieldDispatch}
+          <TabButton
+            index={1}
+            value={tabsValue}
+            icon={<PeopleAltIcon sx={{ fontSize: 30 }} />}
+            onChange={handleTabsChange}
           />
-        </TabContent>
-      </ContentContainer>
-    </AppContainer>
+          <TabButton
+            index={2}
+            value={tabsValue}
+            icon={<SendIcon sx={{ fontSize: 30 }} />}
+            onChange={handleTabsChange}
+          />
+        </TabButtonsContainer>
+        <ContentContainer>
+          <TabContent index={0} value={tabsValue}>
+            <CustomEditor
+              value={documentValue}
+              fieldList={fieldList}
+              onDocumentChange={setDocumentValue}
+              onFieldListChange={fieldDispatch}
+            />
+          </TabContent>
+          <TabContent index={1} value={tabsValue}>
+            <AddresseeGrid
+              fieldList={fieldList}
+              addresseeList={addresseeList}
+              onChange={fieldDispatch}
+            />
+          </TabContent>
+        </ContentContainer>
+      </AppContainer>
+    </ThemeProvider>
   );
 }
 

@@ -94,7 +94,11 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
                 value={value}
                 onChange={handleChange}
             >
-                <EditorContainerEditableArea>
+                <EditorContainerEditableArea
+                    sx={{
+                        width: "70%"
+                    }}
+                >
                     <CustomSlateEditor
                         editor={editor}
                         autoCompleteList={autoCompleteList}
@@ -103,7 +107,11 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
                     />
                 </EditorContainerEditableArea>
                 <Divider orientation='vertical' />
-                <EditorContainerToolbar>
+                <EditorContainerToolbar
+                    sx={{
+                        width: "30%",
+                    }}
+                >
                     <SlateToolBar/>
                     <Divider />
                     <EditableList

@@ -3,10 +3,8 @@ import { styled } from "@mui/system";
 export const AppContainer = styled("div", { name: "AppContainer" })({
     // fontFamily: 'Roboto, sans-serif',
     display: 'flex',
-    padding: "3px 3px 3px 3px",
     width: "900px",
     height: "500px",
-    borderRadius: "1%",
 });
 
 export const TabButtonsContainer = styled("div", { name: "TabButtonsContainer" })({
@@ -23,21 +21,31 @@ export const EditorContainer = styled("div", { name: "EditorContainer" })({
     height: "100%",
 
     boxSizing: "border-box",
-    border: "1px solid rgba(224, 224, 224, 1)",
-    borderRadius: "4px",
-
-    padding: "4px"
 });
 
 export const EditorContainerEditableArea = styled("div", { name: "EditorContainerEditableArea" })({
-    width: "70%",
-    paddingRight: "5px",
     "& .editable-container": {
         overflowY: "scroll",
         height: "-webkit-fill-available",
+
+        "&::-webkit-scrollbar": {
+            width: "10px",
+        },
+
+        "&::-webkit-scrollbar-track": {
+            backgroundColor: "#e3e3e3",
+            borderRadius: "100px",
+        },
+
+        "&::-webkit-scrollbar-thumb": {
+            borderRadius: "100px",
+            border: "5px solid transparent",
+            backgroundColor: "#1976d2",
+        }
     },
 
     "& .editable": {
+        height: '100%',
         paddingRight: "5px",
         lineHeight: "1.4",
 
@@ -54,8 +62,6 @@ export const EditorContainerEditableArea = styled("div", { name: "EditorContaine
 export const EditorContainerToolbar = styled("div", { name: "EditorContainerToolbar" })({
     display: "flex",
     flexDirection: "column",
-    width: "30%",
-    paddingLeft: "5px",
 
     "& .slate-toolbar": {
         height: "22%",
@@ -64,5 +70,24 @@ export const EditorContainerToolbar = styled("div", { name: "EditorContainerTool
     "& .editable-list": {
         height: "75%",
         marginTop: "auto",
+    },
+
+    "& .editable-list-elements": {
+        overflowY: "scroll",
+
+        "&::-webkit-scrollbar": {
+            width: "10px",
+        },
+
+        "&::-webkit-scrollbar-track": {
+            backgroundColor: "#e3e3e3",
+            borderRadius: "100px",
+        },
+
+        "&::-webkit-scrollbar-thumb": {
+            borderRadius: "100px",
+            border: "5px solid transparent",
+            backgroundColor: "#1976d2",
+        }
     },
 });

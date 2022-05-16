@@ -24,7 +24,6 @@ const EditableListContainer = styled("div")({
 
 const ScrollableListContainer = styled("div")({
     flex: "auto",
-    overflowY: "scroll",
 });
 
 export const EditableList = memo(({ elementList, getLabel, isChangeable, onAdd, onRename, onRemove }: EditableListProps<any>) => {
@@ -104,7 +103,7 @@ export const EditableList = memo(({ elementList, getLabel, isChangeable, onAdd, 
 
             <ListTopBar onChange={setBarState} />
 
-            <ScrollableListContainer>
+            <ScrollableListContainer className="editable-list-elements">
                 <Grid
                     container
                     justifyContent="flex-start"

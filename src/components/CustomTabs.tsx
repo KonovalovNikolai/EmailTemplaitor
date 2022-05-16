@@ -9,12 +9,12 @@ interface TabButtonProps {
     onChange: (index: number) => void;
 }
 
-const TabIconButton = styled(IconButton, { name: "TabIconButton" })({
+const TabIconButton = styled(IconButton, { name: "TabIconButton" })(({theme}) => ({
     padding: "5px",
     ":hover": {
         color: "#1976d2"
     }
-});
+}));
 
 export const TabButton = memo(({ index, value, icon, onChange }: TabButtonProps) => {
     const isCurrent = value === index;
