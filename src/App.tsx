@@ -12,12 +12,10 @@ import SendIcon from '@mui/icons-material/Send';
 import { fieldsReducer, initFieldReducer } from './hooks/FieldListReducer';
 import { AddresseeGrid } from './components/AddresseeGrid';
 import { TabButton, TabContent } from './components/CustomTabs';
-import { AppContainer, ContentContainer, TabButtonsContainer } from './components/StyledComponents';
 import { createTheme, ThemeProvider } from '@mui/material';
 
-const theme = createTheme({
-  
-});
+import theme from './utils/Theme';
+import { AppContainer, ContentContainer, TabButtonsContainer } from './components/StyledComponents';
 
 function App() {
   const [documentValue, setDocumentValue] = useState<Descendant[]>(initialValue);

@@ -1,6 +1,7 @@
-
 import { IconButton, styled } from "@mui/material";
 import { memo, useCallback } from "react";
+import { TabIconButton } from "./StyledComponents";
+
 
 interface TabButtonProps {
     index: number;
@@ -8,13 +9,6 @@ interface TabButtonProps {
     icon: string | React.ReactElement;
     onChange: (index: number) => void;
 }
-
-const TabIconButton = styled(IconButton, { name: "TabIconButton" })(({theme}) => ({
-    padding: "5px",
-    ":hover": {
-        color: "#1976d2"
-    }
-}));
 
 export const TabButton = memo(({ index, value, icon, onChange }: TabButtonProps) => {
     const isCurrent = value === index;
@@ -26,13 +20,11 @@ export const TabButton = memo(({ index, value, icon, onChange }: TabButtonProps)
 
     return (
         <TabIconButton
-            // disableFocusRipple={true}
             disableRipple={true}
             disableTouchRipple={true}
             size="large"
-            color={isCurrent ? "primary" : "default"}
+            current={isCurrent}
             onClick={handleClick}
-            sx={{ padding: "5px", }}
         >
             {icon}
         </TabIconButton>
