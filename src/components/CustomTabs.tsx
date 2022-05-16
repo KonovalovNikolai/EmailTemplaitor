@@ -1,4 +1,3 @@
-import { IconButton, styled } from "@mui/material";
 import { memo, useCallback } from "react";
 import { TabIconButton } from "./StyledComponents";
 
@@ -20,8 +19,8 @@ export const TabButton = memo(({ index, value, icon, onChange }: TabButtonProps)
 
     return (
         <TabIconButton
-            disableRipple={true}
-            disableTouchRipple={true}
+            // disableRipple={true}
+            // disableTouchRipple={true}
             size="large"
             current={isCurrent}
             onClick={handleClick}

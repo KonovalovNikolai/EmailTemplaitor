@@ -89,16 +89,10 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
 
     return (
         <EditorContainer>
-            <Slate
-                editor={editor}
-                value={value}
-                onChange={handleChange}
-            >
-                <EditorContainerEditableArea
-                    sx={{
-                        width: "70%"
-                    }}
-                >
+            <Slate editor={editor} value={value} onChange={handleChange}>
+                {/* Редактор */}
+                <EditorContainerEditableArea>
+                    <SlateToolBar />
                     <CustomSlateEditor
                         editor={editor}
                         autoCompleteList={autoCompleteList}
@@ -106,23 +100,15 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
                         setAutoCompleteData={setAutoCompleteData}
                     />
                 </EditorContainerEditableArea>
-                <Divider orientation='vertical' />
-                <EditorContainerToolbar
-                    sx={{
-                        width: "30%",
-                    }}
-                >
-                    <SlateToolBar/>
-                    <Divider />
-                    <EditableList
-                        elementList={fieldList}
-                        getLabel={getFieldName}
-                        isChangeable={isFieldDeletable}
-                        onAdd={handleAddField}
-                        onRename={handleRenameField}
-                        onRemove={handleRemoveField}
-                    />
-                </EditorContainerToolbar>
+                {/* Список переменных */}
+                <EditableList
+                    elementList={fieldList}
+                    getLabel={getFieldName}
+                    isChangeable={isFieldDeletable}
+                    onAdd={handleAddField}
+                    onRename={handleRenameField}
+                    onRemove={handleRemoveField}
+                />
             </Slate>
         </EditorContainer >
     );

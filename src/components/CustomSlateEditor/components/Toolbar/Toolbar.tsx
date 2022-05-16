@@ -16,10 +16,13 @@ import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import { styled } from "@mui/material";
 
-const SlateToolbarContainer = styled("div")({
-    textAlign: "center",
+const SlateToolbarContainer = styled("div", {name: "SlateToolbarContainer"})({
+    display: "flex",
+    height: "40px",
+    flexDirection: "row",
     justifyContent: "center",
-
+    alignItems: "center",
+    gap: "20px"
 });
 
 export const SlateToolBar = memo(() => {
