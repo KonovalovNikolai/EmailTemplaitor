@@ -13,7 +13,7 @@ import { SlateToolBar } from '../../CustomSlateEditor/components/Toolbar/Toolbar
 
 import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAction } from '../../../hooks/FieldListReducer';
 import { createDeletableField, Field, getFieldName, getFieldNameList, isFieldDeletable } from '../../../utils/FieldList';
-import { EditableList } from '../../EditableList';
+import { VariableList } from '../../EditableList';
 import { getAutoCompleteData, getBoundingClientRectFromRange } from '../utils';
 import { AutoCompleteData, CustomSlateEditor } from '../../CustomSlateEditor';
 import { EditorContainer, EditorContainerEditableArea, EditorContainerToolbar } from '../../StyledComponents';
@@ -101,7 +101,7 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
                     />
                 </EditorContainerEditableArea>
                 {/* Список переменных */}
-                <EditableList
+                <VariableList
                     elementList={fieldList}
                     getLabel={getFieldName}
                     isChangeable={isFieldDeletable}

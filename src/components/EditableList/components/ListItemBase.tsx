@@ -1,40 +1,72 @@
-import { Chip, Grid, } from "@mui/material";
+import { IconButton, ListItem, ListItemButton, ListItemText, Typography } from "@mui/material";
 import { memo } from "react";
 import { DeletableListItemProps, ListItemBaseProps, UndeletableListItemProps } from "../types";
+import { VariableListItemIcon } from "./VariableListItemIcon";
+import CloseIcon from '@mui/icons-material/Close';
+import EditSharpIcon from '@mui/icons-material/EditSharp';
+import { styled } from "@mui/system";
 
-export const ListItemBase = ({ label, color, onDelete = null, onClick = null }: ListItemBaseProps, ...rest) => {
+const VariableListItemButton = styled(ListItemButton, { name: "VariableListItemButton" })(({ theme }) => ({
+    paddingLeft: "10px",
+    paddingRight: "70px!important",
+}));
+
+export const DeletableListItem = memo(({ element, label, onDelete, onClick }: DeletableListItemProps<any>) => {
     return (
-        <Grid item xs={6}>
-            <Chip
-                sx={{
-                    width: 1,
-                    "&>.MuiChip-label": {
-                        margin: "auto",
-                        flex: "auto"
+        <ListItem
+            secondaryAction={
+                <>
+                    <IconButton edge="end" size="small">
+                        <EditSharpIcon sx={{ fontSize: "1rem" }} />
+                    </IconButton>
+                    <IconButton edge="end" size="small">
+                        <CloseIcon sx={{ fontSize: "1rem" }} />
+                    </IconButton>
+                </>
+            }
+            disablePadding
+        >
+            <VariableListItemButton>
+                <VariableListItemIcon>
+                    <Typography>#</Typography>
+                </VariableListItemIcon>
+                <ListItemText
+                    primary={
+                        <Typography
+                            fontWeight="light"
+                            overflow="hidden"
+                            whiteSpace="nowrap"
+                            textOverflow="ellipsis"
+                        >
+                            {label}
+                        </Typography>
                     }
-                }}
-                color={color}
-                label={`#${label}`}
-                onDelete={onDelete}
-                onClick={onClick}
-                {...rest}
-            />
-        </Grid>
-    );
-};
-
-export const DeletableListItem = memo(({ element, onDelete, onClick }: DeletableListItemProps<any>) => {
-    return (
-        <ListItemBase
-            label={element.name}
-            color="default"
-            onDelete={() => onDelete(element)}
-            onClick={(event) => onClick(event, element)} />
+                />
+            </VariableListItemButton>
+        </ListItem >
     );
 });
 
 export const UndeletableListItem = memo(({ label }: UndeletableListItemProps) => {
     return (
-        <ListItemBase label={label} color="primary" onClick={null} onDelete={null} />
+        <ListItem disablePadding>
+            <VariableListItemButton>
+                <VariableListItemIcon primary>
+                    <Typography>#</Typography>
+                </VariableListItemIcon>
+                <ListItemText
+                    primary={
+                        <Typography
+                            fontWeight="light"
+                            overflow="hidden"
+                            whiteSpace="nowrap"
+                            textOverflow="ellipsis"
+                        >
+                            {label}
+                        </Typography>
+                    }
+                />
+            </VariableListItemButton>
+        </ListItem>
     );
 });

@@ -1,4 +1,4 @@
-import { Box, Grid, Popover, styled } from '@mui/material';
+import { Box, Grid, List, Popover, styled } from '@mui/material';
 import React, { memo, useCallback, useState } from 'react';
 
 import { hasWhiteSpace } from '../utils/hasWhiteSpace';
@@ -17,16 +17,12 @@ interface SelectedElementData<T> {
     element: T | null;
 };
 
-const EditableListContainer = styled("div")({
-    display: "flex",
-    flexDirection: "column",
+const VariableListBox = styled("div", { name: "VariableListBox" })({
+    width: "184px",
+    backgroundColor: "#FFF",
 });
 
-const ScrollableListContainer = styled("div")({
-    flex: "auto",
-});
-
-export const EditableList = memo(({ elementList, getLabel, isChangeable, onAdd, onRename, onRemove }: EditableListProps<any>) => {
+export const VariableList = memo(({ elementList, getLabel, isChangeable, onAdd, onRename, onRemove }: EditableListProps<any>) => {
     // Состояние верхней панели
     const [barState, setBarState] = React.useState<EditableListTopBarData>(
         {
@@ -99,46 +95,33 @@ export const EditableList = memo(({ elementList, getLabel, isChangeable, onAdd, 
     };
 
     return (
-        <EditableListContainer className='editable-list'>
+        <VariableListBox className='editable-list'>
 
             <ListTopBar onChange={setBarState} />
 
-            <ScrollableListContainer className="editable-list-elements">
-                <Grid
-                    container
-                    justifyContent="flex-start"
-                    alignItems="baseline"
-                    spacing={0.5}
-                    paddingRight={"5px"}
-                >
-                    {filteredList.length > 0 &&
-                        filteredList.map((element) => {
-                            const name = getLabel(element);
-                            const isElementChangeable = isChangeable(element);
+            <List dense>
+                {
+                    filteredList.length > 0 &&
+                    filteredList.map((element) => {
+                        const name = getLabel(element);
+                        const isElementChangeable = isChangeable(element);
 
-                            return isElementChangeable ?
-                                <DeletableListItem
-                                    key={name}
-                                    element={element}
-                                    onDelete={onRemove}
-                                    onClick={handleClick}
-                                />
-                                :
-                                <UndeletableListItem
-                                    key={name}
-                                    label={name}
-                                />;
-                        })
-                    }
-
-                    <Grid item xs={1}
-                    >
-                        <NewFieldButton
-                            onClick={handleClick}
-                        />
-                    </Grid>
-                </Grid>
-            </ScrollableListContainer>
+                        return isElementChangeable ?
+                            <DeletableListItem
+                                key={name}
+                                label={name}
+                                element={element}
+                                onDelete={onRemove}
+                                onClick={handleClick}
+                            />
+                            :
+                            <UndeletableListItem
+                                key={name}
+                                label={name}
+                            />;
+                    })
+                }
+            </List>
 
             {!!selectedElement &&
                 <Popover
@@ -164,6 +147,6 @@ export const EditableList = memo(({ elementList, getLabel, isChangeable, onAdd, 
                     />
                 </Popover>
             }
-        </EditableListContainer >
+        </VariableListBox >
     );
 });

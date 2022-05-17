@@ -38,7 +38,6 @@ function App() {
       <AppContainer
         sx={{
           m: "20px auto",
-          backgroundColor: "white",
         }}
       >
         <TabButtonsContainer>

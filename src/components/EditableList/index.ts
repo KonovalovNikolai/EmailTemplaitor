@@ -1,1 +1,1 @@
-export { EditableList } from './components/EditableList';
+export { VariableList } from './components/VariableList';

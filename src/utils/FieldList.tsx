@@ -31,7 +31,7 @@ export const initialFieldList: Field[] = [
         isDeletable: true
     },
     {
-        name: "LastName",
+        name: "LastNameeeeeeeeeeeeee",
         isDeletable: true
     },
     {

@@ -32,14 +32,12 @@ export interface EditableListProps<T> {
 };
 
 export interface ListItemBaseProps {
-    label: string;
-    color: any;
-    onDelete: () => void,
-    onClick: (event: React.MouseEvent) => void;
+    children: React.ReactNode;
 };
 
 export interface DeletableListItemProps<T> {
     element: T;
+    label: string;
     onDelete: (element: T) => void;
     onClick: IOnElementClick<T>;
 }
