@@ -1,10 +1,10 @@
-import { Field } from "./FieldList";
+import { Variable } from "./VariableList";
 
 export interface Addressee {
     [fieldName: string]: string;
 }
 
-export function createAddressee(fieldList: Field[]) {
+export function createAddressee(fieldList: Variable[]) {
     const addressee: Addressee = {};
     fieldList.forEach(f => addressee[f.name] = "");
     return addressee;
@@ -41,14 +41,14 @@ function renameAddresseeField(addressee: Addressee, field: string, newField: str
     return addressee;
 }
 
-export function addAddresseeFieldToList(addresseeList: Addressee[], field: Field) {
+export function addAddresseeFieldToList(addresseeList: Addressee[], field: Variable) {
     return addresseeList.map(a => addAddresseeField(a, field.name));
 }
 
-export function removeAddresseeFieldFromList(addresseeList: Addressee[], field: Field) {
+export function removeAddresseeFieldFromList(addresseeList: Addressee[], field: Variable) {
     return addresseeList.map(a => removeAddresseeField(a, field.name));
 }
 
-export function renameAddresseeFieldInList(addresseeList: Addressee[], field: Field, newField: Field) {
+export function renameAddresseeFieldInList(addresseeList: Addressee[], field: Variable, newField: Variable) {
     return addresseeList.map(a => renameAddresseeField(a, field.name, newField.name));
 }

@@ -1,7 +1,7 @@
 import React, { useReducer, useState } from 'react';
 import { Descendant } from 'slate';
 import { CustomEditor } from "./components/Editor";
-import { initialFieldList } from './utils/FieldList';
+import { initialVariableList } from './utils/VariableList';
 
 import { initialValue } from './utils/initialDocument';
 
@@ -22,7 +22,7 @@ function App() {
 
   const [fieldReducerState, fieldDispatch] = useReducer(
     fieldsReducer,
-    initFieldReducer(initialFieldList, [])
+    initFieldReducer(initialVariableList, [])
   );
 
   const { fieldList, addresseeList } = { ...fieldReducerState };

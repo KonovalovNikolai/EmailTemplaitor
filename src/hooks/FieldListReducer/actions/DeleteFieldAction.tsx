@@ -1,17 +1,17 @@
 import { removeAddresseeFieldFromList } from "../../../utils/Addressee";
-import { Field, removeFieldFromList } from "../../../utils/FieldList";
+import { Variable, removeVariableFromList } from "../../../utils/VariableList";
 import { FieldsReducerState, IFieldsReducerAction } from "../types";
 
 export class DeleteFieldAction implements IFieldsReducerAction {
-    private _field: Field;
+    private _field: Variable;
 
-    public constructor(field: Field) {
+    public constructor(field: Variable) {
         this._field = field;
     }
 
     public Action(state: FieldsReducerState): FieldsReducerState {
         const { fieldList, addresseeList } = { ...state };
-        const newFieldList = removeFieldFromList(fieldList, this._field);
+        const newFieldList = removeVariableFromList(fieldList, this._field);
         const newAddresseeList = removeAddresseeFieldFromList(addresseeList, this._field);
 
         return {

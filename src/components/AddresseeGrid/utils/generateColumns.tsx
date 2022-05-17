@@ -1,12 +1,12 @@
 import { GridColDef, GridValueSetterParams } from "@mui/x-data-grid";
-import { Field } from "../../../utils/FieldList";
+import { Variable } from "../../../utils/VariableList";
 
 interface OnSetValueFunc {
     (rowId: number, value: string, field: string): void;
 }
 
-export function generateColumns(list: Field[], onSet: OnSetValueFunc) {
-    const columns: GridColDef[] = list.map((field: Field) => {
+export function generateColumns(list: Variable[], onSet: OnSetValueFunc) {
+    const columns: GridColDef[] = list.map((field: Variable) => {
         return {
             editable: true,
             field: field.name,

@@ -1,8 +1,8 @@
 import { Addressee } from "../../utils/Addressee";
-import { Field } from "../../utils/FieldList";
+import { Variable } from "../../utils/VariableList";
 import { FieldsReducerState, IFieldsReducerAction } from "./types";
 
-export function initFieldReducer(fieldList: Field[], addresseeList: Addressee[]) {
+export function initFieldReducer(fieldList: Variable[], addresseeList: Addressee[]) {
     return {
         fieldList: fieldList,
         addresseeList: addresseeList,

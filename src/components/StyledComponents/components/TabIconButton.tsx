@@ -11,7 +11,7 @@ export const TabIconButton = styled(IconButton, {
     width: "60px",
     height: "60px",
 
-    color: theme.palette.neutral.dark,
+    color: theme.palette.neutral.light,
 
     ":hover": {
         color: theme.palette.primary.main,

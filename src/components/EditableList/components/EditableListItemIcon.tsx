@@ -1,13 +1,13 @@
 import { ListItemIcon, ListItemIconProps, styled } from "@mui/material";
 
-interface VariableListItemIconProps extends ListItemIconProps {
+interface EditableListItemIcon extends ListItemIconProps {
     primary?: boolean;
 }
 
-export const VariableListItemIcon = styled(ListItemIcon, { 
+export const EditableListItemIcon = styled(ListItemIcon, { 
     name: "VariableListItemIcon",
     shouldForwardProp: (prop) => prop !== 'primary',
-})<VariableListItemIconProps>(({ primary, theme }) => ({
+})<EditableListItemIcon>(({ primary, theme }) => ({
     minWidth: 0,
     paddingRight: "5px",
 

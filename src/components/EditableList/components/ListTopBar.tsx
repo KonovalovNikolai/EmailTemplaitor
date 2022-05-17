@@ -7,12 +7,15 @@ import React, { memo } from "react";
 import { EditableListTopBarProps } from "../types";
 
 const ListTopBarContainer = styled("div")({
-    display: 'flex',
-    marginBottom: "5px",
-    "& .list-search-field": {},
-    "& .MuiIconButton-root": {
-        margin: "auto",
-    }
+    "display": "flex",
+    "flexDirection": "row",
+    "alignItems": "center",
+    "padding": "0px 0px 0px 5px",
+    "height": "40px",
+
+    flex: "none",
+    alignSelf: "stretch",
+    flexGrow: 0,
 });
 
 const ListTopBar = ({ onChange }: EditableListTopBarProps) => {
@@ -27,8 +30,6 @@ const ListTopBar = ({ onChange }: EditableListTopBarProps) => {
     return (
         <ListTopBarContainer>
             <TextField
-                label="Search"
-                size='small'
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">

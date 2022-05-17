@@ -1,20 +1,20 @@
 import { renameAddresseeFieldInList } from "../../../utils/Addressee";
-import { Field, renameFieldInList } from "../../../utils/FieldList";
+import { Variable, renameVariableInList } from "../../../utils/VariableList";
 import { IFieldsReducerAction, FieldsReducerState } from "../types";
 
 
 export class RenameFieldAction implements IFieldsReducerAction {
-    private _field: Field;
-    private _newField: Field;
+    private _field: Variable;
+    private _newField: Variable;
 
-    public constructor(field: Field, newField: Field) {
+    public constructor(field: Variable, newField: Variable) {
         this._field = field;
         this._newField = newField;
     }
 
     public Action(state: FieldsReducerState): FieldsReducerState {
         const { fieldList, addresseeList } = { ...state };
-        const newFieldList = renameFieldInList(fieldList, this._field, this._newField);
+        const newFieldList = renameVariableInList(fieldList, this._field, this._newField);
         const newAddresseeList = renameAddresseeFieldInList(addresseeList, this._field, this._newField);
 
         return {

@@ -12,15 +12,15 @@ import { Divider } from '@mui/material';
 import { SlateToolBar } from '../../CustomSlateEditor/components/Toolbar/Toolbar';
 
 import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAction } from '../../../hooks/FieldListReducer';
-import { createDeletableField, Field, getFieldName, getFieldNameList, isFieldDeletable } from '../../../utils/FieldList';
-import { VariableList } from '../../EditableList';
+import { createDeletableVariable, Variable, getVariableName, getVariableNameList, isVariableDeletable } from '../../../utils/VariableList';
+import { EditableList } from '../../EditableList';
 import { getAutoCompleteData, getBoundingClientRectFromRange } from '../utils';
 import { AutoCompleteData, CustomSlateEditor } from '../../CustomSlateEditor';
 import { EditorContainer, EditorContainerEditableArea, EditorContainerToolbar } from '../../StyledComponents';
 
 interface CustomEditorProps {
     value: Descendant[];
-    fieldList: Field[];
+    fieldList: Variable[];
     onDocumentChange: React.Dispatch<any>;
     onFieldListChange: React.Dispatch<IFieldsReducerAction>;
 }
@@ -34,7 +34,7 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
 
     const handleAddField = useCallback(
         (newFieldName: string) => {
-            const newField = createDeletableField(newFieldName);
+            const newField = createDeletableVariable(newFieldName);
             const action = new AddFieldAction(newField);
             onFieldListChange(action);
         },
@@ -42,8 +42,8 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
     );
 
     const handleRenameField = useCallback(
-        (field: Field, newName: string) => {
-            const newField = createDeletableField(newName);
+        (field: Variable, newName: string) => {
+            const newField = createDeletableVariable(newName);
             const action = new RenameFieldAction(field, newField);
             onFieldListChange(action);
         },
@@ -51,7 +51,7 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
     );
 
     const handleRemoveField = useCallback(
-        (field: Field) => {
+        (field: Variable) => {
             const action = new DeleteFieldAction(field);
             onFieldListChange(action);
         },
@@ -60,7 +60,7 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
 
     const [autoCompleteData, setAutoCompleteData] = useState<AutoCompleteData | null>(null);
 
-    const autoCompleteList = getFieldNameList(fieldList);
+    const autoCompleteList = getVariableNameList(fieldList);
 
     const handleChange = useCallback(
         (value: Descendant[]) => {
@@ -101,10 +101,11 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
                     />
                 </EditorContainerEditableArea>
                 {/* Список переменных */}
-                <VariableList
+                <EditableList
+                    label='Переменные'
                     elementList={fieldList}
-                    getLabel={getFieldName}
-                    isChangeable={isFieldDeletable}
+                    getLabel={getVariableName}
+                    isChangeable={isVariableDeletable}
                     onAdd={handleAddField}
                     onRename={handleRenameField}
                     onRemove={handleRemoveField}

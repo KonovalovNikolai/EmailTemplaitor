@@ -1,22 +1,22 @@
-interface FieldBase {
+interface VariableBase {
     name: string;
 }
 
-export interface DeletableField extends FieldBase {
+export interface DeletableVariable extends VariableBase {
     isDeletable: true;
 };
 
-export interface UnDeletableField extends FieldBase {
+export interface UnDeletableVariable extends VariableBase {
     isDeletable: false;
 };
 
-export interface EmailField extends UnDeletableField {
+export interface EmailVariable extends UnDeletableVariable {
     isEmail: true;
 }
 
-export type Field = DeletableField | UnDeletableField | EmailField;
+export type Variable = DeletableVariable | UnDeletableVariable | EmailVariable;
 
-export const initialFieldList: Field[] = [
+export const initialVariableList: Variable[] = [
     {
         name: "Email",
         isDeletable: false,
@@ -40,33 +40,33 @@ export const initialFieldList: Field[] = [
     },
 ];
 
-export function createDeletableField(name: string): DeletableField {
+export function createDeletableVariable(name: string): DeletableVariable {
     return {
         name: name,
         isDeletable: true
     };
 }
 
-export function getFieldName(field: Field) {
+export function getVariableName(field: Variable) {
     return field.name;
 }
 
-export function isFieldDeletable(field: Field) {
+export function isVariableDeletable(field: Variable) {
     return field.isDeletable;
 }
-export function filterFieldList(list: Field[], filter: string) {
+export function filterVariableList(list: Variable[], filter: string) {
     return !filter ? list : list.filter(element => element.name.toLowerCase().startsWith(filter));
 }
 
-export function getFieldNameList(list: Field[]) {
+export function getVariableNameList(list: Variable[]) {
     return list.map<string>(element => element.name);
 }
 
-export function removeFieldFromList(list: Field[], field: Field) {
+export function removeVariableFromList(list: Variable[], field: Variable) {
     return list.filter(e => e !== field);
 }
 
-export function renameFieldInList(list: Field[], field: Field, newField: Field): Field[] {
+export function renameVariableInList(list: Variable[], field: Variable, newField: Variable): Variable[] {
     const newList = [...list];
 
     const fieldIndex = newList.indexOf(field);
@@ -84,6 +84,6 @@ export function renameFieldInList(list: Field[], field: Field, newField: Field):
     return newList;
 }
 
-export function isFieldListContainName(list: Field[], fieldName: string): boolean {
+export function isVariableListContainName(list: Variable[], fieldName: string): boolean {
     return list.find(element => element.name.toLowerCase() === fieldName) !== undefined;
 }

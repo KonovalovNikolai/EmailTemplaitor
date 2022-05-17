@@ -23,6 +23,7 @@ export interface EditableListTopBarData {
 };
 
 export interface EditableListProps<T> {
+    label: string;
     elementList: T[];
     getLabel: IGetLabel<T>;
     isChangeable: (element: T) => boolean;
@@ -30,6 +31,14 @@ export interface EditableListProps<T> {
     onAdd: (newElementName: string) => void;
     onRemove: (element: T) => void;
 };
+
+export interface ElementListProps<T> {
+    list: T[];
+    getLabel: IGetLabel<T>;
+    isChangeable: (element: T) => boolean;
+    onRename: (element: T, newName: string) => void;
+    onRemove: (element: T) => void;
+}
 
 export interface ListItemBaseProps {
     children: React.ReactNode;
@@ -39,7 +48,7 @@ export interface DeletableListItemProps<T> {
     element: T;
     label: string;
     onDelete: (element: T) => void;
-    onClick: IOnElementClick<T>;
+    onRename: IOnElementClick<T>;
 }
 
 export interface UndeletableListItemProps {
@@ -47,7 +56,7 @@ export interface UndeletableListItemProps {
 }
 
 export interface NewElementButtonProps<T> {
-    onClick: IOnElementClick<T>;
+    onRename: IOnElementClick<T>;
 }
 
 export interface EditableListTopBarProps {

@@ -2,7 +2,7 @@ import { styled } from "@mui/system";
 
 
 export const EditorBox = styled("div", { name: "EditorBox" })({
-    width: "656px",
+    flex: "auto",
 
     "& .editable": {
         height: '100%',

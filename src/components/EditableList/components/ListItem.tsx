@@ -1,48 +1,56 @@
 import { IconButton, ListItem, ListItemButton, ListItemText, Typography } from "@mui/material";
 import { memo } from "react";
 import { DeletableListItemProps, ListItemBaseProps, UndeletableListItemProps } from "../types";
-import { VariableListItemIcon } from "./VariableListItemIcon";
+import { EditableListItemIcon } from "./EditableListItemIcon";
 import CloseIcon from '@mui/icons-material/Close';
 import EditSharpIcon from '@mui/icons-material/EditSharp';
 import { styled } from "@mui/system";
 
-const VariableListItemButton = styled(ListItemButton, { name: "VariableListItemButton" })(({ theme }) => ({
+const ElementListItemButton = styled(ListItemButton, { name: "ElementListItemButton" })(({ theme }) => ({
     paddingLeft: "10px",
     paddingRight: "70px!important",
+    paddingTop: 0,
+    paddingBottom: 0,
 }));
 
-export const DeletableListItem = memo(({ element, label, onDelete, onClick }: DeletableListItemProps<any>) => {
+const ElementLabel = styled(Typography, {name: "ElementLabel"})(({
+    fontWeight: "300",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+}))
+
+export const DeletableListItem = memo(({ element, label, onDelete, onRename: onClick }: DeletableListItemProps<any>) => {
     return (
         <ListItem
             secondaryAction={
                 <>
-                    <IconButton edge="end" size="small">
+                    <IconButton edge="end" size="small"
+                        onClick={(e) => onClick(e, element)}
+                    >
                         <EditSharpIcon sx={{ fontSize: "1rem" }} />
                     </IconButton>
-                    <IconButton edge="end" size="small">
+                    <IconButton edge="end" size="small"
+                        onClick={() => onDelete(element)}
+                    >
                         <CloseIcon sx={{ fontSize: "1rem" }} />
                     </IconButton>
                 </>
             }
             disablePadding
         >
-            <VariableListItemButton>
-                <VariableListItemIcon>
+            <ElementListItemButton>
+                <EditableListItemIcon>
                     <Typography>#</Typography>
-                </VariableListItemIcon>
+                </EditableListItemIcon>
                 <ListItemText
                     primary={
-                        <Typography
-                            fontWeight="light"
-                            overflow="hidden"
-                            whiteSpace="nowrap"
-                            textOverflow="ellipsis"
-                        >
+                        <ElementLabel>
                             {label}
-                        </Typography>
+                        </ElementLabel>
                     }
                 />
-            </VariableListItemButton>
+            </ElementListItemButton>
         </ListItem >
     );
 });
@@ -50,23 +58,18 @@ export const DeletableListItem = memo(({ element, label, onDelete, onClick }: De
 export const UndeletableListItem = memo(({ label }: UndeletableListItemProps) => {
     return (
         <ListItem disablePadding>
-            <VariableListItemButton>
-                <VariableListItemIcon primary>
+            <ElementListItemButton>
+                <EditableListItemIcon primary>
                     <Typography>#</Typography>
-                </VariableListItemIcon>
+                </EditableListItemIcon>
                 <ListItemText
                     primary={
-                        <Typography
-                            fontWeight="light"
-                            overflow="hidden"
-                            whiteSpace="nowrap"
-                            textOverflow="ellipsis"
-                        >
+                        <ElementLabel>
                             {label}
-                        </Typography>
+                        </ElementLabel>
                     }
                 />
-            </VariableListItemButton>
+            </ElementListItemButton>
         </ListItem>
     );
 });
