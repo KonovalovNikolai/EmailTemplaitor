@@ -1,7 +1,10 @@
+import { Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-export const EditableArea = styled("div", { name: "EditableArea" })(({theme}) => ({
-    "background": "#FFFFFF",
+export const EditableArea = styled(Paper, { name: "EditableArea" })(({theme}) => ({
+    borderRadius: 0,
+
+    "background": theme.palette.background.default,
 
     "flex": "auto",
     "alignSelf": "stretch",

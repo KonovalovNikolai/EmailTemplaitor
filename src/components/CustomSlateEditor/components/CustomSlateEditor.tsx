@@ -74,7 +74,7 @@ export const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = memo
 
     return (
         <>
-            <Typography width="100%" height="100%" component={"div"}>
+            <Typography width="100%" height="100%" variant="body1" component={"div"}>
                 <Editable
                     className='editable'
                     onKeyDown={handleKeyDown}

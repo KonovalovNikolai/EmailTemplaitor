@@ -1,4 +1,4 @@
-import { Divider, Typography } from '@mui/material';
+import { Divider, Paper, Typography } from '@mui/material';
 import React, { memo, useCallback, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { hasWhiteSpace } from '../utils/hasWhiteSpace';
@@ -17,17 +17,18 @@ interface SelectedElementData<T> {
     element: T;
 };
 
-const EditableListBox = styled("div", { name: "VariableListBox" })({
+const EditableListBox = styled(Paper, { name: "VariableListBox" })(({ theme }) => ({
+    borderRadius: 0,
+
     width: "184px",
 
-    backgroundColor: "#FFF",
     display: "flex",
     flexDirection: "column",
 
     flex: "none",
     alignSelf: "stretch",
     flexGrow: "0",
-});
+}));
 
 const ListName = styled(Typography, { name: "ListName" })(({ theme }) => ({
     fontWeight: "300",
@@ -140,8 +141,7 @@ export const EditableList = memo(
         }
 
         return (
-            <EditableListBox>
-
+            <EditableListBox elevation={0}>
                 <ListName>{label}</ListName>
 
                 <ListTopBar onChange={setBarState} />

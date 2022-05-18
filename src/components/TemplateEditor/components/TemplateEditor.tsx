@@ -93,7 +93,7 @@ export const TemplateEditor = memo(({ value, fieldList, onDocumentChange, onFiel
             <Slate editor={editor} value={value} onChange={handleChange}>
                 <EditorBox>
                     <SlateToolBar />
-                    <EditableArea>
+                    <EditableArea elevation={0}>
                         <CustomSlateEditor
                             editor={editor}
                             autoCompleteList={autoCompleteList}

@@ -14,9 +14,12 @@ import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
 import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
-import { styled } from "@mui/material";
+import { styled } from '@mui/material/styles';
+import { Paper } from "@mui/material";
 
-const SlateToolbarContainer = styled("div", {name: "SlateToolbarContainer"})({
+const SlateToolbarContainer = styled(Paper, {name: "SlateToolbarContainer"})(({theme}) => ({
+    borderRadius: 0,
+    
     display: "flex",
     height: "40px",
     flexDirection: "row",
@@ -24,17 +27,15 @@ const SlateToolbarContainer = styled("div", {name: "SlateToolbarContainer"})({
     alignItems: "center",
     gap: "20px",
 
-    backgroundColor: "#fff",
-
     "flex": "none",
     "alignSelf": "stretch",
     "flexGrow": "0"
-});
+}));
 
 export const SlateToolBar = memo(() => {
 
     return (
-        <SlateToolbarContainer className="slate-toolbar">
+        <SlateToolbarContainer elevation={0}>
             <div>
                 <MarkButton format='bold'>
                     <FormatBoldIcon />
