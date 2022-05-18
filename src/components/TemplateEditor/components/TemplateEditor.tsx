@@ -16,16 +16,17 @@ import { createDeletableVariable, Variable, getVariableName, getVariableNameList
 import { EditableList } from '../../EditableList';
 import { getAutoCompleteData, getBoundingClientRectFromRange } from '../utils';
 import { AutoCompleteData, CustomSlateEditor } from '../../CustomSlateEditor';
-import { EditorContainer, EditorContainerEditableArea, EditorContainerToolbar } from '../../StyledComponents';
+import { EditorBox, TemplateEditorBox } from '../../StyledComponents';
+import { EditableArea } from '../../StyledComponents/components/EditableArea';
 
-interface CustomEditorProps {
+interface TemplateEditorProps {
     value: Descendant[];
     fieldList: Variable[];
     onDocumentChange: React.Dispatch<any>;
     onFieldListChange: React.Dispatch<IFieldsReducerAction>;
 }
 
-export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldListChange }: CustomEditorProps) => {
+export const TemplateEditor = memo(({ value, fieldList, onDocumentChange, onFieldListChange }: TemplateEditorProps) => {
     // Инициализация редактора
     const editor = useMemo(
         () => withMentions(withReact(withHistory(createEditor()))),
@@ -88,19 +89,19 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
     );
 
     return (
-        <EditorContainer>
+        <TemplateEditorBox>
             <Slate editor={editor} value={value} onChange={handleChange}>
-                {/* Редактор */}
-                <EditorContainerEditableArea>
+                <EditorBox>
                     <SlateToolBar />
-                    <CustomSlateEditor
-                        editor={editor}
-                        autoCompleteList={autoCompleteList}
-                        autoCompleteData={autoCompleteData}
-                        setAutoCompleteData={setAutoCompleteData}
-                    />
-                </EditorContainerEditableArea>
-                {/* Список переменных */}
+                    <EditableArea>
+                        <CustomSlateEditor
+                            editor={editor}
+                            autoCompleteList={autoCompleteList}
+                            autoCompleteData={autoCompleteData}
+                            setAutoCompleteData={setAutoCompleteData}
+                        />
+                    </EditableArea>
+                </EditorBox>
                 <EditableList
                     label='Переменные'
                     elementList={fieldList}
@@ -111,6 +112,6 @@ export const CustomEditor = memo(({ value, fieldList, onDocumentChange, onFieldL
                     onRemove={handleRemoveField}
                 />
             </Slate>
-        </EditorContainer >
+        </TemplateEditorBox >
     );
 });

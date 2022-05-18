@@ -1,12 +1,11 @@
-import { Divider, List, Popover, styled, Typography } from '@mui/material';
+import { Divider, Typography } from '@mui/material';
 import React, { memo, useCallback, useState } from 'react';
-
+import { styled } from '@mui/material/styles';
 import { hasWhiteSpace } from '../utils/hasWhiteSpace';
 
 import { DefaultSortButtonState } from '../utils/SortButtonState';
-import { NameInputField } from './NameInputField';
-import { DeletableListItem, UndeletableListItem } from './ListItem';
 import ListTopBar from './ListTopBar';
+import { NameInputField } from './NameInputField';
 
 import { EditableListProps, EditableListTopBarData } from '../types';
 import ElementList from './ElementList';
@@ -19,9 +18,15 @@ interface SelectedElementData<T> {
 };
 
 const EditableListBox = styled("div", { name: "VariableListBox" })({
+    width: "184px",
+
     backgroundColor: "#FFF",
     display: "flex",
     flexDirection: "column",
+
+    flex: "none",
+    alignSelf: "stretch",
+    flexGrow: "0",
 });
 
 const ListName = styled(Typography, { name: "ListName" })(({ theme }) => ({
@@ -30,7 +35,8 @@ const ListName = styled(Typography, { name: "ListName" })(({ theme }) => ({
     height: "40px",
     display: "flex",
     alignItems: "center",
-    color: theme.palette.neutral.dark,
+
+    color: theme.palette.grey[500], // #9e9e9e
 
     flex: "none",
     alignSelf: "stretch",

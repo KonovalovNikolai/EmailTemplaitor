@@ -1,4 +1,5 @@
-import { IconButton, IconButtonProps, styled } from "@mui/material";
+import { IconButton, IconButtonProps, } from "@mui/material";
+import { styled } from '@mui/material/styles';
 
 interface TabIconButtonProps extends IconButtonProps {
     current?: boolean;
@@ -11,7 +12,7 @@ export const TabIconButton = styled(IconButton, {
     width: "60px",
     height: "60px",
 
-    color: theme.palette.neutral.light,
+    color: theme.palette.grey[200],
 
     ":hover": {
         color: theme.palette.primary.main,

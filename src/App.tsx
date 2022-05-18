@@ -1,6 +1,6 @@
 import React, { useReducer, useState } from 'react';
 import { Descendant } from 'slate';
-import { CustomEditor } from "./components/Editor";
+import { TemplateEditor } from "./components/TemplateEditor";
 import { initialVariableList } from './utils/VariableList';
 
 import { initialValue } from './utils/initialDocument';
@@ -14,7 +14,7 @@ import { AddresseeGrid } from './components/AddresseeGrid';
 import { TabButton, TabContent } from './components/CustomTabs';
 import { createTheme, ThemeProvider } from '@mui/material';
 
-import theme from './utils/Theme';
+import theme from './utils/AppTheme';
 import { AppContainer, ContentContainer, TabButtonsContainer } from './components/StyledComponents';
 
 function App() {
@@ -62,7 +62,7 @@ function App() {
         </TabButtonsContainer>
         <ContentContainer>
           <TabContent index={0} value={tabsValue}>
-            <CustomEditor
+            <TemplateEditor
               value={documentValue}
               fieldList={fieldList}
               onDocumentChange={setDocumentValue}

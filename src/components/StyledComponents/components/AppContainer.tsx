@@ -5,4 +5,6 @@ export const AppContainer = styled("div", { name: "AppContainer" })({
     display: 'flex',
     width: "900px",
     height: "500px",
+
+    backgroundColor: "#fff"
 });

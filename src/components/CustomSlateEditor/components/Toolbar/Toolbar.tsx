@@ -25,6 +25,10 @@ const SlateToolbarContainer = styled("div", {name: "SlateToolbarContainer"})({
     gap: "20px",
 
     backgroundColor: "#fff",
+
+    "flex": "none",
+    "alignSelf": "stretch",
+    "flexGrow": "0"
 });
 
 export const SlateToolBar = memo(() => {

@@ -4,7 +4,7 @@ import { DeletableListItemProps, ListItemBaseProps, UndeletableListItemProps } f
 import { EditableListItemIcon } from "./EditableListItemIcon";
 import CloseIcon from '@mui/icons-material/Close';
 import EditSharpIcon from '@mui/icons-material/EditSharp';
-import { styled } from "@mui/system";
+import { styled } from "@mui/material/styles";
 
 const ElementListItemButton = styled(ListItemButton, { name: "ElementListItemButton" })(({ theme }) => ({
     paddingLeft: "10px",

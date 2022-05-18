@@ -1,4 +1,4 @@
-import { styled } from "@mui/system";
+import { styled } from '@mui/material/styles';
 
 
 export const TabButtonsContainer = styled("div", { name: "TabButtonsContainer" })(({ theme }) => ({
@@ -9,5 +9,5 @@ export const TabButtonsContainer = styled("div", { name: "TabButtonsContainer" }
     display: "flex",
     flexDirection: "column",
 
-    backgroundColor: theme.palette.neutral.main,
+    backgroundColor: theme.palette.grey[900],
 }));

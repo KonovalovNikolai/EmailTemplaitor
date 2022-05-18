@@ -1,11 +1,11 @@
 import { List } from "@mui/material";
-import { styled } from "@mui/system";
+import { styled } from '@mui/material/styles';
 import { memo } from "react";
 
 import { ElementListProps } from "../types";
 import { DeletableListItem, UndeletableListItem } from "./ListItem";
 
-const ElementListBox = styled(List, { name: "ElementListBox" })({
+const ElementListBox = styled(List, { name: "ElementListBox" })(({theme}) => ({
     overflowY: "overlay" as any,
 
     width: "184px",
@@ -24,9 +24,9 @@ const ElementListBox = styled(List, { name: "ElementListBox" })({
     },
 
     "::-webkit-scrollbar-thumb": {
-        backgroundColor: "rgba(0, 0, 0, 0.1)",
+        backgroundColor: theme.palette.divider,
     }
-});
+}));
 
 export const ElementList = memo((
     {
