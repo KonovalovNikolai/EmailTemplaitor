@@ -5,7 +5,7 @@ import { memo } from "react";
 import { ElementListProps } from "../types";
 import { DeletableListItem, UndeletableListItem } from "./ListItem";
 
-const ElementListBox = styled(List, { name: "ElementListBox" })(({theme}) => ({
+const ElementListBox = styled(List, { name: "ElementListBox" })(({ theme }) => ({
     overflowY: "overlay" as any,
 
     width: "184px",
@@ -33,6 +33,7 @@ export const ElementList = memo((
         list,
         getLabel,
         isChangeable,
+        onElementClick,
         onRemove,
         onRename
     }: ElementListProps<any>
@@ -50,11 +51,17 @@ export const ElementList = memo((
                             key={name}
                             label={name}
                             element={element}
+                            onElementClick={onElementClick}
                             onDelete={onRemove}
                             onRename={onRename}
                         />
                         :
-                        <UndeletableListItem key={name} label={name} />;
+                        <UndeletableListItem
+                            key={name}
+                            label={name}
+                            element={element}
+                            onElementClick={onElementClick}
+                        />;
                 })
             }
         </ElementListBox>

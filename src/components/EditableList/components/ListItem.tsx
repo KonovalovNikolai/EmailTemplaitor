@@ -13,14 +13,14 @@ const ElementListItemButton = styled(ListItemButton, { name: "ElementListItemBut
     paddingBottom: 0,
 }));
 
-const ElementLabel = styled(Typography, {name: "ElementLabel"})(({
+const ElementLabel = styled(Typography, { name: "ElementLabel" })(({
     fontWeight: "300",
     overflow: "hidden",
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
-}))
+}));
 
-export const DeletableListItem = memo(({ element, label, onDelete, onRename: onClick }: DeletableListItemProps<any>) => {
+export const DeletableListItem = memo(({ element, label, onElementClick, onDelete, onRename: onClick }: DeletableListItemProps<any>) => {
     return (
         <ListItem
             secondaryAction={
@@ -39,7 +39,12 @@ export const DeletableListItem = memo(({ element, label, onDelete, onRename: onC
             }
             disablePadding
         >
-            <ElementListItemButton>
+            <ElementListItemButton
+                onClick={(e) => {
+                    e.preventDefault();
+                    onElementClick(element);
+                }}
+            >
                 <EditableListItemIcon>
                     <Typography>#</Typography>
                 </EditableListItemIcon>
@@ -55,10 +60,15 @@ export const DeletableListItem = memo(({ element, label, onDelete, onRename: onC
     );
 });
 
-export const UndeletableListItem = memo(({ label }: UndeletableListItemProps) => {
+export const UndeletableListItem = memo(({ label, element, onElementClick }: UndeletableListItemProps<any>) => {
     return (
         <ListItem disablePadding>
-            <ElementListItemButton>
+            <ElementListItemButton
+                onClick={(e) => {
+                    e.preventDefault();
+                    onElementClick(element);
+                }}
+            >
                 <EditableListItemIcon primary>
                     <Typography>#</Typography>
                 </EditableListItemIcon>

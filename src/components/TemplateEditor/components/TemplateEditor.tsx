@@ -15,7 +15,7 @@ import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAct
 import { createDeletableVariable, Variable, getVariableName, getVariableNameList, isVariableDeletable } from '../../../utils/VariableList';
 import { EditableList } from '../../EditableList';
 import { getAutoCompleteData, getBoundingClientRectFromRange } from '../utils';
-import { AutoCompleteData, CustomSlateEditor } from '../../CustomSlateEditor';
+import { AutoCompleteData, CustomSlateEditor, insertVariable } from '../../CustomSlateEditor';
 import { EditorBox, TemplateEditorBox } from '../../StyledComponents';
 import { EditableArea } from '../../StyledComponents/components/EditableArea';
 
@@ -34,28 +34,35 @@ export const TemplateEditor = memo(({ value, fieldList, onDocumentChange, onFiel
         []
     );
 
-    const handleAddField = useCallback(
-        (newFieldName: string) => {
-            const newField = createDeletableVariable(newFieldName);
+    const handleAddVariable = useCallback(
+        (newVariableName: string) => {
+            const newField = createDeletableVariable(newVariableName);
             const action = new AddFieldAction(newField);
             onFieldListChange(action);
         },
         []
     );
 
-    const handleRenameField = useCallback(
-        (field: Variable, newName: string) => {
+    const handleRenameVariable = useCallback(
+        (variable: Variable, newName: string) => {
             const newField = createDeletableVariable(newName);
-            const action = new RenameFieldAction(field, newField);
+            const action = new RenameFieldAction(variable, newField);
             onFieldListChange(action);
         },
         []
     );
 
-    const handleRemoveField = useCallback(
-        (field: Variable) => {
-            const action = new DeleteFieldAction(field);
+    const handleRemoveVariable = useCallback(
+        (variable: Variable) => {
+            const action = new DeleteFieldAction(variable);
             onFieldListChange(action);
+        },
+        []
+    );
+
+    const handleListElementClick = useCallback(
+        (element: Variable) => {
+            insertVariable(editor, element.name);
         },
         []
     );
@@ -108,9 +115,10 @@ export const TemplateEditor = memo(({ value, fieldList, onDocumentChange, onFiel
                     elementList={fieldList}
                     getLabel={getVariableName}
                     isChangeable={isVariableDeletable}
-                    onAdd={handleAddField}
-                    onRename={handleRenameField}
-                    onRemove={handleRemoveField}
+                    onElementClick={handleListElementClick}
+                    onAdd={handleAddVariable}
+                    onRename={handleRenameVariable}
+                    onRemove={handleRemoveVariable}
                 />
             </Slate>
         </TemplateEditorBox >

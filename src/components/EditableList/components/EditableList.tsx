@@ -50,6 +50,7 @@ export const EditableList = memo(
         elementList,
         getLabel,
         isChangeable,
+        onElementClick,
         onAdd,
         onRename,
         onRemove
@@ -152,6 +153,7 @@ export const EditableList = memo(
                     list={filteredList}
                     getLabel={getLabel}
                     isChangeable={isChangeable}
+                    onElementClick={onElementClick}
                     onRename={handleEdit}
                     onRemove={onRemove}
                 />
