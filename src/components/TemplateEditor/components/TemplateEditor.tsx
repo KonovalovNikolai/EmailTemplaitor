@@ -15,7 +15,7 @@ import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAct
 import { createDeletableVariable, Variable, getVariableName, getVariableNameList, isVariableDeletable } from '../../../utils/VariableList';
 import { EditableList } from '../../EditableList';
 import { getAutoCompleteData, getBoundingClientRectFromRange } from '../utils';
-import { AutoCompleteData, CustomSlateEditor, insertVariable, renameVariables } from '../../CustomSlateEditor';
+import { AutoCompleteData, CustomSlateEditor, insertVariable, removeVariables, renameVariables } from '../../CustomSlateEditor';
 import { EditorBox, TemplateEditorBox } from '../../StyledComponents';
 import { EditableArea } from '../../StyledComponents/components/EditableArea';
 
@@ -58,6 +58,8 @@ export const TemplateEditor = memo(({ value, fieldList, onDocumentChange, onFiel
         (variable: Variable) => {
             const action = new DeleteFieldAction(variable);
             onFieldListChange(action);
+
+            removeVariables(editor, variable.name);
         },
         []
     );

@@ -2,13 +2,13 @@ import { Editor, Element as SlateElement, Transforms } from "slate";
 import { isMarkActive } from "./isMarkActive";
 
 export const toggleMark = (editor: any, format: string) => {
-    const isActive = isMarkActive(editor, format)
+    const isActive = isMarkActive(editor, format);
 
     // Применяем изменение для обычных узлов
     if (isActive) {
-        Editor.removeMark(editor, format)
+        Editor.removeMark(editor, format);
     } else {
-        Editor.addMark(editor, format, true)
+        Editor.addMark(editor, format, true);
     }
 
     // Применяем изменения для упоминаний
@@ -21,13 +21,15 @@ export const toggleMark = (editor: any, format: string) => {
         })).forEach(element => {
             const [variable, cellPath] = element;
 
-            if (!Editor.isEditor(variable) &&
+            if (
+                !Editor.isEditor(variable) &&
                 SlateElement.isElement(variable) &&
-                variable.type === "variable") {
-                const newVariable = { ...variable }
-                newVariable[format] = !isActive
-                Transforms.setNodes(editor, newVariable, { at: cellPath })
+                variable.type === "variable"
+            ) {
+                const newVariable = { ...variable };
+                newVariable[format] = !isActive;
+                Transforms.setNodes(editor, newVariable, { at: cellPath });
             }
         }
-    );
-}
+        );
+};

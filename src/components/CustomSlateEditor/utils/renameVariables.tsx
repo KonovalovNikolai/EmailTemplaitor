@@ -1,10 +1,7 @@
 import { Editor, Element as SlateElement, Transforms } from "slate";
 import { VariableElement } from "../elementTypes";
 
-export function renameVariables(editor: Editor, character: string, newCharacter) {
-    console.log("start");
-
-
+export function renameVariables(editor: Editor, character: string, newCharacter: string) {
     Array.from(
         Editor.nodes(editor, {
             at: [],
@@ -17,14 +14,8 @@ export function renameVariables(editor: Editor, character: string, newCharacter)
     ).forEach(element => {
         const [variable, cellPath] = element;
 
-        console.log(variable);
-
-        if (!Editor.isEditor(variable) &&
-            SlateElement.isElement(variable) &&
-            variable.type === "variable") {
-            const newVariable = { ...variable, character: newCharacter };
-            Transforms.setNodes(editor, newVariable, { at: cellPath });
-        }
+        const newVariable = { ...variable, character: newCharacter };
+        Transforms.setNodes(editor, newVariable, { at: cellPath });
     }
     );
 }
