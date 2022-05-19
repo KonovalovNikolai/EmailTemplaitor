@@ -1,54 +1,54 @@
 import { Variable } from "./VariableList";
 
 export interface Addressee {
-    [fieldName: string]: string;
+    [variableName: string]: string;
 }
 
-export function createAddressee(fieldList: Variable[]) {
+export function createAddressee(variableList: Variable[]) {
     const addressee: Addressee = {};
-    fieldList.forEach(f => addressee[f.name] = "");
+    variableList.forEach(f => addressee[f.name] = "");
     return addressee;
 }
 
-function addAddresseeField(addressee: Addressee, field: string) {
-    if (field in addressee) {
+function addAddresseeVariable(addressee: Addressee, variable: string) {
+    if (variable in addressee) {
         return addressee;
     }
 
-    addressee[field] = "";
+    addressee[variable] = "";
     return {
         ...addressee,
-        [field]: ""
+        [variable]: ""
     };
 }
 
-function removeAddresseeField(addressee: Addressee, field: string) {
-    if (field in addressee) {
-        delete addressee[field];
+function removeAddresseeVariable(addressee: Addressee, variable: string) {
+    if (variable in addressee) {
+        delete addressee[variable];
         return addressee;
     }
 
     return addressee;
 }
 
-function renameAddresseeField(addressee: Addressee, field: string, newField: string) {
-    if (field in addressee && !(newField in addressee)) {
-        addressee[newField] = addressee[field];
-        delete addressee[field];
+function renameAddresseeVariable(addressee: Addressee, variable: string, newVariable: string) {
+    if (variable in addressee && !(newVariable in addressee)) {
+        addressee[newVariable] = addressee[variable];
+        delete addressee[variable];
         return addressee;
     }
 
     return addressee;
 }
 
-export function addAddresseeFieldToList(addresseeList: Addressee[], field: Variable) {
-    return addresseeList.map(a => addAddresseeField(a, field.name));
+export function addAddresseeVariableToList(addresseeList: Addressee[], variable: Variable) {
+    return addresseeList.map(a => addAddresseeVariable(a, variable.name));
 }
 
-export function removeAddresseeFieldFromList(addresseeList: Addressee[], field: Variable) {
-    return addresseeList.map(a => removeAddresseeField(a, field.name));
+export function removeAddresseeVariableFromList(addresseeList: Addressee[], variable: Variable) {
+    return addresseeList.map(a => removeAddresseeVariable(a, variable.name));
 }
 
-export function renameAddresseeFieldInList(addresseeList: Addressee[], field: Variable, newField: Variable) {
-    return addresseeList.map(a => renameAddresseeField(a, field.name, newField.name));
+export function renameAddresseeVariableInList(addresseeList: Addressee[], variable: Variable, newVariable: Variable) {
+    return addresseeList.map(a => renameAddresseeVariable(a, variable.name, newVariable.name));
 }

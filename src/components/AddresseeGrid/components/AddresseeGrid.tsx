@@ -9,20 +9,20 @@ import { generateRows } from "../utils/generateRows";
 import {
     AddAddresseeAction,
     DeleteAddresseeAction, SetAddresseeValueAction
-} from "../../../hooks/FieldListReducer";
+} from "../../../hooks/VariableListReducer";
 
 import { AddresseeGridProps } from "../types";
 
-export const AddresseeGrid = memo(({ fieldList, addresseeList, onChange }: AddresseeGridProps) => {
+export const AddresseeGrid = memo(({ variableList, addresseeList, onChange }: AddresseeGridProps) => {
     const columns = useMemo(
         () => generateColumns(
-            fieldList,
-            (id, value, field) => {
-                const action = new SetAddresseeValueAction(id, field, value);
+            variableList,
+            (id, value, variable) => {
+                const action = new SetAddresseeValueAction(id, variable, value);
                 onChange(action);
             }
         ),
-        [fieldList]
+        [variableList]
     );
 
     const gridRows = useMemo(

@@ -47,12 +47,12 @@ export function createDeletableVariable(name: string): DeletableVariable {
     };
 }
 
-export function getVariableName(field: Variable) {
-    return field.name;
+export function getVariableName(variable: Variable) {
+    return variable.name;
 }
 
-export function isVariableDeletable(field: Variable) {
-    return field.isDeletable;
+export function isVariableDeletable(variable: Variable) {
+    return variable.isDeletable;
 }
 export function filterVariableList(list: Variable[], filter: string) {
     return !filter ? list : list.filter(element => element.name.toLowerCase().startsWith(filter));
@@ -62,28 +62,28 @@ export function getVariableNameList(list: Variable[]) {
     return list.map<string>(element => element.name);
 }
 
-export function removeVariableFromList(list: Variable[], field: Variable) {
-    return list.filter(e => e !== field);
+export function removeVariableFromList(list: Variable[], variable: Variable) {
+    return list.filter(e => e !== variable);
 }
 
-export function renameVariableInList(list: Variable[], field: Variable, newField: Variable): Variable[] {
+export function renameVariableInList(list: Variable[], variable: Variable, newVariable: Variable): Variable[] {
     const newList = [...list];
 
-    const fieldIndex = newList.indexOf(field);
-    if (fieldIndex === -1) {
+    const variableIndex = newList.indexOf(variable);
+    if (variableIndex === -1) {
         return newList;
     }
 
-    const newFieldIndex = newList.indexOf(newField);
-    if (newFieldIndex !== -1) {
+    const newVariableIndex = newList.indexOf(newVariable);
+    if (newVariableIndex !== -1) {
         return newList;
     }
 
-    newList[fieldIndex] = newField;
+    newList[variableIndex] = newVariable;
 
     return newList;
 }
 
-export function isVariableListContainName(list: Variable[], fieldName: string): boolean {
-    return list.find(element => element.name.toLowerCase() === fieldName) !== undefined;
+export function isVariableListContainName(list: Variable[], variableName: string): boolean {
+    return list.find(element => element.name.toLowerCase() === variableName) !== undefined;
 }

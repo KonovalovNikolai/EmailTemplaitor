@@ -1,11 +1,11 @@
 import { Addressee } from "../../../utils/Addressee";
-import { IFieldsReducerAction, FieldsReducerState } from "../types";
+import { IVariablesReducerAction, VariablesReducerState } from "../types";
 
 
-export class DeleteAddresseeAction implements IFieldsReducerAction {
+export class DeleteAddresseeAction implements IVariablesReducerAction {
     public constructor(private _indexes: Set<number>, private _shouldUpdate: boolean) { }
 
-    public Action(state: FieldsReducerState): FieldsReducerState {
+    public Action(state: VariablesReducerState): VariablesReducerState {
         const newAddresseeList: Addressee[] = [];
         for (let index = 0; index < state.addresseeList.length; index++) {
             if (!this._indexes.has(index)) {
@@ -15,7 +15,7 @@ export class DeleteAddresseeAction implements IFieldsReducerAction {
 
         if (this._shouldUpdate) {
             return {
-                fieldList: state.fieldList,
+                variableList: state.variableList,
                 addresseeList: newAddresseeList
             };
         }

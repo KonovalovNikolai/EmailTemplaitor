@@ -11,7 +11,7 @@ import { Divider } from '@mui/material';
 
 import { SlateToolBar } from '../../CustomSlateEditor/components/Toolbar/Toolbar';
 
-import { AddFieldAction, DeleteFieldAction, IFieldsReducerAction, RenameFieldAction } from '../../../hooks/FieldListReducer';
+import { AddVariableAction, DeleteVariableAction, IVariablesReducerAction, RenameVariableAction } from '../../../hooks/VariableListReducer';
 import { createDeletableVariable, Variable, getVariableName, getVariableNameList, isVariableDeletable } from '../../../utils/VariableList';
 import { EditableList } from '../../EditableList';
 import { getAutoCompleteData, getBoundingClientRectFromRange } from '../utils';
@@ -21,12 +21,12 @@ import { EditableArea } from '../../StyledComponents/components/EditableArea';
 
 interface TemplateEditorProps {
     value: Descendant[];
-    fieldList: Variable[];
+    variableList: Variable[];
     onDocumentChange: React.Dispatch<any>;
-    onFieldListChange: React.Dispatch<IFieldsReducerAction>;
+    onVariableListChange: React.Dispatch<IVariablesReducerAction>;
 }
 
-export const TemplateEditor = memo(({ value, fieldList, onDocumentChange, onFieldListChange }: TemplateEditorProps) => {
+export const TemplateEditor = memo(({ value, variableList, onDocumentChange, onVariableListChange }: TemplateEditorProps) => {
     // Инициализация редактора
     const editor = useMemo(
         // () => withVariable(withReact(withHistory(createEditor()))),
@@ -36,18 +36,18 @@ export const TemplateEditor = memo(({ value, fieldList, onDocumentChange, onFiel
 
     const handleAddVariable = useCallback(
         (newVariableName: string) => {
-            const newField = createDeletableVariable(newVariableName);
-            const action = new AddFieldAction(newField);
-            onFieldListChange(action);
+            const newVariable = createDeletableVariable(newVariableName);
+            const action = new AddVariableAction(newVariable);
+            onVariableListChange(action);
         },
         []
     );
 
     const handleRenameVariable = useCallback(
         (variable: Variable, newName: string) => {
-            const newField = createDeletableVariable(newName);
-            const action = new RenameFieldAction(variable, newField);
-            onFieldListChange(action);
+            const newVariable = createDeletableVariable(newName);
+            const action = new RenameVariableAction(variable, newVariable);
+            onVariableListChange(action);
 
             renameVariables(editor, variable.name, newName);
         },
@@ -56,8 +56,8 @@ export const TemplateEditor = memo(({ value, fieldList, onDocumentChange, onFiel
 
     const handleRemoveVariable = useCallback(
         (variable: Variable) => {
-            const action = new DeleteFieldAction(variable);
-            onFieldListChange(action);
+            const action = new DeleteVariableAction(variable);
+            onVariableListChange(action);
 
             removeVariables(editor, variable.name);
         },
@@ -73,7 +73,7 @@ export const TemplateEditor = memo(({ value, fieldList, onDocumentChange, onFiel
 
     const [autoCompleteData, setAutoCompleteData] = useState<AutoCompleteData | null>(null);
 
-    const autoCompleteList = getVariableNameList(fieldList);
+    const autoCompleteList = getVariableNameList(variableList);
 
     const handleChange = useCallback(
         (value: Descendant[]) => {
@@ -116,7 +116,7 @@ export const TemplateEditor = memo(({ value, fieldList, onDocumentChange, onFiel
                 </EditorBox>
                 <EditableList
                     label='Переменные'
-                    elementList={fieldList}
+                    elementList={variableList}
                     getLabel={getVariableName}
                     isChangeable={isVariableDeletable}
                     onElementClick={handleListElementClick}

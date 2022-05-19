@@ -1,17 +1,17 @@
 import { Addressee, createAddressee } from "../../../utils/Addressee";
-import { FieldsReducerState, IFieldsReducerAction } from "../types";
+import { VariablesReducerState, IVariablesReducerAction } from "../types";
 
 
-export class AddAddresseeAction implements IFieldsReducerAction {
+export class AddAddresseeAction implements IVariablesReducerAction {
     public newAddressee: Addressee;
     public newAddresseeIndex: number;
     public constructor(private _shouldUpdate: boolean, newAddressee?: Addressee) {
         this.newAddressee = newAddressee;
     }
 
-    public Action(state: FieldsReducerState): FieldsReducerState {
+    public Action(state: VariablesReducerState): VariablesReducerState {
         if (!this.newAddressee) {
-            this.newAddressee = createAddressee(state.fieldList);
+            this.newAddressee = createAddressee(state.variableList);
         }
 
         state.addresseeList.push(this.newAddressee);
@@ -20,7 +20,7 @@ export class AddAddresseeAction implements IFieldsReducerAction {
 
         if (this._shouldUpdate) {
             return {
-                fieldList: state.fieldList,
+                variableList: state.variableList,
                 addresseeList: [...state.addresseeList]
             };
         }

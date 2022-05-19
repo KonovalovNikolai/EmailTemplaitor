@@ -9,7 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import SendIcon from '@mui/icons-material/Send';
 
-import { fieldsReducer, initFieldReducer } from './hooks/FieldListReducer';
+import { variableReducer, initVariableReducer } from './hooks/VariableListReducer';
 import { AddresseeGrid } from './components/AddresseeGrid';
 import { TabButton, TabContent } from './components/CustomTabs';
 import { createTheme, ThemeProvider } from '@mui/material';
@@ -20,12 +20,12 @@ import { AppContainer, ContentContainer, TabButtonsContainer } from './component
 function App() {
   const [documentValue, setDocumentValue] = useState<Descendant[]>(initialValue);
 
-  const [fieldReducerState, fieldDispatch] = useReducer(
-    fieldsReducer,
-    initFieldReducer(initialVariableList, [])
+  const [variableReducerState, variableDispatch] = useReducer(
+    variableReducer,
+    initVariableReducer(initialVariableList, [])
   );
 
-  const { fieldList, addresseeList } = { ...fieldReducerState };
+  const { variableList, addresseeList } = { ...variableReducerState };
 
   const [tabsValue, setTabsValue] = React.useState(0);
 
@@ -64,16 +64,16 @@ function App() {
           <TabContent index={0} value={tabsValue}>
             <TemplateEditor
               value={documentValue}
-              fieldList={fieldList}
+              variableList={variableList}
               onDocumentChange={setDocumentValue}
-              onFieldListChange={fieldDispatch}
+              onVariableListChange={variableDispatch}
             />
           </TabContent>
           <TabContent index={1} value={tabsValue}>
             <AddresseeGrid
-              fieldList={fieldList}
+              variableList={variableList}
               addresseeList={addresseeList}
-              onChange={fieldDispatch}
+              onChange={variableDispatch}
             />
           </TabContent>
         </ContentContainer>

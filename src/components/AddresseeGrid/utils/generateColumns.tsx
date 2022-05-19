@@ -6,17 +6,17 @@ interface OnSetValueFunc {
 }
 
 export function generateColumns(list: Variable[], onSet: OnSetValueFunc) {
-    const columns: GridColDef[] = list.map((field: Variable) => {
+    const columns: GridColDef[] = list.map((variable: Variable) => {
         return {
             editable: true,
-            field: field.name,
+            field: variable.name,
             valueSetter: (params: GridValueSetterParams) => {
                 const row = {
                     ...params.row,
-                    [field.name]: params.value
+                    [variable.name]: params.value
                 };
 
-                onSet(params.row.id, params.value, field.name);
+                onSet(params.row.id, params.value, variable.name);
 
                 return row;
             }

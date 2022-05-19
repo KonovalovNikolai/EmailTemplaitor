@@ -1,10 +1,14 @@
+import { Variable } from "../../utils/VariableList";
+import { Addressee } from "../../utils/Addressee";
+import { IVariablesReducerAction } from "../../hooks/VariableListReducer";
+
 export interface GridToolbarProps {
     onAdd: () => any;
     onDelete: (ids: Set<number>) => void;
 }
 
 export interface AddresseeGridProps {
-    fieldList: Field[];
+    variableList: Variable[];
     addresseeList: Addressee[];
-    onChange: React.Dispatch<IFieldsReducerAction>;
+    onChange: React.Dispatch<IVariablesReducerAction>;
 };
