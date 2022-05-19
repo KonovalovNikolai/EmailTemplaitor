@@ -3,9 +3,24 @@ export interface IGetLabel<T> {
     (element: T): string;
 }
 
-/** Интерфейс функции нажатия на элемент в списке */
-export interface IOnElementClick<T> {
-    (event: React.MouseEvent, element: T): void;
+export interface onRename<T> {
+    (element: T, newName: string): void;
+}
+
+export interface onRemove<T> {
+    (element: T): void;
+}
+
+export interface isChangeable<T> {
+    (element: T): boolean
+}
+
+export interface OnNameInputEnter {
+    (value: string): boolean;
+}
+
+export interface NameValidator {
+    (value: string): boolean;
 }
 
 /** Состояние кнопки сортировки */
@@ -26,18 +41,18 @@ export interface EditableListProps<T> {
     label: string;
     elementList: T[];
     getLabel: IGetLabel<T>;
-    isChangeable: (element: T) => boolean;
-    onRename: (element: T, newName: string) => void;
+    isChangeable: isChangeable<T>;
+    onRename: onRename<T>;
     onAdd: (newElementName: string) => void;
-    onRemove: (element: T) => void;
+    onRemove: onRemove<T>;
 };
 
 export interface ElementListProps<T> {
     list: T[];
     getLabel: IGetLabel<T>;
-    isChangeable: (element: T) => boolean;
-    onRename: (element: T, newName: string) => void;
-    onRemove: (element: T) => void;
+    isChangeable: isChangeable<T>;
+    onRename: onRename<T>;
+    onRemove: onRemove<T>;
 }
 
 export interface ListItemBaseProps {
@@ -47,16 +62,12 @@ export interface ListItemBaseProps {
 export interface DeletableListItemProps<T> {
     element: T;
     label: string;
-    onDelete: (element: T) => void;
-    onRename: IOnElementClick<T>;
+    onDelete: onRemove<T>;
+    onRename: (event: React.MouseEvent, element: T) => void;
 }
 
 export interface UndeletableListItemProps {
     label: string;
-}
-
-export interface NewElementButtonProps<T> {
-    onRename: IOnElementClick<T>;
 }
 
 export interface EditableListTopBarProps {

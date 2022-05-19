@@ -7,7 +7,7 @@ import { DefaultSortButtonState } from '../utils/SortButtonState';
 import ListTopBar from './ListTopBar';
 import { NameInputField } from './NameInputField';
 
-import { EditableListProps, EditableListTopBarData } from '../types';
+import { EditableListProps, EditableListTopBarData, NameValidator, OnNameInputEnter } from '../types';
 import ElementList from './ElementList';
 import { RenamePopper } from './RenamePopper';
 
@@ -86,7 +86,7 @@ export const EditableList = memo(
         );
 
         // Обработка нажатия Enter при вводе имени
-        const handleEnter = (value: string) => {
+        const handleEnter: OnNameInputEnter = (value: string) => {
             // Если поле пустое или имеет тоже значение, что и текущее имя элемента,
             // то изменения не будут приняты
             if (value === "") return false;
@@ -114,7 +114,7 @@ export const EditableList = memo(
         };
 
         // Валидатор значения поля ввода нового имени
-        const validator = (value: string) => {
+        const validator: NameValidator = (value: string) => {
             if (value === "" || hasWhiteSpace(value)) {
                 return false;
             }

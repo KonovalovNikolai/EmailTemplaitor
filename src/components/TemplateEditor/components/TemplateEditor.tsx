@@ -29,7 +29,8 @@ interface TemplateEditorProps {
 export const TemplateEditor = memo(({ value, fieldList, onDocumentChange, onFieldListChange }: TemplateEditorProps) => {
     // Инициализация редактора
     const editor = useMemo(
-        () => withVariable(withReact(withHistory(createEditor()))),
+        // () => withVariable(withReact(withHistory(createEditor()))),
+        () => withVariable(withReact(createEditor())),
         []
     );
 

@@ -1,5 +1,6 @@
 import { InputAdornment, styled, TextField, Typography } from "@mui/material";
 import React from "react";
+import { NameValidator, OnNameInputEnter } from "../types";
 
 const NameTextField = styled(TextField, { name: "NameTextField" })({
     margin: 0.5,
@@ -16,8 +17,8 @@ const NameTextField = styled(TextField, { name: "NameTextField" })({
 type NameInputFieldProps = {
     helperText: string;
     defaultValue: string;
-    onEnter: (value: string) => boolean;
-    validator: (value: string) => boolean;
+    onEnter: OnNameInputEnter;
+    validator: NameValidator;
 };
 
 export const NameInputField = ({
