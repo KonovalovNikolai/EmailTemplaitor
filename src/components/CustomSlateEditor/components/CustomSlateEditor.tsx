@@ -21,7 +21,7 @@ export const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = memo
 
     let filteredList = [];
     if (autoCompleteData) {
-        const searchValue = autoCompleteData.searchValue;
+        const searchValue = autoCompleteData.searchValue.toLowerCase();
         filteredList = autoCompleteList.filter(e => e.toLowerCase().startsWith(searchValue)).sort().slice(0, 10);
     }
 
@@ -33,44 +33,52 @@ export const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = memo
         []
     );
 
-    const handleKeyDown = useCallback(
-        event => {
-            if (!!autoCompleteData) {
+    let isPopperOpen = !!autoCompleteData && filteredList.length > 0;
+    let anchorEl = null;
+    let handleKeyDown;
+    let index;
 
-                switch (event.key) {
-                    case 'ArrowDown':
-                        event.preventDefault();
-                        setAutoCompleteData(prevData => {
-                            const index = prevData.listIndex;
-                            const newData = { ...prevData };
-                            newData.listIndex = index >= filteredList.length - 1 ? 0 : index + 1;
-                            return newData;
-                        });
-                        break;
-                    case 'ArrowUp':
-                        event.preventDefault();
-                        setAutoCompleteData(prevData => {
-                            const index = prevData.listIndex;
-                            const newData = { ...prevData };
-                            newData.listIndex = index >= filteredList.length - 1 ? 0 : index - 1;
-                            return newData;
-                        });
-                        break;
-                    case 'Tab':
-                    case 'Enter':
-                        event.preventDefault();
-                        Transforms.select(editor, autoCompleteData.targetRange);
-                        insertVariable(editor, filteredList[autoCompleteData.listIndex]);
-                        break;
-                    case 'Escape':
-                        event.preventDefault();
-                        setAutoCompleteData(null);
-                        break;
+    if (isPopperOpen) {
+        index = autoCompleteData.listIndex;
+        anchorEl = autoCompleteData.anchorEl;
+
+        handleKeyDown =
+            event => {
+                if (!!autoCompleteData && filteredList.length > 0) {
+
+                    switch (event.key) {
+                        case 'ArrowDown':
+                            event.preventDefault();
+                            setAutoCompleteData(prevData => {
+                                const index = prevData.listIndex;
+                                const newData = { ...prevData };
+                                newData.listIndex = index >= filteredList.length - 1 ? 0 : index + 1;
+                                return newData;
+                            });
+                            break;
+                        case 'ArrowUp':
+                            event.preventDefault();
+                            setAutoCompleteData(prevData => {
+                                const index = prevData.listIndex;
+                                const newData = { ...prevData };
+                                newData.listIndex = index <= 0 ? filteredList.length - 1 : index - 1;
+                                return newData;
+                            });
+                            break;
+                        case 'Tab':
+                        case 'Enter':
+                            event.preventDefault();
+                            Transforms.select(editor, autoCompleteData.targetRange);
+                            insertVariable(editor, filteredList[autoCompleteData.listIndex]);
+                            break;
+                        case 'Escape':
+                            event.preventDefault();
+                            setAutoCompleteData(null);
+                            break;
+                    }
                 }
-            }
-        },
-        [filteredList, autoCompleteData]
-    );
+            };
+    }
 
     return (
         <>
@@ -86,10 +94,10 @@ export const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = memo
                 />
             </Typography>
             <AutoCompletePopper
-                anchorEl={autoCompleteData?.anchorEl}
+                anchorEl={anchorEl}
                 chars={filteredList}
-                open={!!autoCompleteData}
-                index={autoCompleteData?.listIndex}
+                open={isPopperOpen}
+                index={index}
                 onInsert={(value) => {
                     Transforms.select(editor, autoCompleteData?.targetRange);
                     insertVariable(editor, value);
