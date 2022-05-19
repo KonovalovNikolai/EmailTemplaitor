@@ -5,7 +5,7 @@ import {
 } from 'slate';
 import { withHistory } from 'slate-history';
 import { Slate, withReact } from 'slate-react';
-import { withMentions } from '../../CustomSlateEditor/plugins/withMentions';
+import { withVariable } from '../../CustomSlateEditor/plugins/withVariables';
 
 import { Divider } from '@mui/material';
 
@@ -29,7 +29,7 @@ interface TemplateEditorProps {
 export const TemplateEditor = memo(({ value, fieldList, onDocumentChange, onFieldListChange }: TemplateEditorProps) => {
     // Инициализация редактора
     const editor = useMemo(
-        () => withMentions(withReact(withHistory(createEditor()))),
+        () => withVariable(withReact(withHistory(createEditor()))),
         []
     );
 

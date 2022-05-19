@@ -17,16 +17,16 @@ export const toggleMark = (editor: any, format: string) => {
             match: n =>
                 !Editor.isEditor(n) &&
                 SlateElement.isElement(n) &&
-                n.type === "mention"
+                n.type === "variable"
         })).forEach(element => {
-            const [mention, cellPath] = element;
+            const [variable, cellPath] = element;
 
-            if (!Editor.isEditor(mention) &&
-                SlateElement.isElement(mention) &&
-                mention.type === "mention") {
-                const newMention = { ...mention }
-                newMention[format] = !isActive
-                Transforms.setNodes(editor, newMention, { at: cellPath })
+            if (!Editor.isEditor(variable) &&
+                SlateElement.isElement(variable) &&
+                variable.type === "variable") {
+                const newVariable = { ...variable }
+                newVariable[format] = !isActive
+                Transforms.setNodes(editor, newVariable, { at: cellPath })
             }
         }
     );

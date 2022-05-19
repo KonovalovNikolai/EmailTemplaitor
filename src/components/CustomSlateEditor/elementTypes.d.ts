@@ -47,8 +47,8 @@ export type ListItemElement = {
   children: Descendant[];
 };
 
-export type MentionElement = {
-  type: 'mention';
+export type VariableElement = {
+  type: 'variable';
   character: string;
   children: CustomText[];
   bold?: boolean;
@@ -69,7 +69,7 @@ type CustomElement =
   | HeadingElement
   | HeadingTwoElement
   | ListItemElement
-  | MentionElement
+  | VariableElement
   | ParagraphElement;
 
 export type CustomText = {

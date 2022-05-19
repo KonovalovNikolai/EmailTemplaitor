@@ -5,7 +5,7 @@ import AutoCompletePopper from "./AutoCompletePopper/AutoCompletePopper";
 import RenderElement from "../elements/RenderElement";
 import RenderLeaf from "../elements/RenderLeaf";
 import { AutoCompleteData } from "../types";
-import { insertMention } from "../utils";
+import { insertVariable } from "../utils";
 import { Typography } from "@mui/material";
 
 interface CustomSlateEditorProps {
@@ -60,7 +60,7 @@ export const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = memo
                     case 'Enter':
                         event.preventDefault();
                         Transforms.select(editor, autoCompleteData.targetRange);
-                        insertMention(editor, filteredList[autoCompleteData.listIndex]);
+                        insertVariable(editor, filteredList[autoCompleteData.listIndex]);
                         break;
                     case 'Escape':
                         event.preventDefault();
@@ -92,7 +92,7 @@ export const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = memo
                 index={autoCompleteData?.listIndex}
                 onInsert={(value) => {
                     Transforms.select(editor, autoCompleteData?.targetRange);
-                    insertMention(editor, value);
+                    insertVariable(editor, value);
                 }}
             />
         </>

@@ -7,7 +7,7 @@ import {
     BulletedListElement,
     HeadingElement, CustomText,
     HeadingTwoElement, ListItemElement,
-    MentionElement, NumberedListElement, ParagraphElement
+    VariableElement, NumberedListElement, ParagraphElement
 } from '../components/CustomSlateEditor';
 
 export const serializeNode = (node: Descendant) => {
@@ -27,8 +27,8 @@ export const serializeNode = (node: Descendant) => {
                 return serializeNumberedList(node);
             case "list-item":
                 return serializeListItem(node);
-            case "mention":
-                return serializeMention(node);
+            case "variable":
+                return serializeVariable(node);
             default:
                 return serializeParagraph(node);
         }
@@ -112,7 +112,7 @@ function serializeListItem(node: ListItemElement) {
     );
 }
 
-function serializeMention(node: MentionElement) {
+function serializeVariable(node: VariableElement) {
     let element = <>{node.character}</>;
 
     if (node.bold) {

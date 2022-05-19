@@ -1,4 +1,4 @@
-import { Mention } from "./Mention"
+import { Variable } from "./Variable"
 
 
 const RenderElement = ({ attributes, children, element }: any) => {
@@ -35,9 +35,9 @@ const RenderElement = ({ attributes, children, element }: any) => {
                     {children}
                 </ol>
             )
-        case 'mention':
+        case 'variable':
             return (
-                <Mention {...{ attributes, children, element }} /> 
+                <Variable {...{ attributes, children, element }} /> 
             )
         default:
             return (

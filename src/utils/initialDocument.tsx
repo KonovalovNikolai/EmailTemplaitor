@@ -35,15 +35,15 @@ export const initialValue: Descendant[] = [
     {
         type: 'paragraph',
         children: [
-          { text: 'Try mentioning characters, like ' },
+          { text: 'Try variable, like ' },
           {
-            type: 'mention',
+            type: 'variable',
             character: 'R2-D2',
             children: [{ text: '' }],
           },
           { text: ' or ' },
           {
-            type: 'mention',
+            type: 'variable',
             character: 'Mace Windu',
             children: [{ text: '' }],
           },

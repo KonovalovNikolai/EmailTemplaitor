@@ -10,7 +10,7 @@ export type {
     HeadingElement,
     HeadingTwoElement,
     ListItemElement,
-    MentionElement,
+    VariableElement,
     NumberedListElement,
     ParagraphElement,
 } from "./elementTypes";
