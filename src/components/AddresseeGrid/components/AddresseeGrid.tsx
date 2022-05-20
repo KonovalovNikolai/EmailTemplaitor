@@ -1,4 +1,4 @@
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, DataGridProps } from "@mui/x-data-grid";
 import { memo, useCallback, useMemo } from "react";
 
 import AddresseeGridToolbar from "./AddresseeGridToolbar";
@@ -12,6 +12,40 @@ import {
 } from "../../../hooks/VariableListReducer";
 
 import { AddresseeGridProps } from "../types";
+import { styled } from '@mui/material/styles';
+
+const GridBox = styled("div", { name: "GridBox" })({
+    display: 'flex',
+    height: '100%',
+    width: '100%',
+
+    flexDirection: 'column'
+});
+
+const AddresseeStyledGrid = styled(DataGrid, { name: "AddresseeStyledGrid" })<DataGridProps>(({ theme }) => ({
+    border: "none",
+
+    "& .MuiDataGrid-virtualScroller": {
+        overflow: "overlay",
+
+        "::-webkit-scrollbar": {
+            width: "11px",
+            height: "11px",
+        },
+
+        "::-webkit-scrollbar-track": {
+            background: "transparent",
+        },
+
+        "::-webkit-scrollbar-thumb": {
+            backgroundColor: theme.palette.divider,
+        },  
+
+        "::-webkit-scrollbar-corner": {
+            background: "transparent",
+        }
+    },
+}));
 
 export const AddresseeGrid = memo(({ variableList, addresseeList, onChange }: AddresseeGridProps) => {
     const columns = useMemo(
@@ -60,16 +94,14 @@ export const AddresseeGrid = memo(({ variableList, addresseeList, onChange }: Ad
     };
 
     return (
-        <div style={{ display: 'flex', height: '100%', flexDirection: 'column' }}>
-            <div style={{ flexGrow: 1 }}>
-                <DataGrid
-                    rows={gridRows}
-                    columns={columns}
-                    components={{
-                        Toolbar: toolBar
-                    }}
-                />
-            </div>
-        </div>
+        <GridBox style={{ display: 'flex', height: '100%', flexDirection: 'column' }}>
+            <AddresseeStyledGrid
+                rows={gridRows}
+                columns={columns}
+                components={{
+                    Toolbar: toolBar
+                }}
+            />
+        </GridBox>
     );
 });
