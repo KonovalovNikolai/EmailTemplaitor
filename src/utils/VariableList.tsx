@@ -23,19 +23,19 @@ export const initialVariableList: Variable[] = [
         isEmail: true
     },
     {
-        name: "City",
+        name: "Имя",
         isDeletable: true
     },
     {
-        name: "Name",
+        name: "Фамилия",
         isDeletable: true
     },
     {
-        name: "LastNameeeeeeeeeeeeee",
+        name: "Отчество",
         isDeletable: true
     },
     {
-        name: "Phone",
+        name: "НомерТелефона",
         isDeletable: true
     },
 ];

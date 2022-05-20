@@ -77,6 +77,9 @@ export const TemplateEditor = memo(({ value, variableList, onDocumentChange, onV
 
     const handleChange = useCallback(
         (value: Descendant[]) => {
+            console.log(editor.operations);
+            
+
             onDocumentChange(value);
 
             const data = getAutoCompleteData(editor);

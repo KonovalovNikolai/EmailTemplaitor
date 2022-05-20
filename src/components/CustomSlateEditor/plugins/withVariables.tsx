@@ -1,4 +1,6 @@
-export const withVariable = editor => {
+import { Editor } from "slate"
+
+export const withVariable = (editor: Editor) => {
     const { isInline, isVoid } = editor
 
     editor.isInline = element => {
@@ -9,5 +11,5 @@ export const withVariable = editor => {
         return element.type === 'variable' ? true : isVoid(element)
     }
 
-    return editor
+    return editor;
 }
