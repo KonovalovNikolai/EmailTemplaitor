@@ -29,8 +29,8 @@ interface TemplateEditorProps {
 export const TemplateEditor = memo(({ value, variableList, onDocumentChange, onVariableListChange }: TemplateEditorProps) => {
     // Инициализация редактора
     const editor = useMemo(
-        // () => withVariable(withReact(withHistory(createEditor()))),
-        () => withVariable(withReact(createEditor())),
+        () => withVariable(withReact(withHistory(createEditor()))),
+        // () => withVariable(withReact(createEditor())),
         []
     );
 
@@ -77,9 +77,6 @@ export const TemplateEditor = memo(({ value, variableList, onDocumentChange, onV
 
     const handleChange = useCallback(
         (value: Descendant[]) => {
-            console.log(editor.operations);
-            
-
             onDocumentChange(value);
 
             const data = getAutoCompleteData(editor);

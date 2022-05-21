@@ -1,14 +1,16 @@
 import { Descendant } from "slate";
+import { Addressee } from "../utils/Addressee";
 import { serializeNode } from "../utils/serialize";
 
 type SerializedDocumentProps = {
     nodes: Descendant[];
+    addressee: Addressee;
 };
 
-export const SerializedDocument = ({ nodes }: SerializedDocumentProps) => {
+export const SerializedDocument = ({ nodes, addressee }: SerializedDocumentProps) => {
     return (
-        <div>
-            {nodes.map(n => serializeNode(n))}
-        </div>
+        <>
+            {nodes.map(n => serializeNode(n, addressee))}
+        </>
     );
 };

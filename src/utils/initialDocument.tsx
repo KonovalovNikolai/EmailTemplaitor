@@ -20,7 +20,7 @@ export const initialValue: Descendant[] = [
             },
             { text: 'жирным', bold: true },
             { text: ' или ' },
-            { text: 'курсивом,', bold: true },
+            { text: 'курсивом,', italic: true },
         ],
     },
     {

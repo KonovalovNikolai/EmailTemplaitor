@@ -9,8 +9,9 @@ import {
     HeadingTwoElement, ListItemElement,
     VariableElement, NumberedListElement, ParagraphElement
 } from '../components/CustomSlateEditor';
+import { Addressee } from './Addressee';
 
-export const serializeNode = (node: Descendant) => {
+export const serializeNode = (node: Descendant, addressee: Addressee) => {
     if (Text.isText(node)) {
         return serializeText(node);
     }
@@ -18,26 +19,26 @@ export const serializeNode = (node: Descendant) => {
     if (SlateElement.isElement(node)) {
         switch (node.type) {
             case 'heading-one':
-                return serializeH1(node);
+                return serializeH1(node, addressee);
             case 'heading-two':
-                return serializeH2(node);
+                return serializeH2(node, addressee);
             case "bulleted-list":
-                return serializeBulletedList(node);
+                return serializeBulletedList(node, addressee);
             case "numbered-list":
-                return serializeNumberedList(node);
+                return serializeNumberedList(node, addressee);
             case "list-item":
-                return serializeListItem(node);
+                return serializeListItem(node, addressee);
             case "variable":
-                return serializeVariable(node);
+                return serializeVariable(node, addressee);
             default:
-                return serializeParagraph(node);
+                return serializeParagraph(node, addressee);
         }
     }
 };
 
 function serializeText(node: CustomText) {
-    if (!node.text.trim()) {
-        return <br />;
+    if (node.text.trim() === "") {
+        return `${node.text}﻿`;
     }
 
     let element = <>{node.text}</>;
@@ -54,66 +55,75 @@ function serializeText(node: CustomText) {
     return element;
 }
 
-function serializeH1(node: HeadingElement) {
+function serializeH1(node: HeadingElement, addressee: Addressee) {
     const textAlign: any = node.align;
     return (
         <h1 style={{ textAlign: textAlign }}>
             {node.children.map(n => {
-                return serializeNode(n);
+                return serializeNode(n, addressee);
             })}
         </h1>
     );
 }
 
-function serializeH2(node: HeadingTwoElement) {
+function serializeH2(node: HeadingTwoElement, addressee: Addressee) {
     const textAlign: any = node.align;
     return (
         <h2 style={{ textAlign: textAlign }}>
             {node.children.map(n => {
-                return serializeNode(n);
+                return serializeNode(n, addressee);
             })}
         </h2>
     );
 }
 
-function serializeBulletedList(node: BulletedListElement) {
+function serializeBulletedList(node: BulletedListElement, addressee: Addressee) {
     return (
         <ul style={{ textAlign: node.align as any }}>
             {node.children.map(n => {
                 return (
-                    serializeNode(n)
+                    serializeNode(n, addressee)
                 );
             })}
         </ul>
     );
 }
 
-function serializeNumberedList(node: NumberedListElement) {
+function serializeNumberedList(node: NumberedListElement, addressee: Addressee) {
     return (
         <ol style={{ textAlign: node.align as any }}>
             {node.children.map(n => {
                 return (
-                    serializeNode(n)
+                    serializeNode(n, addressee)
                 );
             })}
         </ol>
     );
 }
 
-function serializeListItem(node: ListItemElement) {
+function serializeListItem(node: ListItemElement, addressee: Addressee) {
     return (
         <ol style={{ textAlign: node.align as any }}>
             {node.children.map(n => {
                 return (
-                    serializeNode(n)
+                    serializeNode(n, addressee)
                 );
             })}
         </ol>
     );
 }
 
-function serializeVariable(node: VariableElement) {
-    let element = <>{node.character}</>;
+function serializeVariable(node: VariableElement, addressee: Addressee) {
+    let value = "";
+    if (node.character in addressee) {
+        value = addressee[node.character];
+    }
+
+    if (value === "") {
+        return "";
+    }
+
+    let element = <>{value}</>;
 
     if (node.bold) {
         element = <strong>{element}</strong>;
@@ -127,10 +137,10 @@ function serializeVariable(node: VariableElement) {
     return element;
 }
 
-function serializeParagraph(node: ParagraphElement) {
+function serializeParagraph(node: ParagraphElement, addressee: Addressee) {
     return (
         <p style={{ textAlign: node.align as any }}>
-            {node.children.map(n => serializeNode(n))}
+            {node.children.map(n => serializeNode(n, addressee))}
         </p>
     );
 }

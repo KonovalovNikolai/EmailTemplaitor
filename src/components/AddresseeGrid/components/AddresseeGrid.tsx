@@ -1,10 +1,12 @@
 import { DataGrid, DataGridProps } from "@mui/x-data-grid";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 
 import AddresseeGridToolbar from "./AddresseeGridToolbar";
 
 import { generateColumns } from "../utils/generateColumns";
 import { generateRows } from "../utils/generateRows";
+
+import { Addressee } from "../../../utils/Addressee";
 
 import {
     AddAddresseeAction,
@@ -13,6 +15,8 @@ import {
 
 import { AddresseeGridProps } from "../types";
 import { styled } from '@mui/material/styles';
+import { Divider, Modal, Paper, Typography } from "@mui/material";
+import { ModalPreview } from "./ModalPreview";
 
 const GridBox = styled("div", { name: "GridBox" })({
     display: 'flex',
@@ -39,7 +43,7 @@ const AddresseeStyledGrid = styled(DataGrid, { name: "AddresseeStyledGrid" })<Da
 
         "::-webkit-scrollbar-thumb": {
             backgroundColor: theme.palette.divider,
-        },  
+        },
 
         "::-webkit-scrollbar-corner": {
             background: "transparent",
@@ -47,7 +51,7 @@ const AddresseeStyledGrid = styled(DataGrid, { name: "AddresseeStyledGrid" })<Da
     },
 }));
 
-export const AddresseeGrid = memo(({ variableList, addresseeList, onChange }: AddresseeGridProps) => {
+export const AddresseeGrid = memo(({ variableList, addresseeList, onChange, onPreview }: AddresseeGridProps) => {
     const columns = useMemo(
         () => generateColumns(
             variableList,
@@ -84,24 +88,54 @@ export const AddresseeGrid = memo(({ variableList, addresseeList, onChange }: Ad
         []
     );
 
+    const handleSetPreview = useCallback(
+        (id: number) => {
+            if (id >= 0 && id < addresseeList.length) {
+                setAddresseePreview(addresseeList[id]);
+            }
+        },
+        []
+    );
+
     const toolBar = () => {
         return (
             <AddresseeGridToolbar
                 onAdd={handleAddRow}
                 onDelete={handleDeleteRow}
+                onPreview={handleSetPreview}
             />
         );
     };
 
+    const [addresseePreview, setAddresseePreview] = useState<Addressee | null>(null);
+
+    const handleClosePreview = useCallback(
+        () => {
+            setAddresseePreview(null);
+        },
+        []
+    );
+
+    let isOpen = !!addresseePreview;
+    let preview = <></>;
+    if (isOpen) {
+        preview = onPreview(addresseePreview);
+    }
+
     return (
-        <GridBox style={{ display: 'flex', height: '100%', flexDirection: 'column' }}>
-            <AddresseeStyledGrid
-                rows={gridRows}
-                columns={columns}
-                components={{
-                    Toolbar: toolBar
-                }}
-            />
-        </GridBox>
+        <>
+            <GridBox>
+                <AddresseeStyledGrid
+                    rows={gridRows}
+                    columns={columns}
+                    components={{
+                        Toolbar: toolBar
+                    }}
+                />
+            </GridBox>
+            <ModalPreview isOpen={isOpen} onClose={handleClosePreview}>
+                {preview}
+            </ModalPreview>
+        </>
     );
 });

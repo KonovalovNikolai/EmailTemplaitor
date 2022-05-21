@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React, { useCallback, useReducer, useState } from 'react';
 import { Descendant } from 'slate';
 import { TemplateEditor } from "./components/TemplateEditor";
 import { initialVariableList } from './utils/VariableList';
@@ -16,6 +16,8 @@ import { createTheme, ThemeProvider } from '@mui/material';
 
 import theme from './utils/AppTheme';
 import { AppContainer, ContentContainer, TabButtonsContainer } from './components/StyledComponents';
+import { Addressee } from './utils/Addressee';
+import { SerializedDocument } from './components/SerializedDocument';
 
 function App() {
   const [documentValue, setDocumentValue] = useState<Descendant[]>(initialValue);
@@ -74,6 +76,9 @@ function App() {
               variableList={variableList}
               addresseeList={addresseeList}
               onChange={variableDispatch}
+              onPreview={(addressee) => {
+                return (<SerializedDocument nodes={documentValue} addressee={addressee} />)
+              }}
             />
           </TabContent>
         </ContentContainer>
