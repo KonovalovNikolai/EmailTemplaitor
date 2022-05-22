@@ -1,10 +1,4 @@
 import { createTheme, } from '@mui/material/styles';
-import { light } from '@mui/material/styles/createPalette';
-import { App } from 'electron';
-
-//     main:  #212121 //900
-//     light: #eeeeee //200
-//     dark:  #9e9e9e //500
 
 const APPTHEME_STORAGE_KEY = "AppTheme";
 

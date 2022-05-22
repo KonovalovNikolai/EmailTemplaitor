@@ -8,11 +8,11 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 import SaveIcon from '@mui/icons-material/Save';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 
 import { memo } from 'react';
 
 import { styled } from '@mui/material/styles';
-import { AppTheme } from 'renderer/utils/AppTheme';
 
 const SideMenuContainer = styled('div', { name: 'SideMenuContainer' })(({ theme }) => ({
   paddingTop: '10px',
@@ -24,10 +24,10 @@ const SideMenuContainer = styled('div', { name: 'SideMenuContainer' })(({ theme 
   backgroundColor: theme.palette.grey[900]
 }));
 
-const BottomMenuContainer = styled("div", { name: "BottomMenuContainer" })({
+const CenterMenuContainer = styled("div", { name: "BottomMenuContainer" })({
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: "flex-end",
+  justifyContent: "center",
   alignItems: 'center',
   flex: "none",
   flexGrow: 1,
@@ -73,10 +73,11 @@ export const SideMenu = memo(({ tabsValue, onTabChange, onThemeChange }: SideMen
         onChange={onTabChange}
       />
       <TabButton index={2} value={tabsValue} icon={<SendIcon />} onChange={onTabChange} />
-      <BottomMenuContainer>
+      <CenterMenuContainer>
         <TabIconButton><SaveIcon /></TabIconButton>
-        <TabIconButton onClick={onThemeChange}><ThemeIcon /></TabIconButton>
-      </BottomMenuContainer>
+        <TabIconButton><FolderOpenIcon   /></TabIconButton>
+      </CenterMenuContainer>
+      <TabIconButton onClick={onThemeChange}><ThemeIcon /></TabIconButton>
     </SideMenuContainer>
   );
 });
