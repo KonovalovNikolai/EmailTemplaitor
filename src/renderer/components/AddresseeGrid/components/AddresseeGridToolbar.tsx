@@ -41,11 +41,7 @@ const AddresseeGridToolbar = ({ onAdd: onAdd, onDelete, onPreview }: GridToolbar
                     <IconButton
                         color="primary"
                         onClick={() => {
-                            const addRes = onAdd();
-
-                            apiRef.current.updateRows([{
-                                ...addRes
-                            }]);
+                            onAdd();
                         }}
                     >
                         <AddIcon />

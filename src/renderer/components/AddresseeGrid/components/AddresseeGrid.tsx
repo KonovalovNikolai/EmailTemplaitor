@@ -28,6 +28,11 @@ const GridBox = styled("div", { name: "GridBox" })({
 const AddresseeStyledGrid = styled(DataGrid, { name: "AddresseeStyledGrid" })<DataGridProps>(({ theme }) => ({
     border: "none",
 
+    flexGrow: 1,
+
+    width: "100%",
+    height: "100%",
+
     "& .MuiDataGrid-virtualScroller": {
         overflow: "overlay",
 
@@ -69,7 +74,7 @@ export const AddresseeGrid = memo(({ variableList, addresseeList, onChange, onPr
 
     const handleAddRow = useCallback(
         () => {
-            const action = new AddAddresseeAction(false);
+            const action = new AddAddresseeAction(true);
 
             onChange(action);
         },
@@ -87,10 +92,12 @@ export const AddresseeGrid = memo(({ variableList, addresseeList, onChange, onPr
     const handleSetPreview = useCallback(
         (id: number) => {
             if (id >= 0 && id < addresseeList.length) {
-                setAddresseePreview(addresseeList[id]);
+                const addressee = addresseeList[id];
+
+                setAddresseePreview(addressee);
             }
         },
-        []
+        [addresseeList]
     );
 
     const toolBar = () => {

@@ -89,7 +89,7 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  mainWindow.removeMenu();
+  // mainWindow.removeMenu();
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
