@@ -1,5 +1,28 @@
+import { IconButton, IconButtonProps } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { memo, useCallback } from 'react';
-import { TabIconButton } from './StyledComponents';
+
+interface TabIconButtonProps extends IconButtonProps {
+	current?: boolean;
+}
+
+export const TabIconButton = styled(IconButton, {
+	shouldForwardProp: (prop) => prop !== 'current'
+})<TabIconButtonProps>(({ current, theme }) => ({
+	padding: '0px',
+	width: '60px',
+	height: '60px',
+
+	color: theme.palette.grey[200],
+
+	':hover': {
+		color: theme.palette.primary.main
+	},
+
+	...current && {
+		color: theme.palette.primary.main
+	}
+}));
 
 interface TabButtonProps {
   index: number;
@@ -16,9 +39,8 @@ export const TabButton = memo(
 
     return (
       <TabIconButton
-        // disableRipple={true}
-        // disableTouchRipple={true}
-        size="large"
+        disableRipple={true}
+        disableTouchRipple={true}
         current={isCurrent}
         onClick={handleClick}
       >

@@ -1,8 +1,5 @@
 import React, { useCallback, useReducer, useState } from 'react';
 import { Descendant } from 'slate';
-import EditIcon from '@mui/icons-material/Edit';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import SendIcon from '@mui/icons-material/Send';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { TemplateEditor } from './components/TemplateEditor';
 import { initialVariableList } from './utils/VariableList';
@@ -11,24 +8,19 @@ import { initialValue } from './utils/initialDocument';
 
 import './App.css';
 
-import {
-  variableReducer,
-  initVariableReducer,
-} from './hooks/VariableListReducer';
+import { variableReducer, initVariableReducer } from './hooks/VariableListReducer';
 import { AddresseeGrid } from './components/AddresseeGrid';
-import { TabButton, TabContent } from './components/CustomTabs';
+import { TabContent } from './components/CustomTabs';
 
-import theme from './utils/AppTheme';
-import {
-  AppContainer,
-  ContentContainer,
-  TabButtonsContainer,
-} from './components/StyledComponents';
+import { AppContainer, ContentContainer, } from './components/StyledComponents';
 import { SerializedDocument } from './components/SerializedDocument';
+import { SideMenu } from './components/SideMenu';
+import { AppTheme, getTheme, initTheme, toggleTheme } from './utils/AppTheme';
 
 function App() {
-  const [documentValue, setDocumentValue] =
-    useState<Descendant[]>(initialValue);
+  const [themeMode, setThemeMode] = useState<AppTheme>(initTheme());
+
+  const [documentValue, setDocumentValue] = useState<Descendant[]>(initialValue);
 
   const [variableReducerState, variableDispatch] = useReducer(
     variableReducer,
@@ -39,33 +31,23 @@ function App() {
 
   const [tabsValue, setTabsValue] = React.useState(0);
 
-  const handleTabsChange = (newValue: number) => {
+  const handleThemeSwitch = useCallback(
+    () => {
+      console.log("switch theme");
+
+      setThemeMode(prevTheme => toggleTheme(prevTheme));
+    },
+    []
+  );
+
+  const handleTabsChange = useCallback((newValue: number) => {
     setTabsValue(newValue);
-  };
+  }, []);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={getTheme(themeMode)}>
       <AppContainer>
-        <TabButtonsContainer>
-          <TabButton
-            index={0}
-            value={tabsValue}
-            icon={<EditIcon sx={{ fontSize: 30 }} />}
-            onChange={handleTabsChange}
-          />
-          <TabButton
-            index={1}
-            value={tabsValue}
-            icon={<PeopleAltIcon sx={{ fontSize: 30 }} />}
-            onChange={handleTabsChange}
-          />
-          <TabButton
-            index={2}
-            value={tabsValue}
-            icon={<SendIcon sx={{ fontSize: 30 }} />}
-            onChange={handleTabsChange}
-          />
-        </TabButtonsContainer>
+        <SideMenu onTabChange={handleTabsChange} onThemeChange={handleThemeSwitch} tabsValue={tabsValue} />
         <ContentContainer>
           <TabContent index={0} value={tabsValue}>
             <TemplateEditor
@@ -81,12 +63,7 @@ function App() {
               addresseeList={addresseeList}
               onChange={variableDispatch}
               onPreview={(addressee) => {
-                return (
-                  <SerializedDocument
-                    nodes={documentValue}
-                    addressee={addressee}
-                  />
-                );
+                return <SerializedDocument nodes={documentValue} addressee={addressee} />;
               }}
             />
           </TabContent>
