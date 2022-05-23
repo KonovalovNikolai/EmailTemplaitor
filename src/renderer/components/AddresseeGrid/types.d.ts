@@ -1,6 +1,6 @@
 import { Variable } from "../../utils/VariableList";
 import { Addressee } from "../../utils/Addressee";
-import { IVariablesReducerAction } from "../../hooks/VariableListReducer";
+import { IVariablesReducerAction } from "../../hooks/DocumentReducer";
 import React, { ReactNode } from "react";
 
 export interface GridToolbarProps {

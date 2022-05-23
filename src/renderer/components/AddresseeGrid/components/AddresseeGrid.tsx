@@ -11,7 +11,7 @@ import { Addressee } from "../../../utils/Addressee";
 import {
     AddAddresseeAction,
     DeleteAddresseeAction, SetAddresseeValueAction
-} from "../../../hooks/VariableListReducer";
+} from "../../../hooks/DocumentReducer";
 
 import { AddresseeGridProps } from "../types";
 import { styled } from '@mui/material/styles';

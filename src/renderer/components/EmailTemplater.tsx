@@ -10,20 +10,15 @@ import { SideMenu } from "./SideMenu";
 import { AppContainer, ContentContainer } from "./StyledComponents";
 import { TemplateEditor } from "./TemplateEditor";
 
-interface EmailTemplaterProps {
-  path: string;
-}
-
-export const EmailTemplater = ({ path }: EmailTemplaterProps) => {
+export const EmailTemplater = () => {
   const [themeMode, setThemeMode] = useState<AppTheme>(initTheme());
   const [tabsValue, setTabsValue] = React.useState(0);
   const [
     documentValue,
-    setDocumentValue,
     variableList,
     addresseeList,
-    variableDispatch
-  ] = useDocument(...initDocument(path));
+    documentDispatch
+  ] = useDocument(...initDocument());
 
   const handleSave = useCallback(
     () => {
@@ -49,15 +44,14 @@ export const EmailTemplater = ({ path }: EmailTemplaterProps) => {
             <TemplateEditor
               value={documentValue}
               variableList={variableList}
-              onDocumentChange={setDocumentValue}
-              onVariableListChange={variableDispatch}
+              onDocumentChange={documentDispatch}
             />
           </TabContent>
           <TabContent index={1} value={tabsValue}>
             <AddresseeGrid
               variableList={variableList}
               addresseeList={addresseeList}
-              onChange={variableDispatch}
+              onChange={documentDispatch}
               onPreview={(addressee) => {
                 return <SerializedDocument nodes={documentValue} addressee={addressee} />;
               }}

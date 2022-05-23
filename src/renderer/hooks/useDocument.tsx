@@ -1,20 +1,24 @@
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import { Addressee } from "renderer/utils/Addressee";
 import { Variable } from "renderer/utils/VariableList";
 import { Descendant } from "slate";
-import { initVariableReducer, IVariablesReducerAction, variableReducer } from "./VariableListReducer";
+import { documentReducer, IDocumentReducerAction, initDocumentReducer } from "./DocumentReducer";
 
 export function useDocument(
   document: Descendant[],
   variables: Variable[],
   addressees: Addressee[]
-) : [Descendant[], React.Dispatch<React.SetStateAction<Descendant[]>>, Variable[], Addressee[], React.Dispatch<IVariablesReducerAction>] {
-  const [documentValue, setDocumentValue] = useState<Descendant[]>(document);
+) : [Descendant[], Variable[], Addressee[], React.Dispatch<IDocumentReducerAction>] {
 
-  const [variableReducerState, variableDispatch] = useReducer(
-    variableReducer,
-    initVariableReducer(variables, addressees)
+  const [documentReducerState, documentDispatch] = useReducer(
+    documentReducer,
+    initDocumentReducer(document, variables, addressees)
   );
 
-  return [documentValue, setDocumentValue, variableReducerState.variableList, variableReducerState.addresseeList, variableDispatch];
+  return [
+    documentReducerState.document,
+    documentReducerState.variableList,
+    documentReducerState.addresseeList,
+    documentDispatch
+  ];
 }

@@ -1,32 +1,30 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import {
-    createEditor,
-    Descendant
+  createEditor,
+  Descendant
 } from 'slate';
 import { withHistory } from 'slate-history';
 import { Slate, withReact } from 'slate-react';
-import { withVariable } from '../../CustomSlateEditor/plugins/withVariables';
-
-import { Divider } from '@mui/material';
-
-import { SlateToolBar } from '../../CustomSlateEditor/components/Toolbar/Toolbar';
-
-import { AddVariableAction, DeleteVariableAction, IVariablesReducerAction, RenameVariableAction } from '../../../hooks/VariableListReducer';
-import { createDeletableVariable, Variable, getVariableName, getVariableNameList, isVariableDeletable } from '../../../utils/VariableList';
-import { EditableList } from '../../EditableList';
-import { getAutoCompleteData, getBoundingClientRectFromRange } from '../utils';
+import { AddVariableAction, DeleteVariableAction, IDocumentReducerAction, RenameVariableAction, SetDocumentAction } from '../../../hooks/DocumentReducer';
+import { createDeletableVariable, getVariableName, getVariableNameList, isVariableDeletable, Variable } from '../../../utils/VariableList';
 import { AutoCompleteData, CustomSlateEditor, insertVariable, removeVariables, renameVariables } from '../../CustomSlateEditor';
+import { SlateToolBar } from '../../CustomSlateEditor/components/Toolbar/Toolbar';
+import { withVariable } from '../../CustomSlateEditor/plugins/withVariables';
+import { EditableList } from '../../EditableList';
 import { EditorBox, TemplateEditorBox } from '../../StyledComponents';
 import { EditableArea } from '../../StyledComponents/components/EditableArea';
+import { getAutoCompleteData, getBoundingClientRectFromRange } from '../utils';
+
+
+
 
 interface TemplateEditorProps {
     value: Descendant[];
     variableList: Variable[];
-    onDocumentChange: React.Dispatch<any>;
-    onVariableListChange: React.Dispatch<IVariablesReducerAction>;
+    onDocumentChange: React.Dispatch<IDocumentReducerAction>;
 }
 
-export const TemplateEditor = memo(({ value, variableList, onDocumentChange, onVariableListChange }: TemplateEditorProps) => {
+export const TemplateEditor = memo(({ value, variableList, onDocumentChange }: TemplateEditorProps) => {
     // Инициализация редактора
     const editor = useMemo(
         () => withVariable(withReact(withHistory(createEditor()))),
@@ -38,7 +36,7 @@ export const TemplateEditor = memo(({ value, variableList, onDocumentChange, onV
         (newVariableName: string) => {
             const newVariable = createDeletableVariable(newVariableName);
             const action = new AddVariableAction(newVariable);
-            onVariableListChange(action);
+            onDocumentChange(action);
         },
         []
     );
@@ -47,7 +45,7 @@ export const TemplateEditor = memo(({ value, variableList, onDocumentChange, onV
         (variable: Variable, newName: string) => {
             const newVariable = createDeletableVariable(newName);
             const action = new RenameVariableAction(variable, newVariable);
-            onVariableListChange(action);
+            onDocumentChange(action);
 
             renameVariables(editor, variable.name, newName);
         },
@@ -57,7 +55,7 @@ export const TemplateEditor = memo(({ value, variableList, onDocumentChange, onV
     const handleRemoveVariable = useCallback(
         (variable: Variable) => {
             const action = new DeleteVariableAction(variable);
-            onVariableListChange(action);
+            onDocumentChange(action);
 
             removeVariables(editor, variable.name);
         },
@@ -77,7 +75,8 @@ export const TemplateEditor = memo(({ value, variableList, onDocumentChange, onV
 
     const handleChange = useCallback(
         (value: Descendant[]) => {
-            onDocumentChange(value);
+            const action = new SetDocumentAction(value, false)
+            onDocumentChange(action);
 
             const data = getAutoCompleteData(editor);
             if (!data) {
