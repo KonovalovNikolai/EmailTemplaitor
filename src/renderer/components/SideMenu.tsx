@@ -21,7 +21,11 @@ const SideMenuContainer = styled('div', { name: 'SideMenuContainer' })(({ theme 
   flexDirection: 'column',
   alignItems: 'center',
 
-  backgroundColor: theme.palette.grey[900]
+  backgroundColor: theme.palette.grey[900],
+
+  "& .MuiSvgIcon-root": {
+    fontSize: "2rem",
+  }
 }));
 
 const CenterMenuContainer = styled("div", { name: "BottomMenuContainer" })({
@@ -73,6 +77,7 @@ export const SideMenu = memo(({ tabsValue, onTabChange, onSave, onThemeChange }:
         icon={<PeopleAltIcon />}
         onChange={onTabChange}
       />
+
       <TabButton index={2} value={tabsValue} icon={<SendIcon />} onChange={onTabChange} />
       <CenterMenuContainer>
         <TabIconButton onClick={onSave}><SaveIcon /></TabIconButton>
