@@ -59,10 +59,11 @@ const ThemeIcon = () => {
 interface SideMenuProps {
   tabsValue: number;
   onTabChange: (index: number) => void;
+  onSave: () => void;
   onThemeChange: () => void;
 }
 
-export const SideMenu = memo(({ tabsValue, onTabChange, onThemeChange }: SideMenuProps) => {
+export const SideMenu = memo(({ tabsValue, onTabChange, onSave, onThemeChange }: SideMenuProps) => {
   return (
     <SideMenuContainer>
       <TabButton index={0} value={tabsValue} icon={<EditIcon />} onChange={onTabChange} />
@@ -74,8 +75,8 @@ export const SideMenu = memo(({ tabsValue, onTabChange, onThemeChange }: SideMen
       />
       <TabButton index={2} value={tabsValue} icon={<SendIcon />} onChange={onTabChange} />
       <CenterMenuContainer>
-        <TabIconButton><SaveIcon /></TabIconButton>
-        <TabIconButton><FolderOpenIcon   /></TabIconButton>
+        <TabIconButton onClick={onSave}><SaveIcon /></TabIconButton>
+        <TabIconButton><FolderOpenIcon /></TabIconButton>
       </CenterMenuContainer>
       <TabIconButton onClick={onThemeChange}><ThemeIcon /></TabIconButton>
     </SideMenuContainer>
