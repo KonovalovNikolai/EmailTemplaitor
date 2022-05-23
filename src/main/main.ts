@@ -126,15 +126,23 @@ app
 
 async function handleSaveDocument(event, JSONDocument: string) {
   if (filehandle === null) {
-    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow);
+    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+      filters: [{ name: "Шаблон EMail", extensions: ['etd'] }],
+    });
     if (canceled) {
-      return "error";
+      return "canceled";
     }
 
     filehandle = filePath;
   }
 
-  await fs.writeFile(filehandle, JSONDocument);
+  try {
+    await fs.writeFile(filehandle, JSONDocument);
+  } catch (err) {
+    filehandle = null;
+    console.log(err);
+    return "error";
+  }
 
   return "success";
 }

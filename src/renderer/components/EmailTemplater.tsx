@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@emotion/react";
+import { Alert, Slide, Snackbar } from "@mui/material";
 import React, { useCallback, useState } from "react";
 import { SaveDocumentAction } from "renderer/hooks/DocumentReducer";
 import { useDocument } from "renderer/hooks/useDocument";
@@ -11,6 +12,12 @@ import { SideMenu } from "./SideMenu";
 import { AppContainer, ContentContainer } from "./StyledComponents";
 import { TemplateEditor } from "./TemplateEditor";
 
+interface SnackbarState {
+  open: boolean;
+  message: string;
+  variant: "success" | "info" | "error";
+}
+
 export const EmailTemplater = () => {
   const [themeMode, setThemeMode] = useState<AppTheme>(initTheme());
   const [tabsValue, setTabsValue] = React.useState(0);
@@ -21,12 +28,55 @@ export const EmailTemplater = () => {
     documentDispatch
   ] = useDocument(...initDocument());
 
+  const [snackState, setSnackOpen] = React.useState<SnackbarState>({
+    open: false,
+    message: "",
+    variant: undefined,
+  });
+
+  const handleSnackClose = () => {
+    setSnackOpen(prev => {
+      return {
+        ...prev,
+        open: false,
+      };
+    });
+  };
+
   const handleSave = useCallback(
     () => {
       const action = new SaveDocumentAction(
         async (resultPromise) => {
+          setSnackOpen({
+            open: true,
+            message: "Сохраняю...",
+            variant: "info",
+          });
+
           const resultMessage = await resultPromise;
-          console.log(resultMessage);
+
+          if (resultMessage === "success") {
+            setSnackOpen({
+              open: true,
+              message: "Успешно сохранено!",
+              variant: "success",
+            });
+          }
+          else if (resultMessage === "error") {
+            setSnackOpen({
+              open: true,
+              message: "Ошибка!",
+              variant: "error",
+            });
+          }
+          else {
+            setSnackOpen(prev => {
+              return {
+                ...prev,
+                open: false,
+              }
+            })
+          }
         }
       );
       documentDispatch(action);
@@ -35,6 +85,7 @@ export const EmailTemplater = () => {
   );
   const handleThemeSwitch = useCallback(() => setThemeMode(prevTheme => toggleTheme(prevTheme)), []);
   const handleTabsChange = useCallback((newValue: number) => setTabsValue(newValue), []);
+
 
   return (
     <ThemeProvider theme={getTheme(themeMode)}>
@@ -65,6 +116,15 @@ export const EmailTemplater = () => {
           </TabContent>
         </ContentContainer>
       </AppContainer>
+      <Snackbar
+        key={snackState.variant}
+        open={snackState.open}
+        autoHideDuration={2000}
+        onClose={handleSnackClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert severity={snackState.variant}>{snackState.message}</Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 };
