@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@emotion/react";
 import React, { useCallback, useState } from "react";
+import { SaveDocumentAction } from "renderer/hooks/DocumentReducer";
 import { useDocument } from "renderer/hooks/useDocument";
 import { AppTheme, getTheme, initTheme, toggleTheme } from "renderer/utils/AppTheme";
 import { documentToJson, initDocument, selectSavePath } from "renderer/utils/FileControl";
@@ -22,10 +23,15 @@ export const EmailTemplater = () => {
 
   const handleSave = useCallback(
     () => {
-      selectSavePath();
-      documentToJson(documentValue, variableList, addresseeList);
+      const action = new SaveDocumentAction(
+        async (resultPromise) => {
+          const resultMessage = await resultPromise;
+          console.log(resultMessage);
+        }
+      );
+      documentDispatch(action);
     },
-    [documentValue, variableList, addresseeList]
+    []
   );
   const handleThemeSwitch = useCallback(() => setThemeMode(prevTheme => toggleTheme(prevTheme)), []);
   const handleTabsChange = useCallback((newValue: number) => setTabsValue(newValue), []);

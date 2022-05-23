@@ -10,21 +10,16 @@
  */
 import path from 'path';
 import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import { resolveHtmlPath } from './util';
 
 let mainWindow: BrowserWindow | null = null;
+let filehandle: string = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
-});
-
-ipcMain.on('saveFile', (event, arg) => {
-  const path = dialog.showSaveDialogSync(mainWindow);
-
-  event.reply('saveFile', path);
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -117,6 +112,8 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
+    ipcMain.handle('saveFile', handleSaveDocument);
+
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
@@ -125,3 +122,19 @@ app
     });
   })
   .catch(console.log);
+
+
+async function handleSaveDocument(event, JSONDocument: string) {
+  if (filehandle === null) {
+    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow);
+    if (canceled) {
+      return "error";
+    }
+
+    filehandle = filePath;
+  }
+
+  await fs.writeFile(filehandle, JSONDocument);
+
+  return "success";
+}
