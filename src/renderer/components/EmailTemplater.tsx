@@ -6,7 +6,7 @@ import { useDocument } from "renderer/hooks/useDocument";
 import { AppTheme, getTheme, initTheme, toggleTheme } from "renderer/utils/AppTheme";
 import EditorDocument from "renderer/utils/EditorDocument";
 import { initDocument, JsonToDocument } from "renderer/utils/FileControl";
-import { createEditor } from "slate";
+import { createEditor, Editor, Point, Transforms, Node } from "slate";
 import { withHistory } from "slate-history";
 import { withReact } from "slate-react";
 import { AddresseeGrid } from "./AddresseeGrid";
@@ -42,6 +42,8 @@ export const EmailTemplater = () => {
     () => withVariable(withReact(withHistory(createEditor()))),
     []
   );
+
+  console.log(editor);
 
   const [snackState, setSnackOpen] = React.useState<SnackbarState>({
     open: false,
@@ -147,9 +149,14 @@ export const EmailTemplater = () => {
       documentDispatch(action);
       setUpToDateStatus(true);
 
-      editor.children = document[0];
-      editor.history.redos = [];
-      editor.history.undos = [];
+      resetNodes(editor,
+        {nodes: document[0]}
+      ),
+
+      editor.history = {
+        redos: [],
+        undos: [],
+      };
 
       setSnackOpen({
         open: true,
@@ -208,3 +215,26 @@ export const EmailTemplater = () => {
     </ThemeProvider>
   );
 };
+
+function resetNodes<T extends Node>(
+  editor: Editor,
+  options: {  nodes?: Node | Node[],  at?: Location } = {}
+): void {
+  const children = [...editor.children]
+
+  children.forEach((node) => editor.apply({ type: 'remove_node', path: [0], node }))
+
+  if (options.nodes) {
+    const nodes = Node.isNode(options.nodes) ? [options.nodes] : options.nodes
+
+    nodes.forEach((node, i) => editor.apply({ type: 'insert_node', path: [i], node: node }))
+  }
+
+  const point = options.at && Point.isPoint(options.at)
+    ? options.at
+    : Editor.end(editor, [])
+
+  if (point) {
+    Transforms.select(editor, point)
+  }
+}
