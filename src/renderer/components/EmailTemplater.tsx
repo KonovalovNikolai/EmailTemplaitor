@@ -20,13 +20,17 @@ interface SnackbarState {
 
 export const EmailTemplater = () => {
   const [themeMode, setThemeMode] = useState<AppTheme>(initTheme());
+  const [upToDateStatus, setUpToDateStatus] = useState(false);
+
+  const handleDocumentUpdate = useCallback(() => setUpToDateStatus(false), []);
+
   const [tabsValue, setTabsValue] = React.useState(0);
   const [
     documentValue,
     variableList,
     addresseeList,
     documentDispatch
-  ] = useDocument(...initDocument());
+  ] = useDocument(...initDocument(), handleDocumentUpdate);
 
   const [snackState, setSnackOpen] = React.useState<SnackbarState>({
     open: false,
@@ -56,6 +60,7 @@ export const EmailTemplater = () => {
           const resultMessage = await resultPromise;
 
           if (resultMessage === "success") {
+            setUpToDateStatus(true);
             setSnackOpen({
               open: true,
               message: "Успешно сохранено!",
@@ -74,8 +79,8 @@ export const EmailTemplater = () => {
               return {
                 ...prev,
                 open: false,
-              }
-            })
+              };
+            });
           }
         }
       );
@@ -83,6 +88,7 @@ export const EmailTemplater = () => {
     },
     []
   );
+
   const handleThemeSwitch = useCallback(() => setThemeMode(prevTheme => toggleTheme(prevTheme)), []);
   const handleTabsChange = useCallback((newValue: number) => setTabsValue(newValue), []);
 
@@ -91,15 +97,16 @@ export const EmailTemplater = () => {
     <ThemeProvider theme={getTheme(themeMode)}>
       <AppContainer>
         <SideMenu
-          onTabChange={handleTabsChange}
           onSave={handleSave}
+          onTabChange={handleTabsChange}
           onThemeChange={handleThemeSwitch}
           tabsValue={tabsValue}
+          upToDateStatus={upToDateStatus}
         />
         <ContentContainer>
           <TabContent index={0} value={tabsValue}>
             <TemplateEditor
-              value={documentValue}
+              documentValue={documentValue}
               variableList={variableList}
               onDocumentChange={documentDispatch}
             />

@@ -54,36 +54,35 @@ const ThemeIconButton = styled(TabIconButton, { name: 'SideMenuContainer' })(({ 
 const ThemeIcon = () => {
   return (
     <ThemeIconButton>
-      <LightModeIcon className='LightThemeIcon' sx={{ fontSize: 30 }} />
-      <DarkModeIcon className='DarkThemeIcon' sx={{ fontSize: 30 }} />
+      <LightModeIcon className='LightThemeIcon' />
+      <DarkModeIcon className='DarkThemeIcon' />
     </ThemeIconButton>
   );
 };
 
 interface SideMenuProps {
   tabsValue: number;
+  upToDateStatus: boolean;
   onTabChange: (index: number) => void;
   onSave: () => void;
   onThemeChange: () => void;
 }
 
-export const SideMenu = memo(({ tabsValue, onTabChange, onSave, onThemeChange }: SideMenuProps) => {
+export const SideMenu = memo(({ tabsValue, upToDateStatus, onTabChange, onSave, onThemeChange }: SideMenuProps) => {
   return (
     <SideMenuContainer>
-      <TabButton index={0} value={tabsValue} icon={<EditIcon />} onChange={onTabChange} />
-      <TabButton
-        index={1}
-        value={tabsValue}
-        icon={<PeopleAltIcon />}
-        onChange={onTabChange}
-      />
 
+      <TabButton index={0} value={tabsValue} icon={<EditIcon />} onChange={onTabChange} />
+      <TabButton index={1} value={tabsValue} icon={<PeopleAltIcon />} onChange={onTabChange} />
       <TabButton index={2} value={tabsValue} icon={<SendIcon />} onChange={onTabChange} />
+
       <CenterMenuContainer>
-        <TabIconButton onClick={onSave}><SaveIcon /></TabIconButton>
+        <TabIconButton disabled={upToDateStatus} onClick={onSave}><SaveIcon /></TabIconButton>
         <TabIconButton><FolderOpenIcon /></TabIconButton>
       </CenterMenuContainer>
+
       <TabIconButton onClick={onThemeChange}><ThemeIcon /></TabIconButton>
+
     </SideMenuContainer>
   );
 });
