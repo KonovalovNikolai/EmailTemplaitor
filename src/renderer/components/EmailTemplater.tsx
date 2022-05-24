@@ -1,11 +1,16 @@
 import { ThemeProvider } from "@emotion/react";
 import { Alert, Snackbar } from "@mui/material";
-import React, { useCallback, useState } from "react";
-import { SaveDocumentAction } from "renderer/hooks/DocumentReducer";
+import React, { useCallback, useMemo, useState } from "react";
+import { SaveDocumentAction, SetEditorDocumentAction } from "renderer/hooks/DocumentReducer";
 import { useDocument } from "renderer/hooks/useDocument";
 import { AppTheme, getTheme, initTheme, toggleTheme } from "renderer/utils/AppTheme";
-import { initDocument } from "renderer/utils/FileControl";
+import EditorDocument from "renderer/utils/EditorDocument";
+import { initDocument, JsonToDocument } from "renderer/utils/FileControl";
+import { createEditor } from "slate";
+import { withHistory } from "slate-history";
+import { withReact } from "slate-react";
 import { AddresseeGrid } from "./AddresseeGrid";
+import { withVariable } from "./CustomSlateEditor/plugins/withVariables";
 import { TabContent } from "./CustomTabs";
 import { SerializedDocument } from "./SerializedDocument";
 import { SideMenu } from "./SideMenu";
@@ -31,6 +36,12 @@ export const EmailTemplater = () => {
     addresseeList,
     documentDispatch
   ] = useDocument(...initDocument(), handleDocumentUpdate);
+
+  // Инициализация редактора
+  const editor = useMemo(
+    () => withVariable(withReact(withHistory(createEditor()))),
+    []
+  );
 
   const [snackState, setSnackOpen] = React.useState<SnackbarState>({
     open: false,
@@ -84,7 +95,67 @@ export const EmailTemplater = () => {
           }
         }
       );
+
       documentDispatch(action);
+    },
+    []
+  );
+
+  const handleOpenDocument = useCallback(
+    async () => {
+      setSnackOpen({
+        message: "Открываю...",
+        variant: "info",
+        open: true,
+      });
+
+      const result = await window.electron.ipcRenderer.openDocument();
+
+      if (result.status === "canceled") {
+        setSnackOpen(prev => {
+          return {
+            ...prev,
+            open: false,
+          };
+        });
+        return;
+      }
+
+      else if (result.status === "error") {
+        setSnackOpen({
+          open: true,
+          message: "Ошибка!",
+          variant: "error",
+        });
+        return;
+      }
+
+      let document: EditorDocument;
+
+      try {
+        document = JsonToDocument(result.JSONDocument);
+      } catch (error) {
+        setSnackOpen({
+          open: true,
+          message: "Ошибка!",
+          variant: "error",
+        });
+        return;
+      }
+
+      const action = new SetEditorDocumentAction(document);
+      documentDispatch(action);
+      setUpToDateStatus(true);
+
+      editor.children = document[0];
+      editor.history.redos = [];
+      editor.history.undos = [];
+
+      setSnackOpen({
+        open: true,
+        message: "Успешно!",
+        variant: "success",
+      });
     },
     []
   );
@@ -98,6 +169,7 @@ export const EmailTemplater = () => {
       <AppContainer>
         <SideMenu
           onSave={handleSave}
+          onOpen={handleOpenDocument}
           onTabChange={handleTabsChange}
           onThemeChange={handleThemeSwitch}
           tabsValue={tabsValue}
@@ -106,6 +178,7 @@ export const EmailTemplater = () => {
         <ContentContainer>
           <TabContent index={0} value={tabsValue}>
             <TemplateEditor
+              editor={editor}
               documentValue={documentValue}
               variableList={variableList}
               onDocumentChange={documentDispatch}
@@ -124,7 +197,7 @@ export const EmailTemplater = () => {
         </ContentContainer>
       </AppContainer>
       <Snackbar
-        key={snackState.variant}
+        key={snackState.message}
         open={snackState.open}
         autoHideDuration={2000}
         onClose={handleSnackClose}

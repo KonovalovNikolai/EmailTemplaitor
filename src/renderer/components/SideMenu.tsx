@@ -65,10 +65,11 @@ interface SideMenuProps {
   upToDateStatus: boolean;
   onTabChange: (index: number) => void;
   onSave: () => void;
+  onOpen: () => void;
   onThemeChange: () => void;
 }
 
-export const SideMenu = memo(({ tabsValue, upToDateStatus, onTabChange, onSave, onThemeChange }: SideMenuProps) => {
+export const SideMenu = memo(({ tabsValue, upToDateStatus, onTabChange, onSave, onOpen, onThemeChange }: SideMenuProps) => {
   return (
     <SideMenuContainer>
 
@@ -78,7 +79,7 @@ export const SideMenu = memo(({ tabsValue, upToDateStatus, onTabChange, onSave, 
 
       <CenterMenuContainer>
         <TabIconButton disabled={upToDateStatus} onClick={onSave}><SaveIcon /></TabIconButton>
-        <TabIconButton><FolderOpenIcon /></TabIconButton>
+        <TabIconButton onClick={onOpen}><FolderOpenIcon /></TabIconButton>
       </CenterMenuContainer>
 
       <TabIconButton onClick={onThemeChange}><ThemeIcon /></TabIconButton>

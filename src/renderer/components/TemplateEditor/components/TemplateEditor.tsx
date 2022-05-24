@@ -1,15 +1,13 @@
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import {
-  createEditor,
-  Descendant
+  Descendant,
+  Editor
 } from 'slate';
-import { withHistory } from 'slate-history';
-import { Slate, withReact } from 'slate-react';
+import { Slate } from 'slate-react';
 import { AddVariableAction, DeleteVariableAction, IDocumentReducerAction, RenameVariableAction, SetDocumentAction } from '../../../hooks/DocumentReducer';
 import { createDeletableVariable, getVariableName, getVariableNameList, isVariableDeletable, Variable } from '../../../utils/VariableList';
 import { AutoCompleteData, CustomSlateEditor, insertVariable, removeVariables, renameVariables } from '../../CustomSlateEditor';
 import { SlateToolBar } from '../../CustomSlateEditor/components/Toolbar/Toolbar';
-import { withVariable } from '../../CustomSlateEditor/plugins/withVariables';
 import { EditableList } from '../../EditableList';
 import { EditorBox, TemplateEditorBox } from '../../StyledComponents';
 import { EditableArea } from '../../StyledComponents/components/EditableArea';
@@ -19,18 +17,13 @@ import { getAutoCompleteData, getBoundingClientRectFromRange } from '../utils';
 
 
 interface TemplateEditorProps {
+  editor: Editor;
   documentValue: Descendant[];
   variableList: Variable[];
   onDocumentChange: React.Dispatch<IDocumentReducerAction>;
 }
 
-export const TemplateEditor = memo(({ documentValue, variableList, onDocumentChange }: TemplateEditorProps) => {
-  // Инициализация редактора
-  const editor = useMemo(
-    () => withVariable(withReact(withHistory(createEditor()))),
-    // () => withVariable(withReact(createEditor())),
-    []
-  );
+export const TemplateEditor = memo(({ editor, documentValue, variableList, onDocumentChange }: TemplateEditorProps) => {
 
   const handleAddVariable = useCallback(
     (newVariableName: string) => {

@@ -10,7 +10,7 @@
  */
 import path from 'path';
 import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
-import * as fs from 'fs/promises';
+import * as fsPromise from 'fs/promises';
 import { resolveHtmlPath } from './util';
 
 let mainWindow: BrowserWindow | null = null;
@@ -113,6 +113,7 @@ app
   .whenReady()
   .then(() => {
     ipcMain.handle('saveFile', handleSaveDocument);
+    ipcMain.handle('openFile', handleOpenDocument)
 
     createWindow();
     app.on('activate', () => {
@@ -137,7 +138,7 @@ async function handleSaveDocument(event, JSONDocument: string) {
   }
 
   try {
-    await fs.writeFile(filehandle, JSONDocument);
+    await fsPromise.writeFile(filehandle, JSONDocument, { encoding: "utf-8"});
   } catch (err) {
     filehandle = null;
     console.log(err);
@@ -145,4 +146,43 @@ async function handleSaveDocument(event, JSONDocument: string) {
   }
 
   return "success";
+}
+
+export interface OpenFileResult {
+  status: "canceled" | "error" | "success";
+  JSONDocument: string;
+}
+
+async function handleOpenDocument(event): Promise<OpenFileResult> {
+  const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+    properties: ['openFile',],
+    filters: [{ name: "Шаблон EMail", extensions: ['etd'] }],
+  });
+  if (canceled) {
+    return {
+      status: "canceled",
+      JSONDocument: "",
+    };
+  }
+
+  const path = filePaths[0];
+
+  let data: string;
+
+  try {
+    data = await fsPromise.readFile(path, {encoding: "utf-8"});
+  } catch (err) {
+    console.log(err);
+    return {
+      status: "error",
+      JSONDocument: "",
+    };
+  }
+
+  filehandle = path;
+
+  return {
+    status: "success",
+    JSONDocument: data,
+  }
 }

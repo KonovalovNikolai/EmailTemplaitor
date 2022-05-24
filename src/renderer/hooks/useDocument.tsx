@@ -1,5 +1,6 @@
 import { useCallback, useReducer } from "react";
 import { Addressee } from "renderer/utils/Addressee";
+import EditorDocument from "renderer/utils/EditorDocument";
 import { Variable } from "renderer/utils/VariableList";
 import { Descendant } from "slate";
 import { documentReducer, DocumentReducerState, IDocumentReducerAction, initDocumentReducer } from "./DocumentReducer";
@@ -9,7 +10,7 @@ export function useDocument(
   variables: Variable[],
   addressees: Addressee[],
   onUpdate: () => void,
-) : [Descendant[], Variable[], Addressee[], React.Dispatch<IDocumentReducerAction>] {
+) : [...EditorDocument, React.Dispatch<IDocumentReducerAction>] {
 
   const reducer = useCallback(
     (state: DocumentReducerState, action: IDocumentReducerAction) => {

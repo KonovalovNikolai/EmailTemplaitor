@@ -6,5 +6,6 @@ export { RenameVariableAction } from "./actions/RenameVariableAction";
 export { SetAddresseeValueAction } from "./actions/SetAddresseeValueAction";
 export { SetDocumentAction } from "./actions/SetDocumentAction";
 export { SaveDocumentAction } from "./actions/SaveDocumentAction";
+export { SetEditorDocumentAction } from "./actions/SetEditorDocumentAction";
 export { initDocumentReducer, documentReducer } from "./utils";
 export type { DocumentReducerState, IDocumentReducerAction } from "./types";

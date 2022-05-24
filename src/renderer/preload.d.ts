@@ -1,4 +1,5 @@
 import { Channels } from 'main/preload';
+import { OpenFileResult } from './utils/ipcInterfaces';
 
 declare global {
   interface Window {
@@ -11,9 +12,10 @@ declare global {
         ): (() => void) | undefined;
         once(channel: string, func: (...args: unknown[]) => void): void;
         saveDocument(JSONDocument: string): Promise<string>;
+        openDocument(): Promise<OpenFileResult>;
       };
     };
   }
 }
 
-export {};
+export { };
