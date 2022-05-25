@@ -13,7 +13,7 @@ interface CloseSnackbarStatus {
 }
 
 export function useStatusSnackbar(): [ StatusSnackBarState, SetSnackbarStatus,  CloseSnackbarStatus ] {
-  const [snackState, setSnackState] = React.useState<StatusSnackBarState>(initSnackbarState);
+  const [snackState, setSnackState] = React.useState<StatusSnackBarState>(initSnackbarState());
 
   const handleSetStatus = useCallback(
     (varian: StatusSnackbarVariant, message: string) => setSnackbarStatus(varian, message, setSnackState),

@@ -28,7 +28,7 @@ export function getAutoCompleteData(editor: Editor): ReturnType | null {
         const beforeRange = before && Editor.range(editor, before, start);
         const beforeText = beforeRange && Editor.string(editor, beforeRange);
 
-        const beforeMatch = beforeText && beforeText.match(/^#(\w+)$/);
+        const beforeMatch = beforeText && beforeText.match(/^#([\wа-я]+)$/);
         const after = Editor.after(editor, start);
         const afterRange = Editor.range(editor, start, after);
         const afterText = Editor.string(editor, afterRange);

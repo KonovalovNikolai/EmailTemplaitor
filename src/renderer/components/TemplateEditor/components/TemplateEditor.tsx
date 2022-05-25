@@ -78,6 +78,7 @@ export const TemplateEditor = memo(({ editor, documentValue, variableList, onDoc
       }
 
       const data = getAutoCompleteData(editor);
+
       if (!data) {
         setAutoCompleteData(null);
         return;
