@@ -1,83 +1,83 @@
 /** Интерфейс функции получения названия элемента для списка */
 export interface IGetLabel<T> {
-    (element: T): string;
+  (element: T): string;
 }
 
 export interface onRename<T> {
-    (element: T, newName: string): void;
+  (element: T, newName: string): void;
 }
 
 export interface onRemove<T> {
-    (element: T): void;
+  (element: T): void;
 }
 
 export interface isChangeable<T> {
-    (element: T): boolean
+  (element: T): boolean;
 }
 
 export interface OnNameInputEnter {
-    (value: string): boolean;
+  (value: string): boolean;
 }
 
 export interface NameValidator {
-    (value: string): boolean;
+  (value: string): boolean;
 }
 
 export interface OnElementClick<T> {
-    (element: T): void
+  (element: T): void;
 }
 
 /** Состояние кнопки сортировки */
 export interface ISortState<T> {
-    /** Сортировка списка элементов */
-    Sort(list: T[], getLabel: IGetLabel<T>): T[];
-    /** Сменить состояние */
-    ChangeState(): ISortState;
+  /** Сортировка списка элементов */
+  Sort(list: T[], getLabel: IGetLabel<T>): T[];
+  /** Сменить состояние */
+  ChangeState(): ISortState<T>;
 }
 
 
-export interface EditableListTopBarData {
-    searchValue: string;
-    sortState: ISortState<T>;
-};
+export interface EditableListTopBarData<T> {
+  searchValue: string;
+  sortState: ISortState<T>;
+}
 
 export interface EditableListProps<T> {
-    label: string;
-    elementList: T[];
-    getLabel: IGetLabel<T>;
-    isChangeable: isChangeable<T>;
-    onElementClick: OnElementClick<T>;
-    onRename: onRename<T>;
-    onAdd: (newElementName: string) => void;
-    onRemove: onRemove<T>;
-};
+  label: string;
+  elementList: T[];
+  getLabel: IGetLabel<T>;
+  isChangeable: isChangeable<T>;
+  onElementClick: OnElementClick<T>;
+  onRename: onRename<T>;
+  onAdd: (newElementName: string) => void;
+  onRemove: onRemove<T>;
+}
 
 export interface ElementListProps<T> {
-    list: T[];
-    getLabel: IGetLabel<T>;
-    isChangeable: isChangeable<T>;
-    onElementClick: OnElementClick<T>;
-    onRename: onRename<T>;
-    onRemove: onRemove<T>;
+  list: T[];
+  getLabel: IGetLabel<T>;
+  isChangeable: isChangeable<T>;
+  onElementClick: OnElementClick<T>;
+  onRename: onRename<T>;
+  onRemove: onRemove<T>;
 }
 
 export interface ListItemBaseProps {
-    children: React.ReactNode;
-};
+  children: React.ReactNode;
+}
 
 interface ListItemProps<T> {
-    element: T;
-    label: string;
-    onElementClick: OnElementClick<T>;
+  element: T;
+  label: string;
+  onElementClick: OnElementClick<T>;
 }
 
 export interface DeletableListItemProps<T> extends ListItemProps<T> {
-    onDelete: onRemove<T>;
-    onRename: (event: React.MouseEvent, element: T) => void;
+  onDelete: onRemove<T>;
+  onRename: (event: React.MouseEvent, element: T) => void;
 }
 
-export interface UndeletableListItemProps<T> extends ListItemProps<T> {}
+export interface UndeletableListItemProps<T> extends ListItemProps<T> { }
 
-export interface EditableListTopBarProps {
-    onChange: React.Dispatch<React.SetStateAction<TopBarData>>;
-};
+export interface EditableListTopBarProps<T> {
+  onChange: React.Dispatch<React.SetStateAction<EditableListTopBarData<T>>>;
+}

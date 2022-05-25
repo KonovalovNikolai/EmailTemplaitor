@@ -1,7 +1,7 @@
 export { CustomSlateEditor } from "./components/CustomSlateEditor";
 export type { AutoCompleteData } from "./types";
 
-export { insertVariable, renameVariables, removeVariables } from "./utils";
+export { insertVariable, renameVariables, removeVariables, resetNodes } from "./utils";
 
 export type {
     CustomEditor,

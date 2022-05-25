@@ -1,35 +1,30 @@
 import { ThemeProvider } from "@emotion/react";
-import { Alert, Snackbar } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
 import { SaveDocumentAction, SetEditorDocumentAction } from "renderer/hooks/DocumentReducer";
 import { useDocument } from "renderer/hooks/useDocument";
+import { Addressee } from "renderer/utils/Addressee";
 import { AppTheme, getTheme, initTheme, toggleTheme } from "renderer/utils/AppTheme";
 import EditorDocument from "renderer/utils/EditorDocument";
 import { initDocument, JsonToDocument } from "renderer/utils/FileControl";
-import { createEditor, Editor, Point, Transforms, Node } from "slate";
+import { createEditor } from "slate";
 import { withHistory } from "slate-history";
 import { withReact } from "slate-react";
 import { AddresseeGrid } from "./AddresseeGrid";
+import { resetNodes } from "./CustomSlateEditor";
 import { withVariable } from "./CustomSlateEditor/plugins/withVariables";
 import { TabContent } from "./CustomTabs";
 import { SerializedDocument } from "./SerializedDocument";
 import { SideMenu } from "./SideMenu";
+import { StatusSnackbar, useStatusSnackbar } from "./StatusSnackbar";
 import { AppContainer, ContentContainer } from "./StyledComponents";
 import { TemplateEditor } from "./TemplateEditor";
-
-interface SnackbarState {
-  open: boolean;
-  message: string;
-  variant: "success" | "info" | "error";
-}
 
 export const EmailTemplater = () => {
   const [themeMode, setThemeMode] = useState<AppTheme>(initTheme());
   const [upToDateStatus, setUpToDateStatus] = useState(false);
-
+  const [tabsValue, setTabsValue] = React.useState(0);
   const handleDocumentUpdate = useCallback(() => setUpToDateStatus(false), []);
 
-  const [tabsValue, setTabsValue] = React.useState(0);
   const [
     documentValue,
     variableList,
@@ -37,98 +32,55 @@ export const EmailTemplater = () => {
     documentDispatch
   ] = useDocument(...initDocument(), handleDocumentUpdate);
 
+  const [snackbarState, setSnackbarState, closeSnackbar] = useStatusSnackbar();
+
   // Инициализация редактора
   const editor = useMemo(
     () => withVariable(withReact(withHistory(createEditor()))),
     []
   );
 
-  console.log(editor);
+  const saveCallback = useCallback(
+    async (resultPromise: Promise<string>) => {
+      setSnackbarState("info", "Сохраняю...");
 
-  const [snackState, setSnackOpen] = React.useState<SnackbarState>({
-    open: false,
-    message: "",
-    variant: undefined,
-  });
+      const resultMessage = await resultPromise;
 
-  const handleSnackClose = () => {
-    setSnackOpen(prev => {
-      return {
-        ...prev,
-        open: false,
-      };
-    });
-  };
+      if (resultMessage === "success") {
+        setUpToDateStatus(true);
+        setSnackbarState("success", "Успешно сохранено!");
+        return;
+      }
+
+      if (resultMessage === "error") {
+        setSnackbarState("error", "Ошибка!");
+        return;
+      }
+
+      closeSnackbar();
+    }, []
+  );
 
   const handleSave = useCallback(
     () => {
-      const action = new SaveDocumentAction(
-        async (resultPromise) => {
-          setSnackOpen({
-            open: true,
-            message: "Сохраняю...",
-            variant: "info",
-          });
-
-          const resultMessage = await resultPromise;
-
-          if (resultMessage === "success") {
-            setUpToDateStatus(true);
-            setSnackOpen({
-              open: true,
-              message: "Успешно сохранено!",
-              variant: "success",
-            });
-          }
-          else if (resultMessage === "error") {
-            setSnackOpen({
-              open: true,
-              message: "Ошибка!",
-              variant: "error",
-            });
-          }
-          else {
-            setSnackOpen(prev => {
-              return {
-                ...prev,
-                open: false,
-              };
-            });
-          }
-        }
-      );
-
+      const action = new SaveDocumentAction(saveCallback);
       documentDispatch(action);
-    },
-    []
+    }, []
   );
 
   const handleOpenDocument = useCallback(
     async () => {
-      setSnackOpen({
-        message: "Открываю...",
-        variant: "info",
-        open: true,
-      });
+      setSnackbarState("info", "Открываю...");
 
       const result = await window.electron.ipcRenderer.openDocument();
 
       if (result.status === "canceled") {
-        setSnackOpen(prev => {
-          return {
-            ...prev,
-            open: false,
-          };
-        });
+        closeSnackbar();
         return;
       }
 
-      else if (result.status === "error") {
-        setSnackOpen({
-          open: true,
-          message: "Ошибка!",
-          variant: "error",
-        });
+      if (result.status === "error") {
+        setSnackbarState("error", "Ошибка!");
         return;
       }
 
@@ -137,11 +89,7 @@ export const EmailTemplater = () => {
       try {
         document = JsonToDocument(result.JSONDocument);
       } catch (error) {
-        setSnackOpen({
-          open: true,
-          message: "Ошибка!",
-          variant: "error",
-        });
+        setSnackbarState("error", "Ошибка!");
         return;
       }
 
@@ -149,20 +97,12 @@ export const EmailTemplater = () => {
       documentDispatch(action);
       setUpToDateStatus(true);
 
-      resetNodes(editor,
-        {nodes: document[0]}
-      ),
+      resetNodes(
+        editor,
+        { nodes: document[0] }
+      );
 
-      editor.history = {
-        redos: [],
-        undos: [],
-      };
-
-      setSnackOpen({
-        open: true,
-        message: "Успешно!",
-        variant: "success",
-      });
+      setSnackbarState("success", "Успешно!");
     },
     []
   );
@@ -170,6 +110,9 @@ export const EmailTemplater = () => {
   const handleThemeSwitch = useCallback(() => setThemeMode(prevTheme => toggleTheme(prevTheme)), []);
   const handleTabsChange = useCallback((newValue: number) => setTabsValue(newValue), []);
 
+  const handlePreview = useCallback(
+    (addressee: Addressee) => { return <SerializedDocument nodes={documentValue} addressee={addressee} />; }, []
+  );
 
   return (
     <ThemeProvider theme={getTheme(themeMode)}>
@@ -196,45 +139,12 @@ export const EmailTemplater = () => {
               variableList={variableList}
               addresseeList={addresseeList}
               onChange={documentDispatch}
-              onPreview={(addressee) => {
-                return <SerializedDocument nodes={documentValue} addressee={addressee} />;
-              }}
+              onPreview={handlePreview}
             />
           </TabContent>
         </ContentContainer>
       </AppContainer>
-      <Snackbar
-        key={snackState.message}
-        open={snackState.open}
-        autoHideDuration={2000}
-        onClose={handleSnackClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert severity={snackState.variant}>{snackState.message}</Alert>
-      </Snackbar>
+      <StatusSnackbar state={snackbarState} onClose={closeSnackbar} />
     </ThemeProvider>
   );
 };
-
-function resetNodes<T extends Node>(
-  editor: Editor,
-  options: {  nodes?: Node | Node[],  at?: Location } = {}
-): void {
-  const children = [...editor.children]
-
-  children.forEach((node) => editor.apply({ type: 'remove_node', path: [0], node }))
-
-  if (options.nodes) {
-    const nodes = Node.isNode(options.nodes) ? [options.nodes] : options.nodes
-
-    nodes.forEach((node, i) => editor.apply({ type: 'insert_node', path: [i], node: node }))
-  }
-
-  const point = options.at && Point.isPoint(options.at)
-    ? options.at
-    : Editor.end(editor, [])
-
-  if (point) {
-    Transforms.select(editor, point)
-  }
-}
