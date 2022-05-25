@@ -21,7 +21,7 @@ export const CustomSlateEditor: FunctionComponent<CustomSlateEditorProps> = memo
 
     let filteredList = [];
     if (autoCompleteData) {
-        const searchValue = autoCompleteData.searchValue.toLowerCase();
+        const searchValue = autoCompleteData.searchValue;
         filteredList = autoCompleteList.filter(e => e.toLowerCase().startsWith(searchValue)).sort().slice(0, 10);
     }
 
