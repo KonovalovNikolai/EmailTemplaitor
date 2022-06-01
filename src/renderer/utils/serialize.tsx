@@ -34,26 +34,9 @@ export const serializeNode = (node: Descendant, addressee: Addressee) => {
                 return serializeParagraph(node, addressee);
         }
     }
+
+    return <></>;
 };
-
-function serializeText(node: CustomText) {
-    if (node.text.trim() === "") {
-        return `${node.text}﻿`;
-    }
-
-    let element = <>{node.text}</>;
-
-    if (node.bold) {
-        element = <strong>{element}</strong>;
-    }
-    if (node.italic) {
-        element = <i>{element}</i>;
-    }
-    if (node.underline) {
-        element = <u>{element}</u>;
-    }
-    return element;
-}
 
 function serializeH1(node: HeadingElement, addressee: Addressee) {
     const textAlign: any = node.align;
@@ -103,14 +86,46 @@ function serializeNumberedList(node: NumberedListElement, addressee: Addressee) 
 
 function serializeListItem(node: ListItemElement, addressee: Addressee) {
     return (
-        <ol style={{ textAlign: node.align as any }}>
+        <li style={{ textAlign: node.align as any }}>
             {node.children.map(n => {
                 return (
                     serializeNode(n, addressee)
                 );
             })}
-        </ol>
+        </li>
     );
+}
+
+function serializeParagraph(node: ParagraphElement, addressee: Addressee) {
+  return (
+      <p style={{ textAlign: node.align as any }}>
+          {node.children.map(n => serializeNode(n, addressee))}
+      </p>
+  );
+}
+
+function serializeMarkdownNode(node: CustomText | VariableElement, text: string) {
+  let element = <>{text}</>;
+
+  if (node.bold) {
+      element = <strong>{element}</strong>;
+  }
+  if (node.italic) {
+      element = <i>{element}</i>;
+  }
+  if (node.underline) {
+      element = <u>{element}</u>;
+  }
+
+  return element;
+}
+
+function serializeText(node: CustomText) {
+  if (node.text.trim() === "") {
+      return `${node.text}﻿`;
+  }
+
+  return serializeMarkdownNode(node, node.text);
 }
 
 function serializeVariable(node: VariableElement, addressee: Addressee) {
@@ -123,24 +138,5 @@ function serializeVariable(node: VariableElement, addressee: Addressee) {
         return "";
     }
 
-    let element = <>{value}</>;
-
-    if (node.bold) {
-        element = <strong>{element}</strong>;
-    }
-    if (node.italic) {
-        element = <i>{element}</i>;
-    }
-    if (node.underline) {
-        element = <u>{element}</u>;
-    }
-    return element;
-}
-
-function serializeParagraph(node: ParagraphElement, addressee: Addressee) {
-    return (
-        <p style={{ textAlign: node.align as any }}>
-            {node.children.map(n => serializeNode(n, addressee))}
-        </p>
-    );
+    return serializeMarkdownNode(node, value);
 }

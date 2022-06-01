@@ -6,6 +6,7 @@ import { Addressee } from "renderer/utils/Addressee";
 import { AppTheme, getTheme, initTheme, toggleTheme } from "renderer/utils/AppTheme";
 import EditorDocument from "renderer/utils/EditorDocument";
 import { initDocument, JsonToDocument } from "renderer/utils/FileControl";
+import { serializeNodeToHTML } from "renderer/utils/serializeToHTML";
 import { AddresseeGrid } from "./AddresseeGrid";
 import { resetNodes } from "./CustomSlateEditor";
 import { TabContent } from "./CustomTabs";
@@ -96,6 +97,9 @@ export const EmailTemplater = () => {
   const handlePreview = useCallback(
     (addressee: Addressee) => { return <SerializedDocument nodes={documentValue} addressee={addressee} />; }, [documentValue]
   );
+
+  console.log(documentValue.map(n => serializeNodeToHTML(n)).join(""));
+
 
   return (
     <ThemeProvider theme={getTheme(themeMode)}>
