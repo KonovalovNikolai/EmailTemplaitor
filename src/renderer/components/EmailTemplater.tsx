@@ -1,17 +1,13 @@
 import { ThemeProvider } from "@emotion/react";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { SaveDocumentAction, SetEditorDocumentAction } from "renderer/hooks/DocumentReducer";
 import { useDocument } from "renderer/hooks/useDocument";
 import { Addressee } from "renderer/utils/Addressee";
 import { AppTheme, getTheme, initTheme, toggleTheme } from "renderer/utils/AppTheme";
 import EditorDocument from "renderer/utils/EditorDocument";
 import { initDocument, JsonToDocument } from "renderer/utils/FileControl";
-import { createEditor } from "slate";
-import { withHistory } from "slate-history";
-import { withReact } from "slate-react";
 import { AddresseeGrid } from "./AddresseeGrid";
 import { resetNodes } from "./CustomSlateEditor";
-import { withVariable } from "./CustomSlateEditor/plugins/withVariables";
 import { TabContent } from "./CustomTabs";
 import { SerializedDocument } from "./SerializedDocument";
 import { SideMenu } from "./SideMenu";
@@ -28,16 +24,11 @@ export const EmailTemplater = () => {
     variableList,
     addresseeList,
     upToDateStatus,
+    editor,
     documentDispatch
   ] = useDocument(...initDocument());
 
   const [snackbarState, setSnackbarState, closeSnackbar] = useStatusSnackbar();
-
-  // Инициализация редактора
-  const editor = useMemo(
-    () => withVariable(withReact(withHistory(createEditor()))),
-    []
-  );
 
   const saveCallback = useCallback(
     async (resultPromise: Promise<string>) => {
@@ -93,11 +84,6 @@ export const EmailTemplater = () => {
 
       const action = new SetEditorDocumentAction(document);
       documentDispatch(action);
-
-      resetNodes(
-        editor,
-        { nodes: document[0] }
-      );
 
       setSnackbarState("success", "Успешно!");
     },

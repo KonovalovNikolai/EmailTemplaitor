@@ -1,11 +1,12 @@
 import { Variable } from "../../utils/VariableList";
 import { Addressee } from "../../utils/Addressee";
-import { Descendant } from "slate";
+import { Descendant, Editor } from "slate";
 
 export interface DocumentReducerState {
     document: Descendant[];
     variableList: Variable[];
     addresseeList: Addressee[];
+    editor: Editor;
     upToDateStatus: boolean;
 }
 
