@@ -14,6 +14,8 @@ export class DeleteVariableAction implements IDocumentReducerAction {
     const newVariableList = removeVariableFromList(variableList, this._variable);
     const newAddresseeList = removeAddresseeVariableFromList(addresseeList, this._variable);
 
+    state.upToDateStatus = false;
+
     return {
       ...state,
       variableList: newVariableList,

@@ -6,6 +6,7 @@ export interface DocumentReducerState {
     document: Descendant[];
     variableList: Variable[];
     addresseeList: Addressee[];
+    upToDateStatus: boolean;
 }
 
 export interface IDocumentReducerAction {

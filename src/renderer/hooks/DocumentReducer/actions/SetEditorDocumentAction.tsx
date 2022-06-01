@@ -11,6 +11,7 @@ export class SetEditorDocumentAction implements IDocumentReducerAction {
       document: document,
       addresseeList: addressees,
       variableList: variables,
+      upToDateStatus: true,
     };
   }
 }

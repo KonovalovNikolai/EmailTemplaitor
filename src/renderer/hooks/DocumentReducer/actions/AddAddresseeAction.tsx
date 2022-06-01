@@ -14,9 +14,8 @@ export class AddAddresseeAction implements IDocumentReducerAction {
             this._newAddressee = createAddressee(state.variableList);
         }
 
+        state.upToDateStatus = false;
         state.addresseeList.push(this._newAddressee);
-
-        // this.newAddresseeIndex = state.addresseeList.length - 1;
 
         if (this._shouldUpdate) {
             return {

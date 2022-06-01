@@ -78,4 +78,4 @@ export const initialValue: Descendant[] = [
             },
         ],
     },
-] as any;
+] as Descendant[];

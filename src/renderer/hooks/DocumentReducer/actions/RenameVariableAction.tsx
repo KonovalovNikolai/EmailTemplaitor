@@ -17,6 +17,8 @@ export class RenameVariableAction implements IDocumentReducerAction {
     const newVariableList = renameVariableInList(variableList, this._variable, this._newVariable);
     const newAddresseeList = renameAddresseeVariableInList(addresseeList, this._variable, this._newVariable);
 
+    state.upToDateStatus = false;
+
     return {
       ...state,
       variableList: newVariableList,

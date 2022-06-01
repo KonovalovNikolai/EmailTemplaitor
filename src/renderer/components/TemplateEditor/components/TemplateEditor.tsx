@@ -73,7 +73,7 @@ export const TemplateEditor = memo(({ editor, documentValue, variableList, onDoc
       );
 
       if (isAstChange) {
-        const action = new SetDocumentAction(value, false);
+        const action = new SetDocumentAction(value, true);
         onDocumentChange(action);
       }
 

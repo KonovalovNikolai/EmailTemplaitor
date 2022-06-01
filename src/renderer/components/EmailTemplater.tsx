@@ -21,16 +21,15 @@ import { TemplateEditor } from "./TemplateEditor";
 
 export const EmailTemplater = () => {
   const [themeMode, setThemeMode] = useState<AppTheme>(initTheme());
-  const [upToDateStatus, setUpToDateStatus] = useState(false);
   const [tabsValue, setTabsValue] = React.useState(0);
-  const handleDocumentUpdate = useCallback(() => setUpToDateStatus(false), []);
 
   const [
     documentValue,
     variableList,
     addresseeList,
+    upToDateStatus,
     documentDispatch
-  ] = useDocument(...initDocument(), handleDocumentUpdate);
+  ] = useDocument(...initDocument());
 
   const [snackbarState, setSnackbarState, closeSnackbar] = useStatusSnackbar();
 
@@ -47,7 +46,6 @@ export const EmailTemplater = () => {
       const resultMessage = await resultPromise;
 
       if (resultMessage === "success") {
-        setUpToDateStatus(true);
         setSnackbarState("success", "Успешно сохранено!");
         return;
       }
@@ -95,7 +93,6 @@ export const EmailTemplater = () => {
 
       const action = new SetEditorDocumentAction(document);
       documentDispatch(action);
-      setUpToDateStatus(true);
 
       resetNodes(
         editor,
@@ -111,7 +108,7 @@ export const EmailTemplater = () => {
   const handleTabsChange = useCallback((newValue: number) => setTabsValue(newValue), []);
 
   const handlePreview = useCallback(
-    (addressee: Addressee) => { return <SerializedDocument nodes={documentValue} addressee={addressee} />; }, []
+    (addressee: Addressee) => { return <SerializedDocument nodes={documentValue} addressee={addressee} />; }, [documentValue]
   );
 
   return (

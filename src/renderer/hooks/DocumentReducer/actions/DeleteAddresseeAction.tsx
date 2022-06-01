@@ -13,6 +13,8 @@ export class DeleteAddresseeAction implements IDocumentReducerAction {
       }
     }
 
+    state.upToDateStatus = false;
+
     if (this._shouldUpdate) {
       return {
         ...state,

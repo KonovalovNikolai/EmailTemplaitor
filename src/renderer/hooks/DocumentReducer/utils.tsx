@@ -8,6 +8,7 @@ export function initDocumentReducer(document: Descendant[], variableList: Variab
         document: document,
         variableList: variableList,
         addresseeList: addresseeList,
+        upToDateStatus: false
     };
 }
 

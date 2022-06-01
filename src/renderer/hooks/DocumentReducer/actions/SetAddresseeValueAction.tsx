@@ -8,8 +8,8 @@ export class SetAddresseeValueAction implements IDocumentReducerAction {
       return state;
     }
 
+    state.upToDateStatus = false;
     state.addresseeList[this._index][this._variable] = this._value;
-
-    return state;
+    return { ...state };
   }
 }

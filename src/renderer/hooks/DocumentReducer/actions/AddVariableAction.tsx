@@ -14,6 +14,8 @@ export class AddVariableAction implements IDocumentReducerAction {
     variableList.push(this._newVariable);
     const newAddresseeList = addAddresseeVariableToList(addresseeList, this._newVariable);
 
+    state.upToDateStatus = false;
+
     return {
       ...state,
       variableList: [...variableList],

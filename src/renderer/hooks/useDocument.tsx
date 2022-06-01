@@ -1,27 +1,18 @@
-import { useCallback, useReducer } from "react";
+import { useReducer } from "react";
 import { Addressee } from "renderer/utils/Addressee";
 import EditorDocument from "renderer/utils/EditorDocument";
 import { Variable } from "renderer/utils/VariableList";
 import { Descendant } from "slate";
-import { documentReducer, DocumentReducerState, IDocumentReducerAction, initDocumentReducer } from "./DocumentReducer";
+import { documentReducer, IDocumentReducerAction, initDocumentReducer } from "./DocumentReducer";
 
 export function useDocument(
   document: Descendant[],
   variables: Variable[],
   addressees: Addressee[],
-  onUpdate: () => void,
-) : [...EditorDocument, React.Dispatch<IDocumentReducerAction>] {
-
-  const reducer = useCallback(
-    (state: DocumentReducerState, action: IDocumentReducerAction) => {
-      onUpdate();
-      return documentReducer(state, action);
-    },
-    []
-  )
+) : [...EditorDocument, boolean, React.Dispatch<IDocumentReducerAction>] {
 
   const [documentReducerState, documentDispatch] = useReducer(
-    reducer,
+    documentReducer,
     initDocumentReducer(document, variables, addressees)
   );
 
@@ -29,6 +20,7 @@ export function useDocument(
     documentReducerState.document,
     documentReducerState.variableList,
     documentReducerState.addresseeList,
+    documentReducerState.upToDateStatus,
     documentDispatch
   ];
 }
