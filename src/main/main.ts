@@ -14,7 +14,7 @@ import * as fsPromise from 'fs/promises';
 import { resolveHtmlPath } from './util';
 
 let mainWindow: BrowserWindow | null = null;
-let filehandle: string = null;
+let currentDocumentPath: string = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
@@ -113,7 +113,7 @@ app
   .whenReady()
   .then(() => {
     ipcMain.handle('saveFile', handleSaveDocument);
-    ipcMain.handle('openFile', handleOpenDocument)
+    ipcMain.handle('openFile', handleOpenDocument);
 
     createWindow();
     app.on('activate', () => {
@@ -125,8 +125,13 @@ app
   .catch(console.log);
 
 
+function setWindowsTitle(window: BrowserWindow, filePath: string) {
+  const documentName = path.basename(filePath, '.etd');
+  mainWindow.setTitle(`${documentName} - EmailTemplater`);
+}
+
 async function handleSaveDocument(event, JSONDocument: string) {
-  if (filehandle === null) {
+  if (currentDocumentPath === null) {
     const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
       filters: [{ name: "Шаблон EMail", extensions: ['etd'] }],
     });
@@ -134,13 +139,14 @@ async function handleSaveDocument(event, JSONDocument: string) {
       return "canceled";
     }
 
-    filehandle = filePath;
+    currentDocumentPath = filePath;
+    setWindowsTitle(mainWindow, filePath);
   }
 
   try {
-    await fsPromise.writeFile(filehandle, JSONDocument, { encoding: "utf-8"});
+    await fsPromise.writeFile(currentDocumentPath, JSONDocument, { encoding: "utf-8" });
   } catch (err) {
-    filehandle = null;
+    currentDocumentPath = null;
     console.log(err);
     return "error";
   }
@@ -165,12 +171,12 @@ async function handleOpenDocument(event): Promise<OpenFileResult> {
     };
   }
 
-  const path = filePaths[0];
+  const selectedPath = filePaths[0];
 
   let data: string;
 
   try {
-    data = await fsPromise.readFile(path, {encoding: "utf-8"});
+    data = await fsPromise.readFile(selectedPath, { encoding: "utf-8" });
   } catch (err) {
     console.log(err);
     return {
@@ -179,10 +185,11 @@ async function handleOpenDocument(event): Promise<OpenFileResult> {
     };
   }
 
-  filehandle = path;
+  currentDocumentPath = selectedPath;
+  setWindowsTitle(mainWindow, selectedPath);
 
   return {
     status: "success",
     JSONDocument: data,
-  }
+  };
 }

@@ -98,9 +98,6 @@ export const EmailTemplater = () => {
     (addressee: Addressee) => { return <SerializedDocument nodes={documentValue} addressee={addressee} />; }, [documentValue]
   );
 
-  console.log(documentValue.map(n => serializeNodeToHTML(n)).join(""));
-
-
   return (
     <ThemeProvider theme={getTheme(themeMode)}>
       <AppContainer>
