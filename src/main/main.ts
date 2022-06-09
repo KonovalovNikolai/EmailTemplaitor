@@ -13,6 +13,8 @@ import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import * as fsPromise from 'fs/promises';
 import { resolveHtmlPath } from './util';
 
+import { createTransport, createTestAccount, getTestMessageUrl } from 'nodemailer';
+
 let mainWindow: BrowserWindow | null = null;
 let currentDocumentPath: string = null;
 
@@ -61,6 +63,7 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
+    autoHideMenuBar: true,
     show: false,
     width: 900,
     height: 550,
@@ -112,9 +115,10 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
+    ipcMain.on('openURL', handleOpenURL)
     ipcMain.handle('saveFile', handleSaveDocument);
     ipcMain.handle('openFile', handleOpenDocument);
-
+    ipcMain.handle('sendEmail', handleSendEmail);
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
@@ -192,4 +196,50 @@ async function handleOpenDocument(event): Promise<OpenFileResult> {
     status: "success",
     JSONDocument: data,
   };
+}
+
+export interface SendEmailResult {
+  status: "success" | "error";
+  url: string;
+}
+
+async function handleSendEmail(event, html: string, addressee: string): Promise<SendEmailResult> {
+  let transporter = createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: "joesph.collins86@ethereal.email",
+      pass: "XNzRKyyadpNAJSyUWN",
+    }
+  });
+
+  let result: SendEmailResult;
+
+  try {
+    const info = await transporter.sendMail({
+      from: "joesph.collins86@ethereal.email",
+      to: addressee,
+      subject: "Тестовое сообщение",
+      html: html,
+    });
+
+    const url = getTestMessageUrl(info);
+    result = {
+      status: "success",
+      url: url ? url : ""
+    };
+  }
+  catch (err) {
+    result = {
+      status: "error",
+      url: ""
+    };
+  }
+
+  return result;
+}
+
+function handleOpenURL(event, url: string) {
+  shell.openExternal(url);
 }

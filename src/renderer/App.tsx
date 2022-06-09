@@ -1,10 +1,10 @@
 import './App.css';
-import { EmailTemplater } from "./components/EmailTemplater";
+import { EmailTemplator } from "./components/EmailTemplator";
 
 
 function App() {
   return (
-    <EmailTemplater />
+    <EmailTemplator />
   );
 }
 

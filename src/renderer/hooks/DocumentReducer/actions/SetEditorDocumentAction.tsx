@@ -8,9 +8,6 @@ export class SetEditorDocumentAction implements IDocumentReducerAction {
   public Action(state: DocumentReducerState): DocumentReducerState {
     const [document, variables, addressees] = this._editorDocument;
 
-    console.log(document);
-
-
     this.resetNodes(state.editor, { nodes: document });
 
     return {

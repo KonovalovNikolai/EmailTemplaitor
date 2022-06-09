@@ -1,5 +1,5 @@
 import { Channels } from 'main/preload';
-import { OpenFileResult } from './utils/ipcInterfaces';
+import { OpenFileResult, SendEmailResult } from './utils/ipcInterfaces';
 
 declare global {
   interface Window {
@@ -13,6 +13,8 @@ declare global {
         once(channel: string, func: (...args: unknown[]) => void): void;
         saveDocument(JSONDocument: string): Promise<string>;
         openDocument(): Promise<OpenFileResult>;
+        sendEmail(html: string, addressee: string): Promise<SendEmailResult>;
+        openURL(url: string): void;
       };
     };
   }

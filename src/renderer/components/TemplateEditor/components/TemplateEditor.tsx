@@ -69,7 +69,11 @@ export const TemplateEditor = memo(({ editor, documentValue, variableList, onDoc
   const handleChange = useCallback(
     (value: Descendant[]) => {
       const isAstChange = editor.operations.some(
-        op => 'set_selection' !== op.type
+        op => {
+          console.log(op);
+
+          return 'set_selection' !== op.type
+        }
       );
 
       if (isAstChange) {

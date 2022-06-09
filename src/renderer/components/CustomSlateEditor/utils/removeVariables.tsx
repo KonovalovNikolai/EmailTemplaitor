@@ -2,8 +2,6 @@ import { Editor, Element as SlateElement, Transforms } from "slate";
 import { VariableElement } from "../elementTypes";
 
 export function removeVariables(editor: Editor, character: string) {
-    console.log("start");
-
     Transforms.removeNodes(editor, {
         at: [],
         match: n =>

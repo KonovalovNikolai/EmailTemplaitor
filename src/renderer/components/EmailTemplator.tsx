@@ -10,15 +10,17 @@ import { serializeNodeToHTML } from "renderer/utils/serializeToHTML";
 import { AddresseeGrid } from "./AddresseeGrid";
 import { resetNodes } from "./CustomSlateEditor";
 import { TabContent } from "./CustomTabs";
+import { SendLogItem, SendPage } from "./SendPage";
 import { SerializedDocument } from "./SerializedDocument";
 import { SideMenu } from "./SideMenu";
 import { StatusSnackbar, useStatusSnackbar } from "./StatusSnackbar";
 import { AppContainer, ContentContainer } from "./StyledComponents";
 import { TemplateEditor } from "./TemplateEditor";
 
-export const EmailTemplater = () => {
+export const EmailTemplator = () => {
   const [themeMode, setThemeMode] = useState<AppTheme>(initTheme());
-  const [tabsValue, setTabsValue] = React.useState(0);
+  const [tabsValue, setTabsValue] = useState(0);
+  const [sendLog, setSendLog] = useState<SendLogItem[]>([]);
 
   const [
     documentValue,
@@ -98,6 +100,29 @@ export const EmailTemplater = () => {
     (addressee: Addressee) => { return <SerializedDocument nodes={documentValue} addressee={addressee} />; }, [documentValue]
   );
 
+  const handleSend = useCallback(
+    async () => {
+      if (addresseeList.length < 1) return;
+
+      addresseeList.forEach(async addressee => {
+        const addresseeEmail = addressee["Email"];
+        const htmlDocument = documentValue.map(n => serializeNodeToHTML(n, addressee)).join("");
+        const result = await window.electron.ipcRenderer.sendEmail(htmlDocument, addresseeEmail);
+
+        setSendLog(prev => {
+          const newItem: SendLogItem = {
+            to: addresseeEmail,
+            status: result.status,
+            preview: result.url
+          };
+
+          return [...prev, newItem];
+        });
+      });
+    },
+    [addresseeList, documentValue]
+  );
+
   return (
     <ThemeProvider theme={getTheme(themeMode)}>
       <AppContainer>
@@ -125,6 +150,9 @@ export const EmailTemplater = () => {
               onChange={documentDispatch}
               onPreview={handlePreview}
             />
+          </TabContent>
+          <TabContent index={2} value={tabsValue}>
+            <SendPage log={sendLog} onSend={handleSend} />
           </TabContent>
         </ContentContainer>
       </AppContainer>
