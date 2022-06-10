@@ -9,7 +9,6 @@ import {
   HeadingTwoElement, ListItemElement,
   VariableElement, NumberedListElement, ParagraphElement
 } from '../components/CustomSlateEditor';
-import { Addressee } from './Addressee';
 
 type BlockElement =
   | BulletedListElement
@@ -19,7 +18,7 @@ type BlockElement =
   | NumberedListElement
   | ParagraphElement;
 
-export const serializeNodeToHTML = (node: Descendant, addressee: Addressee): string => {
+export const serializeNodeToHTML = (node: Descendant): string => {
   if (Text.isText(node)) {
     return serializeText(node);
   }
@@ -27,36 +26,40 @@ export const serializeNodeToHTML = (node: Descendant, addressee: Addressee): str
   if (SlateElement.isElement(node)) {
     switch (node.type) {
       case 'heading-one':
-        return serializeElement("h1", node, addressee);
+        return serializeElement("h1", node);
       case 'heading-two':
-        return serializeElement("h2", node, addressee);
+        return serializeElement("h2", node);
       case "bulleted-list":
-        return serializeElement("ul", node, addressee);
+        return serializeElement("ul", node);
       case "numbered-list":
-        return serializeElement("ol", node, addressee);
+        return serializeElement("ol", node);
       case "list-item":
-        return serializeElement("li", node, addressee);
+        return serializeElement("li", node);
       case "variable":
-        return serializeVariable(node, addressee);
+        return serializeVariable(node);
       default:
-        return serializeElement("p", node, addressee);
+        return serializeElement("p", node);
     }
   }
 
   return "";
 };
 
-function serializeElement(element: string, node: BlockElement, addressee: Addressee) {
+function serializeElement(element: string, node: BlockElement) {
   const textAlign: string = node.align;
   const style = textAlign ?  `style="text-align: ${textAlign}"` : "";
-  const content = node.children.map(n => { return serializeNodeToHTML(n, addressee); }).join("");
+  const content = node.children.map(n => { return serializeNodeToHTML(n); }).join("");
 
   return `<${element} ${style}>${content}</${element}>`;
 }
 
 
-function serializeVariable(node: VariableElement, addressee: Addressee) {
-  return serializeMarkdownText(node, `${addressee[node.character]}`);
+function serializeVariable(node: VariableElement) {
+  return serializeMarkdownText(node, `{${node.character}}`);
+}
+
+function replaceImportantSymbols(text: string): string {
+  return text.replaceAll("{", "/{").replaceAll("}", "/}");
 }
 
 function serializeText(node: CustomText) {
@@ -64,7 +67,7 @@ function serializeText(node: CustomText) {
     return `${node.text}﻿`;
   }
 
-  return serializeMarkdownText(node, node.text);
+  return serializeMarkdownText(node, replaceImportantSymbols(node.text));
 }
 
 function serializeMarkdownText(node: VariableElement | CustomText, text: string) {

@@ -115,10 +115,10 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
-    ipcMain.on('openURL', handleOpenURL)
+    ipcMain.on('openURL', handleOpenURL);
+    ipcMain.on('sendEmail', handleSendEmail);
     ipcMain.handle('saveFile', handleSaveDocument);
     ipcMain.handle('openFile', handleOpenDocument);
-    ipcMain.handle('sendEmail', handleSendEmail);
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
@@ -198,12 +198,17 @@ async function handleOpenDocument(event): Promise<OpenFileResult> {
   };
 }
 
+export interface Addressee {
+  [variableName: string]: string;
+}
+
 export interface SendEmailResult {
   status: "success" | "error";
+  to: string;
   url: string;
 }
 
-async function handleSendEmail(event, html: string, addressee: string): Promise<SendEmailResult> {
+async function handleSendEmail(event, html: string, addressees: Addressee[]) {
   let transporter = createTransport({
     host: 'smtp.ethereal.email',
     port: 587,
@@ -214,30 +219,46 @@ async function handleSendEmail(event, html: string, addressee: string): Promise<
     }
   });
 
-  let result: SendEmailResult;
+  for (const addressee of addressees) {
+    let result: SendEmailResult;
 
-  try {
-    const info = await transporter.sendMail({
-      from: "joesph.collins86@ethereal.email",
-      to: addressee,
-      subject: "Тестовое сообщение",
-      html: html,
-    });
+    let htmlContent = html;
+    for (const variable in addressee) {
+      htmlContent = htmlContent.replace(`{${variable}}`, addressee[variable]);
+    }
 
-    const url = getTestMessageUrl(info);
-    result = {
-      status: "success",
-      url: url ? url : ""
-    };
+    htmlContent = htmlContent.replace("/{", "{");
+    htmlContent = htmlContent.replace("/}", "}");
+
+    const email = addressee["Email"];
+
+    try {
+      const info = await transporter.sendMail({
+        from: "joesph.collins86@ethereal.email",
+        to: email,
+        subject: "Тестовое сообщение",
+        html: htmlContent,
+      });
+
+      const url = getTestMessageUrl(info);
+      result = {
+        to: email,
+        status: "success",
+        url: url ? url : ""
+      };
+    }
+    catch (err) {
+      result = {
+        to: email,
+        status: "error",
+        url: ""
+      };
+    }
+
+    mainWindow.webContents.send('emailResult', result);
   }
-  catch (err) {
-    result = {
-      status: "error",
-      url: ""
-    };
-  }
 
-  return result;
+  mainWindow.webContents.send('finishSend');
 }
 
 function handleOpenURL(event, url: string) {

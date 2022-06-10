@@ -20,7 +20,6 @@ import { TemplateEditor } from "./TemplateEditor";
 export const EmailTemplator = () => {
   const [themeMode, setThemeMode] = useState<AppTheme>(initTheme());
   const [tabsValue, setTabsValue] = useState(0);
-  const [sendLog, setSendLog] = useState<SendLogItem[]>([]);
 
   const [
     documentValue,
@@ -101,24 +100,11 @@ export const EmailTemplator = () => {
   );
 
   const handleSend = useCallback(
-    async () => {
+    () => {
       if (addresseeList.length < 1) return;
 
-      addresseeList.forEach(async addressee => {
-        const addresseeEmail = addressee["Email"];
-        const htmlDocument = documentValue.map(n => serializeNodeToHTML(n, addressee)).join("");
-        const result = await window.electron.ipcRenderer.sendEmail(htmlDocument, addresseeEmail);
-
-        setSendLog(prev => {
-          const newItem: SendLogItem = {
-            to: addresseeEmail,
-            status: result.status,
-            preview: result.url
-          };
-
-          return [...prev, newItem];
-        });
-      });
+      const htmlDocument = documentValue.map(n => serializeNodeToHTML(n)).join("");
+      window.electron.ipcRenderer.sendEmail(htmlDocument, addresseeList);
     },
     [addresseeList, documentValue]
   );
@@ -152,7 +138,7 @@ export const EmailTemplator = () => {
             />
           </TabContent>
           <TabContent index={2} value={tabsValue}>
-            <SendPage log={sendLog} onSend={handleSend} />
+            <SendPage onSend={handleSend} />
           </TabContent>
         </ContentContainer>
       </AppContainer>

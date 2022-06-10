@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import { OpenFileResult, SendEmailResult } from './main';
+import { Addressee, OpenFileResult, SendEmailResult } from './main';
 
 export type Channels = 'ipc-example' | "saveFile";
 
@@ -20,7 +20,9 @@ contextBridge.exposeInMainWorld('electron', {
     },
     saveDocument: (JSONDocument: string): Promise<string> => ipcRenderer.invoke("saveFile", JSONDocument),
     openDocument: (): Promise<OpenFileResult> => ipcRenderer.invoke("openFile"),
-    sendEmail: (html: string, addressee: string): Promise<SendEmailResult> => ipcRenderer.invoke("sendEmail", html, addressee),
+    sendEmail: (html: string, addressees: Addressee[]): void => ipcRenderer.send("sendEmail", html, addressees),
+    handleEmailResult: (callback: (event, result: SendEmailResult) => void) => ipcRenderer.on("emailResult", callback),
+    handleFinishSend: (callback: (event) => void) => ipcRenderer.on("finishSend", callback),
     openURL: (url: string) => ipcRenderer.send("openURL", url),
   },
 });
